@@ -1,0 +1,523 @@
+<div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+        try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+    </script>
+
+    <ul class="breadcrumb">
+        <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/admin/dashboard">Home</a>
+        </li>
+
+        <li>
+        <a href="/admin/user">User</a>
+        </li>
+
+        <?if(empty($item->id)):?>
+        <li class="active">Create New User</li>
+        <?else:?>
+        <li class="active">Edit User</li>
+        <?endif?>
+    </ul><!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+        <form class="form-search">
+            <span class="input-icon">
+                <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="icon-search nav-search-icon"></i>
+            </span>
+        </form>
+    </div><!-- #nav-search -->
+</div>
+
+<?$profileForm = $form->getForm('profile');?>
+<div class="page-content">
+    <div class="page-header">
+        <?if(empty($item->id)):?>
+        <h1>Create New User</h1>
+        <?else:?>
+        <h1>Edit User</h1>
+        <?endif?>
+    </div><!-- /.page-header -->
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <?if(!empty($item->id)):?>
+            <div class="row">
+                <div class="col-xs-12 col-sm-3 center">
+                    <span class="profile-picture">
+                        <?if($item->avatar):?>
+                        <img src="<?=$item->avatar?>" id="" alt="" class="img-responsive">
+                        <?else:?>
+                        <img src="<?=$this->tag->gravatar($item->email, 200)?>" id="" alt="" class="img-responsive">
+                        <?endif?>
+                    </span>
+
+                    <div class="space space-4"></div>
+
+                    <a class="btn btn-sm btn-block" href="#">
+                        <i class="icon-envelope-alt bigger-110"></i>
+                        <span class="bigger-110">Resend Active Email</span>
+                    </a>
+
+                    <a class="btn btn-sm btn-block" href="<?=$item->email?>">
+                        <i class="icon-envelope-alt bigger-110"></i>
+                        <span class="bigger-110">Resend Reset Password Email</span>
+                    </a>
+
+                    <a class="btn btn-sm btn-block" href="<?=$item->email?>">
+                        <i class="icon-envelope-alt bigger-110"></i>
+                        <span class="bigger-110">Block This User</span>
+                    </a>
+                </div><!-- /span -->
+
+                <div class="col-xs-12 col-sm-9">
+                    <?$status = array(
+                        'inactive' => 'label-warning',
+                        'deleted' => 'label',
+                        'active' => 'label-success',
+                    )?>
+                    <div class="profile-user-info">
+                        <div class="profile-info-row">
+                            <div class="profile-info-name"> Username </div>
+
+                            <div class="profile-info-value">
+                                <span><?=$item->username?></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row clearfix">
+                            <div class="profile-info-name"> Screen Name</div>
+
+                            <div class="profile-info-value">
+                                <span><?=$item->screenName ? $item->screenName : 'Unknown'?></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name"> Status </div>
+
+                            <div class="profile-info-value">
+                                <span class="label label-sm <?=$status[$item->status]?>"><?=$item->status?></span>
+                                <span class="label label-sm <?=$status[$item->emailStatus]?>"><i class="icon-envelope"></i> <?=$item->emailStatus?></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name"> Location </div>
+
+                            <div class="profile-info-value">
+                                <i class="icon-map-marker light-orange bigger-110"></i>
+                                <span>Netherlands</span>
+                                <span>Amsterdam</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name"> Age </div>
+
+                            <div class="profile-info-value">
+                                <span>38</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name"> Joined </div>
+
+                            <div class="profile-info-value">
+                                <span><?=$this->tag->datetime($item->createdAt)?></span> | Register source : <?=$item->providerType?>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name"> Last Login </div>
+                            <div class="profile-info-value">
+                                <span><?=$item->loginAt ? $this->tag->datetime($item->loginAt) : 'Never'?></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hr hr-8 dotted"></div>
+
+                    <div class="profile-user-info">
+                        <div class="profile-info-row">
+                            <div class="profile-info-name"> Social</div>
+
+                            <div class="profile-info-value">
+                                <a target="_blank" href="#">www.alexdoe.com</a>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">
+                                <i class="middle icon-facebook-sign bigger-150 blue"></i>
+                            </div>
+
+                            <div class="profile-info-value">
+                                <a href="#">Find me on Facebook</a>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">
+                                <i class="middle icon-twitter-sign bigger-150 light-blue"></i>
+                            </div>
+
+                            <div class="profile-info-value">
+                                <a href="#">Follow me on Twitter</a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /span -->
+            </div>
+            <?endif?>
+
+
+            <div class="tabbable">
+                <ul class="nav nav-tabs padding-16">
+                    <li class="active">
+                    <a href="#edit-basic" data-toggle="tab">
+                        <i class="green icon-edit bigger-125"></i>
+                        Basic Info
+                    </a>
+                    </li>
+
+                    <li>
+                    <a href="#edit-settings" data-toggle="tab">
+                        <i class="purple icon-cog bigger-125"></i>
+                        Settings
+                    </a>
+                    </li>
+
+                    <li>
+                    <a href="#edit-password" data-toggle="tab">
+                        <i class="blue icon-key bigger-125"></i>
+                        Password
+                    </a>
+                    </li>
+                </ul>
+
+
+
+                <div class="tab-content profile-edit-tab-content">
+                    <div class="tab-pane in active" id="edit-basic">
+                        <form id="" action="" class="form-horizontal" method="POST" enctype="multipart/form-data" novalidate="novalidate">
+                            <?=$form->render('id')?>
+                            <h4 class="header blue bolder smaller">Avatar</h4>
+                            <div class="form-group">
+                                <label>User Avatar</label>
+                                <input type="file" name="upload" class="ace-file-input">
+                            </div><!--/col-->
+
+                            <h4 class="header blue bolder smaller">Basic</h4>
+
+                            <div class="form-group">
+                                <label for="username" class="col-sm-3 control-label no-padding-right">Username</label>
+                                <div class="col-sm-9">
+                                    <?=$form->render('username', array(
+                                        'placeholder' => 'Username',
+                                        'class' => 'col-xs-12 col-sm-6',
+                                        'required' => 'required',
+                                    ))?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="screenName" class="col-sm-3 control-label no-padding-right">Screen Name</label>
+                                <div class="col-sm-9">
+                                    <?=$form->render('screenName', array(
+                                        'placeholder' => 'Screen Name',
+                                        'class' => 'col-xs-12 col-sm-6',
+                                    ))?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="form-field-first" class="col-sm-3 control-label no-padding-right">Name</label>
+
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <?=$form->render('firstName', array(
+                                                'placeholder' => 'First Name',
+                                                'class' => 'form-control',
+                                            ))?>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <?=$form->render('lastName', array(
+                                                'placeholder' => 'Last Name',
+                                                'class' => 'form-control',
+                                            ))?>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="col-sm-3 control-label no-padding-right">Email</label>
+
+                                <div class="col-sm-9">
+                                        <?=$form->render('email', array(
+                                            'class' => 'col-xs-12 col-sm-6',
+                                            'required' => 'required',
+                                            'data-parsley-type' => 'email'
+                                        ))?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="status" class="col-sm-3 control-label no-padding-right">Status</label>
+
+                                <div class="col-sm-9">
+                                        <?=$form->render('status', array(
+                                            'class' => '',
+                                        ))?>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="password" class="col-sm-3 control-label no-padding-right">Password</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="col-xs-12 col-sm-6" value="" name="password" id="password" autocomplete="off">
+                                </div>
+                            </div>
+
+
+
+                            <hr>
+                            <div class="form-group">
+                                <label for="birthday" class="col-sm-3 control-label no-padding-right">Birth Date</label>
+                                <div class="col-sm-9">
+                                    <div class="input-medium">
+                                        <div class="input-group">
+                                            <?=$profileForm->render('birthday', array(
+                                                'placeholder' => 'yyyy-mm-dd',
+                                                'data-date-format' => 'yyyy-mm-dd',
+                                                'class' => 'input-medium date-picker',
+                                            ))?>
+                                            <span class="input-group-addon">
+                                                <i class="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-4"></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right">Gender</label>
+
+                                <div class="col-sm-9">
+                                    <label class="inline">
+                                        <input type="radio" class="ace" name="form-field-radio">
+                                        <span class="lbl"> Male</span>
+                                    </label>
+
+                                    &nbsp; &nbsp; &nbsp;
+                                    <label class="inline">
+                                        <input type="radio" class="ace" name="form-field-radio">
+                                        <span class="lbl"> Female</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="space-4"></div>
+
+                            <div class="form-group">
+                                <label for="form-field-comment" class="col-sm-3 control-label no-padding-right">Comment</label>
+
+                                <div class="col-sm-9">
+                                    <textarea id="form-field-comment"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="space"></div>
+                            <h4 class="header blue bolder smaller">Contact</h4>
+
+
+
+                            <div class="space-4"></div>
+
+                            <div class="form-group">
+                                <label for="site" class="col-sm-3 control-label no-padding-right">Website</label>
+
+                                <div class="col-sm-9">
+                                    <span class="input-icon input-icon-right">
+                                        <?=$profileForm->render('site', array(
+                                            'class' => '',
+                                        ))?>
+                                        <i class="icon-globe"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="space-4"></div>
+
+                            <div class="form-group">
+                                <label for="form-field-phone" class="col-sm-3 control-label no-padding-right">Phone</label>
+
+                                <div class="col-sm-9">
+                                    <span class="input-icon input-icon-right">
+                                        <?=$form->render('mobile', array(
+                                            'class' => '',
+                                        ))?>
+                                        <i class="icon-phone icon-flip-horizontal"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="space"></div>
+                            <h4 class="header blue bolder smaller">Social</h4>
+
+                            <div class="form-group">
+                                <label for="form-field-facebook" class="col-sm-3 control-label no-padding-right">Facebook</label>
+
+                                <div class="col-sm-9">
+                                    <span class="input-icon">
+                                        <input type="text" id="form-field-facebook" value="facebook_alexdoe">
+                                        <i class="icon-facebook blue"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="space-4"></div>
+
+                            <div class="form-group">
+                                <label for="form-field-twitter" class="col-sm-3 control-label no-padding-right">Twitter</label>
+
+                                <div class="col-sm-9">
+                                    <span class="input-icon">
+                                        <input type="text" id="form-field-twitter" value="twitter_alexdoe">
+                                        <i class="icon-twitter light-blue"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="space-4"></div>
+
+                            <div class="form-group">
+                                <label for="form-field-gplus" class="col-sm-3 control-label no-padding-right">Google+</label>
+
+                                <div class="col-sm-9">
+                                    <span class="input-icon">
+                                        <input type="text" id="form-field-gplus" value="google_alexdoe">
+                                        <i class="icon-google-plus red"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="clearfix form-actions">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button type="submit" class="btn btn-info">
+                                        <i class="icon-ok bigger-110"></i>
+                                        Save
+                                    </button>
+
+                                    &nbsp; &nbsp;
+                                    <button type="reset" class="btn">
+                                        <i class="icon-undo bigger-110"></i>
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div><!--tab pane end-->
+
+                    <div class="tab-pane" id="edit-settings">
+                        <div class="space-10"></div>
+
+                        <div>
+                            <label class="inline">
+                                <input type="checkbox" class="ace" name="form-field-checkbox">
+                                <span class="lbl"> Make my profile public</span>
+                            </label>
+                        </div>
+
+                        <div class="space-8"></div>
+
+                        <div>
+                            <label class="inline">
+                                <input type="checkbox" class="ace" name="form-field-checkbox">
+                                <span class="lbl"> Email me new updates</span>
+                            </label>
+                        </div>
+
+                        <div class="space-8"></div>
+
+                        <div>
+                            <label class="inline">
+                                <input type="checkbox" class="ace" name="form-field-checkbox">
+                                <span class="lbl"> Keep a history of my conversations</span>
+                            </label>
+
+                            <label class="inline">
+                                <span class="space-2 block"></span>
+
+                                for
+                                <input type="text" maxlength="3" class="input-mini">
+                                days
+                            </label>
+                        </div>
+                    </div><!--tab pane end-->
+
+                    <div class="tab-pane" id="edit-password">
+                        <div class="space-10"></div>
+
+                        <div class="form-group">
+                            <label for="form-field-pass1" class="col-sm-3 control-label no-padding-right">New Password</label>
+
+                            <div class="col-sm-9">
+                                <input type="password" id="form-field-pass1">
+                            </div>
+                        </div>
+
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label for="form-field-pass2" class="col-sm-3 control-label no-padding-right">Confirm Password</label>
+
+                            <div class="col-sm-9">
+                                <input type="password" id="form-field-pass2">
+                            </div>
+                        </div>
+
+                        <div class="clearfix form-actions">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="submit" class="btn btn-info">
+                                    <i class="icon-ok bigger-110"></i>
+                                    Save
+                                </button>
+
+                                &nbsp; &nbsp;
+                                <button type="reset" class="btn">
+                                    <i class="icon-undo bigger-110"></i>
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div><!--tab pane end-->
+                </div><!--tab-content end-->
+            </div><!--tabbable end-->
+
+
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.page-content -->
+
+<script>
+    $(document).ready(function(){
+            var updateCreateTime = function(){
+                    var day = $('input[name=day]').val();
+                    var time = $('input[name=time]').val();
+                    time = time.length == 7 ? '0' + time : time;
+                    var timestamp = moment(day + ' ' + time).format('X');
+                    $('input[name=createdAt]').val(timestamp);
+            }
+            $('input[name=day], input[name=time]').on('change', updateCreateTime);
+    });
+</script>

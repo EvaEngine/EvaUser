@@ -1,0 +1,45 @@
+<div id="reset-box" class="reset-box  visible widget-box no-border">
+    <div class="widget-body">
+        <div class="widget-main">
+            <h4 class="header green lighter bigger">
+                <i class="icon-group blue"></i>
+                <?=$this->tag->_('Reset Password');?> 
+            </h4>
+
+            <div class="space-6"></div>
+            <p> <?=$this->tag->_('Enter your new password');?>: </p>
+
+            <form action="" method="POST" novalidate="novalidate">
+                <fieldset>
+                    <div class="form-group">
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            <input type="password" name="password" class="form-control" placeholder="<?=$this->tag->_('Password');?>" size="24" placeholder="Password" data-parsley-trigger="blur change" data-parsley-minlength="6"  data-parsley-maxlength="26" required  />
+                            <i class="icon-lock"></i>
+                        </span>
+                    </label>
+                    </div>
+
+                    <div class="form-group">
+                    <label class="block clearfix">
+                        <span class="block input-icon input-icon-right">
+                            <input type="password" name="passwordConfirm" class="form-control" placeholder="<?=$this->tag->_('Repeat password');?>" data-parsley-trigger="blur change" data-parsley-equalto="#reset-box input[name=password]" data-parsley-equalto-message="<?=$this->tag->_('Password not match');?>" required  />
+                            <i class="icon-retweet"></i>
+                        </span>
+                    </label>
+                    </div>
+
+                    <div class="space-24"></div>
+
+                    <div class="clearfix">
+                        <button type="submit" class="width-65 pull-right btn btn-sm btn-success">
+                            <?=$this->tag->_('Reset Password');?> 
+                            <i class="icon-arrow-right icon-on-right"></i>
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+    </div><!-- /widget-body -->
+</div><!-- /signup-box -->

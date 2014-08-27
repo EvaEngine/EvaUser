@@ -1,0 +1,24 @@
+{
+    "name": "allovince/evauser",
+    "description": "Standard User Module of EvaEngine",
+    "license": "BSD-3-Clause",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+        "name": "AlloVince",
+        "email": "allo.vince@gmail.com",
+        "homepage": "http://avnpc.com"
+    }
+    ],
+    "require": {
+	"allovince/evacommon" : "dev-master",
+        "ircmaxell/password-compat": "dev-master"
+    },
+    "suggest": {
+	"allovince/evafilesystem": "dev-master"
+    },
+    "autoload": {
+	"classmap" : ["Module.php"],
+        "psr-4": {"Eva\\EvaUser\\": "src/EvaUser"}
+    }
+}

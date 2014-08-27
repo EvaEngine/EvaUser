@@ -1,0 +1,248 @@
+<div id="login-box" class="login-box visible widget-box no-border">
+    <div class="widget-body">
+        <div class="widget-main">
+            <h4 class="header blue lighter bigger">
+                <i class="icon-coffee green"></i>
+                <?=$this->tag->_('Please Enter Your Information');?> 
+            </h4>
+
+            <div class="space-6"></div>
+
+            <form id="login-box-form" action="/admin/login" method="POST" novalidate="novalidate">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                                <input type="text" name="identify" class="form-control" placeholder="<?=$this->tag->_('Username or Email');?>" data-parsley-minlength="4" required />
+                                <i class="icon-user"></i>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                                <input type="password" name="password" class="form-control" placeholder="<?=$this->tag->_('Password');?>" data-parsley-minlength="6"  data-parsley-maxlength="26" required />
+                                <i class="icon-lock"></i>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="space"></div>
+
+                    <div class="clearfix">
+                        <label class="inline">
+                            <input type="checkbox" class="ace" name="remember" value="1" />
+                            <span class="lbl"> <?=$this->tag->_('Remember Me');?></span>
+                        </label>
+
+                        <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
+                            <i class="icon-key"></i>
+                            <?=$this->tag->_('Login');?> 
+                        </button>
+                        <input type="hidden" name="__redirect" value="/admin/dashboard" />
+                        <input type="hidden" name="__redirect_error" value="/admin/login" />
+                    </div>
+
+                    <div class="space-4"></div>
+                </fieldset>
+            </form>
+
+            <div class="social-or-login center">
+                <span class="bigger-110"><?=$this->tag->_('Or Login Using');?></span>
+
+            </div>
+
+            <div class="social-login center">
+                <p>
+                <a class="" href="/auth/request/tencent/oauth2">
+                    <img src="http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/bt_blue_76X24.png" alt="QQ" />
+                </a>
+
+                <a class="" href="/auth/request/weibo/oauth2">
+                    <img src="http://www.sinaimg.cn/blog/developer/wiki/240.png" alt="Weibo" />
+                </a>
+                </p>
+
+                <a class="btn btn-success" href="/auth/request/douban/oauth2">
+                    豆瓣
+                </a>
+
+                <a class="btn btn-primary" href="/auth/request/renren/oauth2">
+                    <i class="icon-renren"></i>
+                </a>
+
+                <a class="btn btn-info" href="/auth/request/twitter/oauth1">
+                    <i class="icon-twitter"></i>
+                </a>
+
+                <a class="btn btn-danger" href="/auth/request/google/oauth2">
+                    <i class="icon-google-plus"></i>
+                </a>
+
+                <a class="btn btn-primary" href="/auth/request/facebook/oauth2">
+                    <i class="icon-facebook"></i>
+                </a>
+            </div>
+        </div><!-- /widget-main -->
+
+        <div class="toolbar clearfix">
+            <div>
+                <a href="#" onclick="show_box('forgot-box'); return false;" class="forgot-password-link">
+                    <i class="icon-arrow-left"></i>
+                    <?=$this->tag->_('I forgot my password');?> 
+                </a>
+            </div>
+
+            <div>
+                <a href="#" onclick="show_box('signup-box'); return false;" class="user-signup-link">
+                    <?=$this->tag->_('I want to register');?> 
+                    <i class="icon-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div><!-- /widget-body -->
+</div><!-- /login-box -->
+
+<div id="forgot-box" class="forgot-box widget-box no-border">
+    <div class="widget-body">
+        <div class="widget-main">
+            <h4 class="header red lighter bigger">
+                <i class="icon-key"></i>
+                <?=$this->tag->_('Retrieve Password');?> 
+            </h4>
+
+            <div class="space-6"></div>
+            <p>
+            <?=$this->tag->_('Enter your email and to receive instructions');?> 
+            </p>
+
+            <form action="/admin/session/forgot" method="POST" novalidate="novalidate">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                                <input type="email" name="email" class="form-control" placeholder="<?=$this->tag->_('Email');?>" required />
+                                <i class="icon-envelope"></i>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="clearfix">
+                        <button type="submit" class="width-35 pull-right btn btn-sm btn-danger">
+                            <i class="icon-lightbulb"></i>
+                            <?=$this->tag->_('Send Me');?> 
+                        </button>
+                        <input type="hidden" name="__redirect" value="/admin/login" />
+                    </div>
+                </fieldset>
+            </form>
+        </div><!-- /widget-main -->
+
+        <div class="toolbar center">
+            <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
+                <?=$this->tag->_('Back to login');?> 
+                <i class="icon-arrow-right"></i>
+            </a>
+        </div>
+    </div><!-- /widget-body -->
+</div><!-- /forgot-box -->
+
+<div id="signup-box" class="signup-box widget-box no-border">
+    <div class="widget-body">
+        <div class="widget-main">
+            <h4 class="header green lighter bigger">
+                <i class="icon-group blue"></i>
+                <?=$this->tag->_('New User Registration');?> 
+            </h4>
+
+            <div class="space-6"></div>
+            <p> <?=$this->tag->_('Enter your details to begin');?></p>
+
+            <form action="/admin/register" method="POST" novalidate="novalidate">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                                <input type="email" name="email" class="form-control" placeholder="<?=$this->tag->_('Email');?>" data-parsley-trigger="blur change" data-parsley-remote="/admin/register/check" data-parsley-remote-options='{ method: "GET", dataType: "json"}' data-parsley-remote-message="<?=$this->tag->_('This email has been taken');?>" required />
+                                <i class="icon-envelope"></i>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                                <input type="text" name="username" class="form-control" placeholder="<?=$this->tag->_('Username');?>"
+                                data-parsley-trigger="blur change"
+                                data-parsley-type="alphanum"
+                                data-parsley-minlength="4"
+                                data-parsley-maxlength="24"
+                                data-parsley-pattern="^(?![0-9]+$)"
+                                data-parsley-pattern-message="<?=$this->tag->_('Username not allow pure digits');?>"
+                                data-parsley-remote="/admin/register/check"
+                                data-parsley-remote-options='{ method: "GET", dataType: "json"}'
+                                data-parsley-remote-message="<?=$this->tag->_('This username has been taken');?>"
+                                required />
+                                <i class="icon-user"></i>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                                <input type="password" name="password" class="form-control" size="24" placeholder="<?=$this->tag->_('Password');?>" data-parsley-trigger="blur change" data-parsley-minlength="6"  data-parsley-maxlength="26" required />
+                                <i class="icon-lock"></i>
+                            </span>
+                        </label>
+                    </div>
+
+                    <!--
+                    <div class="form-group">
+                        <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                                <input type="password" name="passwordConfirm" class="form-control" placeholder="Repeat password" data-parsley-trigger="blur change" data-parsley-equalto="#signup-box input[name=password]" data-parsley-equalto-message="Password not match" required />
+                                <i class="icon-retweet"></i>
+                            </span>
+                        </label>
+                    </div>
+                    -->
+
+                    <label class="block">
+                        <input type="checkbox" class="ace" name="agree" checked="checked" value="yes" required />
+                        <span class="lbl">
+                            <?=$this->tag->_('I accept the %a_% User Agreement %_a%', array(
+                                'a_' => '<a href="#">',
+                                '_a' => '</a>',
+                            ));?>
+                        </span>
+                    </label>
+
+                    <div class="space-24"></div>
+
+                    <div class="clearfix">
+                        <button type="reset" class="width-30 pull-left btn btn-sm">
+                            <i class="icon-refresh"></i>
+                            <?=$this->tag->_('Reset');?> 
+                        </button>
+
+                        <button type="submit" class="width-65 pull-right btn btn-sm btn-success">
+                            <?=$this->tag->_('Register');?> 
+                            <i class="icon-arrow-right icon-on-right"></i>
+                        </button>
+                        <input type="hidden" name="__redirect" value="/admin/login" />
+                        <input type="hidden" name="__redirect_error" value="/admin/login" />
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="toolbar center">
+            <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
+                <i class="icon-arrow-left"></i>
+                <?=$this->tag->_('Back to login');?> 
+            </a>
+        </div>
+    </div><!-- /widget-body -->
+</div><!-- /signup-box -->
