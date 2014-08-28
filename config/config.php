@@ -16,5 +16,6 @@ return array(
         'resetMailTemplate' => __DIR__ . '/../views/mails/reset.phtml',
         'changeEmailTemplate' => __DIR__ . '/../views/mails/change_email.phtml',
         'cookieTokenExpired' => 500000,
+        'loginCookieDomain' => '',
     ),
 );

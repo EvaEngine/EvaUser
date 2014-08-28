@@ -183,7 +183,13 @@ class Login extends User
 
         $authIdentity = $this->saveUserToStorage($userinfo);
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
-            $this->getDI()->getCookies()->set(Login::LOGIN_COOKIE_KEY, $userinfo->id);
+            $cookieDomain = $this->getDI()->getConfig()->user->loginCookieDomain;
+
+            $cookies = $this->getDI()->getCookies()->set(Login::LOGIN_COOKIE_KEY, $userinfo->id);
+            if ($cookieDomain) {
+                $cookie = $cookies->get(Login::LOGIN_COOKIE_KEY);
+                $cookie->setDomain($cookieDomain);
+            }
         }
 
         $this->getDI()->getEventsManager()->fire('user:afterLogin', $userinfo);

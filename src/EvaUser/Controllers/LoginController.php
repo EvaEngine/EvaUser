@@ -23,12 +23,35 @@ class LoginController extends ControllerBase
             $user = new Login();
             try {
                 $loginUser = $user->loginByPassword($this->request->getPost('identify'), $this->request->getPost('password'));
+                $cookieDomain = $this->getDI()->getConfig()->user->loginCookieDomain;
                 if ($this->request->getPost('remember')) {
                     $token = $user->getRememberMeToken();
                     if ($token) {
-                        $this->cookies->set(Login::LOGIN_COOKIE_REMEMBER_KEY, $token, time() + $user->getRememberMeTokenExpires());
+                        $cookies = $this->cookies->set(Login::LOGIN_COOKIE_REMEMBER_KEY, $token, time() + $user->getRememberMeTokenExpires());
+                        if ($cookieDomain) {
+                            $cookie = $cookies->get(Login::LOGIN_COOKIE_REMEMBER_KEY);
+                            $cookie->setDomain($cookieDomain);
+                        }
                     }
                 }
+
+                if ($cookieDomain) {
+                    $this->getDI()->getEventsManager()->attach(
+                        'application:beforeSendResponse',
+                        function($events, $application) use ($cookieDomain) {
+                            $di = $application->getDI();
+                            $sessionId = $di->getSession()->getId();
+                            setcookie('PHPSESSID', $sessionId, null, null, $cookieDomain);
+                            
+                            /*
+                            $cookies = $di->getCookies();
+                            $cookie = $cookies->set('PHPSESSID', $sessionId);
+                            $cookie->setDomain($cookieDomain);
+                            */
+                        }
+                    );
+                }
+
                 return $this->showResponseAsJson(Login::getCurrentUser());
             } catch (\Exception $e) {
                 return $this->showExceptionAsJson($e, $user->getMessages());
