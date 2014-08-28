@@ -14,7 +14,7 @@ class LoginController extends ControllerBase
             return;
         }
 
-        if ($this->request->isAjax()) {
+        if ($this->request->isAjax() || $this->request->get('ajax')) {
             $form = new Forms\LoginForm();
             if ($form->isValid($this->request->getPost()) === false) {
                 return $this->showInvalidMessagesAsJson($form);
@@ -65,7 +65,7 @@ class LoginController extends ControllerBase
     public function reactiveAction()
     {
         $username = $this->request->get('username');
-        if ($this->request->isAjax()) {
+        if ($this->request->isAjax() || $this->request->get('ajax')) {
             if (!$username) {
                 return $this->showErrorMessageAsJson(400, 'ERR_USER_REACTIVE_NO_USERNAME_INPUT');
             }
