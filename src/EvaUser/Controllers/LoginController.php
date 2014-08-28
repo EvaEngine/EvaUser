@@ -41,17 +41,17 @@ class LoginController extends ControllerBase
                         function($events, $application) use ($cookieDomain) {
                             $di = $application->getDI();
                             $sessionId = $di->getSession()->getId();
-                            setcookie('PHPSESSID', $sessionId, null, null, $cookieDomain);
-                            
-                            /*
-                            $cookies = $di->getCookies();
-                            $cookie = $cookies->set('PHPSESSID', $sessionId);
-                            $cookie->setDomain($cookieDomain);
-                            */
+                            setcookie('PHPSESSID', $sessionId, time() + 3600, '/', $cookieDomain);
                         }
                     );
                 }
 
+                if (!empty($_SERVER['HTTP_ORIGIN'])) {
+                    $this->response->setHeader('Access-Control-Allow-Credentials', 'true');
+                    $this->response->setHeader('Access-Control-Allow-Origin', $_SERVER['HTTP_ORIGIN']);
+                    $this->response->setHeader('Access-Control-Allow-Methods', 'POST');
+                    $this->response->setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+                }
                 return $this->showResponseAsJson(Login::getCurrentUser());
             } catch (\Exception $e) {
                 return $this->showExceptionAsJson($e, $user->getMessages());
