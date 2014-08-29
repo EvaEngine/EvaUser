@@ -40,8 +40,8 @@
                             <i class="icon-key"></i>
                             <?=$this->tag->_('Login');?> 
                         </button>
-                        <input type="hidden" name="__redirect" value="/admin/dashboard" />
-                        <input type="hidden" name="__redirect_error" value="/admin/login" />
+                        <input type="hidden" name="__redirect" value="<?=$this->url->get('/admin/dashboard')?>" />
+                        <input type="hidden" name="__redirect_error" value="<?=$this->url->get('/admin/login')?>" />
                     </div>
 
                     <div class="space-4"></div>
@@ -53,7 +53,7 @@
 
             </div>
 
-            <div class="social-login center">
+            <div class="social-login center hide">
                 <p>
                 <a class="" href="/auth/request/tencent/oauth2">
                     <img src="http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/bt_blue_76X24.png" alt="QQ" />
@@ -133,7 +133,7 @@
                             <i class="icon-lightbulb"></i>
                             <?=$this->tag->_('Send Me');?> 
                         </button>
-                        <input type="hidden" name="__redirect" value="/admin/login" />
+                        <input type="hidden" name="__redirect" value="<?=$this->url->get('/admin/login');?>" />
                     </div>
                 </fieldset>
             </form>
@@ -231,8 +231,8 @@
                             <?=$this->tag->_('Register');?> 
                             <i class="icon-arrow-right icon-on-right"></i>
                         </button>
-                        <input type="hidden" name="__redirect" value="/admin/login" />
-                        <input type="hidden" name="__redirect_error" value="/admin/login" />
+                        <input type="hidden" name="__redirect" value="<?=$this->url->get('/admin/login');?>" />
+                        <input type="hidden" name="__redirect_error" value="<?=$this->url->get('/admin/login');?>" />
                     </div>
                 </fieldset>
             </form>
