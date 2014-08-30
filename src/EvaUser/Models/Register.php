@@ -56,20 +56,24 @@ class Register extends User
         return $userinfo;
     }
 
-    public function sendVerificationEmail($username, $forceSend = false)
+    public function sendVerificationEmail($identify, $forceSend = false)
     {
         if (false === $forceSend && $this->getDI()->getConfig()->mailer->async) {
             $queue = $this->getDI()->getQueue();
             $result = $queue->doBackground('sendmailAsync', json_encode(array(
                 'class' => __CLASS__,
                 'method' => __FUNCTION__,
-                'parameters' => array($username, true)
+                'parameters' => array($identify, true)
             )));
 
             return true;
         }
 
-        $userinfo = self::findFirst("username = '$username'");
+        if (false === strpos($identify, '@')) {
+            $userinfo = self::findFirst("username = '$identify'");
+        } else {
+            $userinfo = self::findFirst("email = '$identify'");
+        }
         if (!$userinfo) {
             throw new Exception\ResourceNotFoundException('ERR_USER_NOT_EXIST');
         }

@@ -31,7 +31,7 @@ class SessionController extends ControllerBase
             return;
         }
 
-        $email = $this->request->getPost('email');
+        $email = $this->request->getPost('identify');
         if ($this->request->isAjax()) {
             if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 return $this->showErrorMessageAsJson(401, 'ERR_EMAIL_FORMAT_NOT_CORRECT');

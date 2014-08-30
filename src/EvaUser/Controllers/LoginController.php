@@ -87,26 +87,26 @@ class LoginController extends ControllerBase
 
     public function reactiveAction()
     {
-        $username = $this->request->get('username');
+        $identify = $this->request->get('identify');
         if ($this->request->isAjax() || $this->request->get('ajax')) {
-            if (!$username) {
+            if (!$identify) {
                 return $this->showErrorMessageAsJson(400, 'ERR_USER_REACTIVE_NO_USERNAME_INPUT');
             }
             $user = new Models\Register();
             try {
-                $user->sendVerificationEmail($username);
+                $user->sendVerificationEmail($identify);
                 return $this->showResponseAsJson('SUCCESS_USER_ACTIVE_MAIL_SENT');
             } catch (\Exception $e) {
                 return $this->showExceptionAsJson($e, $user->getMessages());
             }
 
         } else {
-            if (!$username) {
+            if (!$identify) {
                 return $this->redirectHandler($this->getDI()->getConfig()->user->resetFailedRedirectUri);
             }
             $user = new Models\Register();
             try {
-                $user->sendVerificationEmail($username);
+                $user->sendVerificationEmail($identify);
                 $this->flashSession->success('SUCCESS_USER_ACTIVE_MAIL_SENT');
                 return $this->redirectHandler($this->getDI()->getConfig()->user->resetSuccessRedirectUri);
             } catch (\Exception $e) {
