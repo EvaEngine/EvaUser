@@ -69,6 +69,7 @@ class Register extends User
             return true;
         }
 
+        $userinfo = array();
         if (false === strpos($identify, '@')) {
             $userinfo = self::findFirst("username = '$identify'");
         } else {
