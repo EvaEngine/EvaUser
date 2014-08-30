@@ -24,14 +24,10 @@ class RegisterController extends ControllerBase
                 'email' => $this->request->getPost('email'),
                 'password' => $this->request->getPost('password'),
             ));
-            $transaction = $this->getDI()->getTransactions()->get();
             try {
-                $transaction->begin();
                 $registerUser = $user->register();
-                $transaction->commit();
                 return $this->showResponseAsJson($registerUser);
             } catch (\Exception $e) {
-                $transaction->rollback();
                 return $this->showExceptionAsJson($e, $user->getMessages());
             }
         } else {

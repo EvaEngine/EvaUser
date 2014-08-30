@@ -46,14 +46,10 @@ class Register extends User
             throw new Exception\RuntimeException('ERR_USER_CREATE_FAILED');
         }
 
-        $userinfo = self::findFirst("username = '$this->username'");
-        if (!$userinfo) {
-            throw new Exception\RuntimeException('ERR_USER_CREATE_FAILED');
-        }
-        $this->sendVerificationEmail($userinfo->username);
+        $this->sendVerificationEmail($this->username);
 
         $this->getDI()->getEventsManager()->fire('user:afterRegister', $this);
-        return $userinfo;
+        return $this;
     }
 
     public function sendVerificationEmail($identify, $forceSend = false)
