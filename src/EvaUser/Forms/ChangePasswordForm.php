@@ -15,15 +15,6 @@ class ChangePasswordForm extends Form
         // Password
         $password = new Password('password');
         $password->setLabel('Old Password');
-        $password->addValidators(array(
-            new PresenceOf(array(
-                'message' => 'The password is required'
-            )),
-            new StringLength(array(
-                'min' => 6,
-                'messageMinimum' => 'Password is too short. Minimum 6 characters'
-            )),
-        ));
         $this->add($password);
 
 
