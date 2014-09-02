@@ -228,6 +228,11 @@ class Users extends \Eva\EvaEngine\Mvc\Model
         return 'http://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email)));
     }
 
+    public function getName()
+    {
+        return $this->screenName ?: $this->username;
+    }
+
     public function initialize()
     {
         $this->hasOne(
