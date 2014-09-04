@@ -14,8 +14,29 @@ use Phalcon\Validation\Validator\StringLength;
 use Phalcon\Validation\Validator\Confirmation;
 use Phalcon\Validation\Validator\Regex;
 
+/**
+ * @package
+ * @category
+ * @subpackage
+ *
+ * @SWG\Model(id="RegisterForm")
+ */
 class RegisterForm extends Form
 {
+    /**
+    * @SWG\Property(name="username",type="string",description="Username, allow alphanumeric and underline")
+     */
+    public $username;
+
+    /**
+     * @SWG\Property(name="email",type="string",description="Email")
+     */
+    public $email;
+
+    /**
+     * @SWG\Property(name="password",type="string",description="Password of the user")
+     */
+    public $password;
 
     public function initialize($entity = null, $options = null)
     {

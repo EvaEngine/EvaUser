@@ -7,8 +7,28 @@ use Phalcon\Forms\Element\Password;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
 
+/**
+ * @package
+ * @category
+ * @subpackage
+ *
+ * @SWG\Model(id="LoginForm")
+ */
 class LoginForm extends Form
 {
+    /**
+     * @SWG\Property(
+     *   name="identify",
+     *   type="string",
+     *   description="User name or email"
+     * )
+     */
+    public $identify;
+
+    /**
+     * @SWG\Property(name="password",type="string",description="Password of the user")
+     */
+    public $password;
 
     public function initialize($entity = null, $options = null)
     {

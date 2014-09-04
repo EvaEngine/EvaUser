@@ -7,8 +7,24 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\StringLength;
 use Phalcon\Validation\Validator\Confirmation;
 
+/**
+ * @package
+ * @category
+ * @subpackage
+ *
+ * @SWG\Model(id="ResetPasswordForm")
+ */
 class ResetPasswordForm extends Form
 {
+
+    /**
+     * @SWG\Property(
+     *   name="identify",
+     *   type="string",
+     *   description="User name or email"
+     * )
+     */
+    public $identify;
 
     public function initialize($entity = null, $options = null)
     {
