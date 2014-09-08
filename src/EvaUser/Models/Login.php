@@ -267,12 +267,14 @@ class Login extends User
         }
 
         $token = new Entities\Tokens();
-        $token->assign(array(
-            'sessionId' => $tokenArray[0],
-            'token' => $tokenArray[1],
-            'userHash' => $tokenArray[2],
+        $tokenInfo = $token::findFirst(array(
+            "conditions" => "sessionId = :sessionId: AND token = :token: AND userHash = :userHash:",
+            "bind"       => array(
+                'sessionId' => $tokenArray[0],
+                'token' => $tokenArray[1],
+                'userHash' => $tokenArray[2],
+            )
         ));
-        $tokenInfo = $token::findFirst();
         if (!$tokenInfo) {
             $this->appendMessage(new Message('ERR_USER_REMEMBER_TOKEN_NOT_FOUND'));
             return false;
@@ -283,9 +285,17 @@ class Login extends User
             return false;
         }
 
+        $userinfo = User::findFirst($tokenInfo->userId);
+        $rememberMeHash = $this->getRememberMeHash($userinfo);
+        //User changed status or password
+        if ($rememberMeHash != $tokenInfo->userHash) {
+            $this->appendMessage(new Message('ERR_USER_REMEMBER_TOKEN_ILLEGAL'));
+            return false;
+        }
         $login = new Login();
         $login->id = $tokenInfo->userId;
-        return $login->login();
+        $userinfo = $login->login();
+        return $userinfo;
     }
 
     public function getAuthIdentity()
