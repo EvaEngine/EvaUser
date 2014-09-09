@@ -56,7 +56,7 @@ class Login extends User
         $storage = Login::getAuthStorage();
         $currentUser = $storage->get(Login::AUTH_KEY_LOGIN);
         if ($currentUser) {
-            return $currentUser;
+            return (array) $currentUser;
         }
         return array(
             'id' => 0,
@@ -170,7 +170,7 @@ class Login extends User
             $userinfo = self::findFirst("id = '$this->id'");
         }
         if (!$userinfo) {
-            throw new Exception\ResourceNotFoundException('ERR_USER_NOT_EXIST');
+            throw new Exception\UnauthorizedException('ERR_USER_NOT_EXIST');
         }
 
         if ($userinfo->status != 'active') {
