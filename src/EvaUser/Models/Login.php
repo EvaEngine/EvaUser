@@ -45,7 +45,7 @@ class Login extends User
     public static function getAuthStorage()
     {
         $di = DI::getDefault();
-        if (Login::getLoginMode() == 'session') {
+        if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
             return $di->getSession();
         }
         return $di->getTokenStorage();
