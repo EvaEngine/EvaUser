@@ -88,12 +88,11 @@ class UserManager extends User
         );
 
         if (!empty($query['username'])) {
-            $itemQuery->andWhere('username = :username:', array('username' => trim($query['username'])));
+            $itemQuery->andWhere('username LIKE :username:', array('username' => "%{$query['username']}%"));
         }
         if (!empty($query['email'])) {
             $itemQuery->andWhere('email = :email:', array('email' => trim($query['email'])));
         }
-
         if (!empty($query['status'])) {
             $itemQuery->andWhere('status = :status:', array('status' => $query['status']));
         }
