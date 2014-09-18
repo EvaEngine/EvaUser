@@ -46,6 +46,13 @@ class FilterForm extends Form
     public $username;
 
     /**
+     * 用户名完全匹配
+     *
+     * @var string
+     */
+    public $usernameClearly;
+
+    /**
      *
      * @var string
      */

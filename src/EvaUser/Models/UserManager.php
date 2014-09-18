@@ -90,6 +90,9 @@ class UserManager extends User
         if (!empty($query['username'])) {
             $itemQuery->andWhere('username LIKE :username:', array('username' => "%{$query['username']}%"));
         }
+        if (!empty($query['usernameClearly'])) {
+            $itemQuery->andWhere('username = :username:', array('username' => $query['usernameClearly']));
+        }
         if (!empty($query['email'])) {
             $itemQuery->andWhere('email = :email:', array('email' => trim($query['email'])));
         }

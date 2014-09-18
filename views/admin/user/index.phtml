@@ -57,6 +57,16 @@
                                 ))?>
                             </div>
                             <div class="form-group">
+                                <?=$form->render('usernameClearly', array(
+                                        'placeholder' => 'Username clearly',
+                                        'class' => 'form-control input-sm autocomplete',
+                                        'data-autocomplete-source' => '/admin/user/process/suggestions?query=%QUERY',
+                                        'data-autocomplete-target' => 'input[name=uid]',
+                                        'data-autocomplete-fill-name' => 'id',
+                                        'data-autocomplete-display-key' => 'username',
+                                    ))?>
+                            </div>
+                            <div class="form-group">
                                 <?=$form->render('email', array(
                                         'placeholder' => 'email',
                                         'class' => 'form-control input-sm'
