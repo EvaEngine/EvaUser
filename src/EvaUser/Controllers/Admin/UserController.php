@@ -7,30 +7,31 @@ use Eva\EvaUser\Models;
 use Eva\EvaEngine\Mvc\Controller\SessionAuthorityControllerInterface;
 
 /**
-* @resourceName("User Managment")
-* @resourceDescription("User Managment")
-*/
+ * @resourceName("User Managment")
+ * @resourceDescription("User Managment")
+ */
 class UserController extends AdminControllerBase implements SessionAuthorityControllerInterface
 {
 
     /**
-    * @operationName("User List")
-    * @operationDescription("Get user list")
-    */
+     * @operationName("User List")
+     * @operationDescription("Get user list")
+     */
     public function indexAction()
     {
         $limit = $this->request->getQuery('per_page', 'int', 25);
         $limit = $limit > 100 ? 100 : $limit;
         $limit = $limit < 10 ? 10 : $limit;
         $query = array(
-           //'q' => $this->request->getQuery('q', 'string'),
-           'status' => $this->request->getQuery('status', 'string'),
-           'uid' => $this->request->getQuery('uid', 'int'),
-           'cid' => $this->request->getQuery('cid', 'int'),
-           'username' => $this->request->getQuery('username', 'string'),
-           'order' => $this->request->getQuery('order', 'string'),
-           'limit' => $limit,
-           'page' => $this->request->getQuery('page', 'int', 1),
+            //'q' => $this->request->getQuery('q', 'string'),
+            'status' => $this->request->getQuery('status', 'string'),
+            'uid' => $this->request->getQuery('uid', 'int'),
+            'cid' => $this->request->getQuery('cid', 'int'),
+            'username' => $this->request->getQuery('username', 'string'),
+            'email' => $this->request->getQuery('email', 'string'),
+            'order' => $this->request->getQuery('order', 'string'),
+            'limit' => $limit,
+            'page' => $this->request->getQuery('page', 'int', 1),
         );
         $form = new Forms\FilterForm();
         $form->setValues($this->request->getQuery());
@@ -38,9 +39,9 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
         $user = new Models\UserManager();
         $users = $user->findUsers($query);
         $paginator = new \Eva\EvaEngine\Paginator(array(
-           "builder" => $users,
-           "limit"=> $limit,
-           "page" => $query['page']
+            "builder" => $users,
+            "limit" => $limit,
+            "page" => $query['page']
         ));
         $paginator->setQuery($query);
         $pager = $paginator->getPaginate();
@@ -48,9 +49,9 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
     }
 
     /**
-    * @operationName("Create User")
-    * @operationDescription("Create User")
-    */
+     * @operationName("Create User")
+     * @operationDescription("Create User")
+     */
     public function createAction()
     {
         $user = new Models\UserManager();
@@ -80,9 +81,9 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
     }
 
     /**
-    * @operationName("Edit User")
-    * @operationDescription("Edit User")
-    */
+     * @operationName("Edit User")
+     * @operationDescription("Edit User")
+     */
     public function editAction()
     {
         $this->view->changeRender('admin/user/create');

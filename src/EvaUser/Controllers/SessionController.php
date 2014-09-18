@@ -37,13 +37,20 @@ class SessionController extends ControllerBase
                 return $this->showErrorMessageAsJson(401, 'ERR_EMAIL_FORMAT_NOT_CORRECT');
             }
             $user = new Models\ResetPassword();
-            $user->assign(array(
-                'email' => $email,
-            ));
+            $user->assign(
+                array(
+                    'email' => $email,
+                )
+            );
             try {
                 $user->requestResetPassword();
                 return $this->showResponseAsJson('SUCCESS_USER_RESET_MAIL_SENT');
             } catch (\Exception $e) {
+                // 邮箱未激活，直接发送验证邮件
+                if ($e->getCode() == 1000) {
+                   $registerUser = new Models\Register();
+                   $registerUser->sendVerificationEmail($email);
+                }
                 return $this->showExceptionAsJson($e, $user->getMessages());
             }
         } else {
@@ -51,9 +58,11 @@ class SessionController extends ControllerBase
                 return $this->redirectHandler($this->getDI()->getConfig()->user->resetFailedRedirectUri);
             }
             $user = new Models\ResetPassword();
-            $user->assign(array(
-                'email' => $email,
-            ));
+            $user->assign(
+                array(
+                    'email' => $email,
+                )
+            );
             try {
                 $user->requestResetPassword();
                 $this->flashSession->success('SUCCESS_USER_RESET_MAIL_SENT');
@@ -87,10 +96,12 @@ class SessionController extends ControllerBase
             return $this->redirectHandler($this->getDI()->getConfig()->user->resetFailedRedirectUri);
         }
 
-        $user->assign(array(
-            'username' => $username,
-            'password' => $this->request->getPost('password'),
-        ));
+        $user->assign(
+            array(
+                'username' => $username,
+                'password' => $this->request->getPost('password'),
+            )
+        );
         try {
             $user->resetPassword();
             $this->flashSession->success('SUCCESS_USER_PASSWORD_RESET');

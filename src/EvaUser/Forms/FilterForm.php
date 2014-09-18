@@ -45,6 +45,12 @@ class FilterForm extends Form
     */
     public $username;
 
+    /**
+     *
+     * @var string
+     */
+    public $email;
+
     public function initialize($entity = null, $options = null)
     {
         $this->initializeFormAnnotations();
