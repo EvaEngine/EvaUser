@@ -86,15 +86,26 @@ class UserManager extends User
             'username' => 'username ASC',
             '-username' => 'username DESC',
         );
-
         if (!empty($query['username'])) {
             $itemQuery->andWhere('username LIKE :username:', array('username' => "%{$query['username']}%"));
+            // 按匹配度排序
+            if (empty($query['order'])) {
+                $backendOrder = "REPLACE(username,'{$query['username']}','')";
+            }
         }
         if (!empty($query['usernameClearly'])) {
             $itemQuery->andWhere('username = :username:', array('username' => $query['usernameClearly']));
         }
         if (!empty($query['email'])) {
             $itemQuery->andWhere('email = :email:', array('email' => trim($query['email'])));
+        }
+        if (!empty($query['screenName'])) {
+            $screenName = trim($query['screenName']);
+            $itemQuery->andWhere('screenName LIKE :screenName:', array('screenName' => "%{$screenName}%"));
+            // 按匹配度排序
+            if (empty($query['order'])) {
+                $backendOrder = "REPLACE(screenName,'{$screenName}','')";
+            }
         }
         if (!empty($query['status'])) {
             $itemQuery->andWhere('status = :status:', array('status' => $query['status']));
@@ -107,6 +118,9 @@ class UserManager extends User
         $order = 'id DESC';
         if (!empty($query['order'])) {
             $order = empty($orderMapping[$query['order']]) ? $order : $orderMapping[$query['order']];
+        // 后端指定的排序
+        } elseif (!empty($backendOrder)) {
+            $order = $backendOrder;
         }
         $itemQuery->orderBy($order);
 
