@@ -85,6 +85,8 @@ class UserManager extends User
             '-created_at' => 'createdAt DESC',
             'username' => 'username ASC',
             '-username' => 'username DESC',
+            'last_login' => 'loginAt ASC',
+            '-last_login' => 'loginAt DESC',
         );
         if (!empty($query['username'])) {
             $itemQuery->andWhere('username LIKE :username:', array('username' => "%{$query['username']}%"));
