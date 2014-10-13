@@ -20,19 +20,19 @@ class User extends Entities\Users
 
     public function beforeSave()
     {
-        if ($this->getDI()->getRequest()->hasFiles()) {
-            $upload = new UploadModel();
-            $files = $this->getDI()->getRequest()->getUploadedFiles();
-            if (!$files) {
-                return;
-            }
-            $file = $files[0];
-            $file = $upload->upload($file);
-            if ($file) {
-                $this->avatarId = $file->id;
-                $this->avatar = $file->getFullUrl();
-            }
-        }
+//        if ($this->getDI()->getRequest()->hasFiles()) {
+//            $upload = new UploadModel();
+//            $files = $this->getDI()->getRequest()->getUploadedFiles();
+//            if (!$files) {
+//                return;
+//            }
+//            $file = $files[0];
+//            $file = $upload->upload($file);
+//            if ($file) {
+//                $this->avatarId = $file->id;
+//                $this->avatar = $file->getFullUrl();
+//            }
+//        }
     }
 
     public function changePassword($oldPassword, $newPassword)

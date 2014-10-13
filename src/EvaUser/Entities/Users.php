@@ -225,6 +225,9 @@ class Users extends \Eva\EvaEngine\Mvc\Model
 
     public function getAvatar()
     {
+        if ($this->avatar) {
+            return $this->avatar;
+        }
         return 'http://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email)));
     }
 
