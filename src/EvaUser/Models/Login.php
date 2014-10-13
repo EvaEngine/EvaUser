@@ -24,6 +24,8 @@ class Login extends User
     const LOGIN_MODE_SESSION = 'session';
     const LOGIN_MODE_TOKEN = 'token';
 
+    const INFO_KEY_BADGE = 'badges';
+
     private $rememberMeTokenSalt = 'EvaUser_Login_TokenSalt';
 
     protected $rememberMeTokenExpires = 5184000; //60 days
@@ -42,6 +44,34 @@ class Login extends User
         return Login::$loginMode;
     }
 
+    /**
+     * @param string        $key
+     * @param string|int    $num    徽标数字，a 为不显示数字
+     */
+    public static function addBadge($key, $num = 'a')
+    {
+        /** @var \Phalcon\Session\AdapterInterface $storage */
+        $storage = self::getAuthStorage();
+        $badges = $storage->get(self::INFO_KEY_BADGE);
+        $badges[$key] = $num;
+        $storage->set(self::INFO_KEY_BADGE, $badges);
+    }
+
+    public static function removeBadge($key)
+    {
+        /** @var \Phalcon\Session\AdapterInterface $storage */
+        $storage = self::getAuthStorage();
+        $badges = $storage->get(self::INFO_KEY_BADGE);
+        if (isset($badges[$key])) {
+            unset($badges[$key]);
+        }
+        if (!$badges) {
+            $storage->remove(self::INFO_KEY_BADGE);
+        } else {
+            $storage->set(self::INFO_KEY_BADGE, $badges);
+        }
+    }
+
     public static function getAuthStorage()
     {
         $di = DI::getDefault();
@@ -56,7 +86,9 @@ class Login extends User
         $storage = Login::getAuthStorage();
         $currentUser = $storage->get(Login::AUTH_KEY_LOGIN);
         if ($currentUser) {
-            return (array) $currentUser;
+            $currentUser =  (array)$currentUser;
+            $currentUser['badges'] = $storage->get(self::INFO_KEY_BADGE);
+            return $currentUser;
         }
         return array(
             'id' => 0,
@@ -93,7 +125,7 @@ class Login extends User
     public function getRememberMeHash(Entities\Users $userinfo)
     {
         //If user password or status changed, all user token will be unavailable
-        return md5($this->tokenSalt . $userinfo->status .  $userinfo->password);
+        return md5($this->tokenSalt . $userinfo->status . $userinfo->password);
     }
 
     public function getRememberMeToken()
@@ -144,19 +176,19 @@ class Login extends User
             'username' => $userinfo->username,
             'status' => $userinfo->status,
             'email' => $userinfo->email,
-            'avatar' => $userinfo->getAvatar(), 
+            'avatar' => $userinfo->getAvatar(),
         );
     }
 
     /**
-    * System login
-    * 1. Check user exsits
-    * 2. Clear user login failde counter
-    * 3. Update user last login time
-    * 4. Save user info to Session
-    *
-    * @return Login
-    */
+     * System login
+     * 1. Check user exsits
+     * 2. Clear user login failde counter
+     * 3. Update user last login time
+     * 4. Save user info to Session
+     *
+     * @return Login
+     */
     public function login()
     {
         $this->getDI()->getEventsManager()->fire('user:beforeLogin', $this);
@@ -197,12 +229,12 @@ class Login extends User
     }
 
     /**
-    * Login by Password
-    *
-    * @param $identify  username or email
-    * @param $password  user password
-    * @return Login
-    */
+     * Login by Password
+     *
+     * @param $identify  username or email
+     * @param $password  user password
+     * @return Login
+     */
     public function loginByPassword($identify, $password)
     {
         if (false === strpos($identify, '@')) {
@@ -236,7 +268,8 @@ class Login extends User
             throw new Exception\RuntimeException('ERR_USER_PASSWORD_WRONG_MAX_TIMES');
         }
 
-        $this->getDI()->getEventsManager()->fire('user:beforeVerifyPassword', array('user'=>$this, 'userInDB'=>$userinfo));
+        $this->getDI()->getEventsManager()->fire('user:beforeVerifyPassword',
+            array('user' => $this, 'userInDB' => $userinfo));
         if (!$userinfo->password) {
             throw new Exception\RuntimeException('ERR_USER_PASSWORD_EMPTY');
         }
@@ -244,12 +277,13 @@ class Login extends User
         // check if hash of provided password matches the hash in the database
         if (!self::passwordVerify($this->password, $userinfo->password)) {
             //MUST be string type here
-            $userinfo->failedLogins = (string) ($userinfo->failedLogins + 1);
+            $userinfo->failedLogins = (string)($userinfo->failedLogins + 1);
             $userinfo->loginFailedAt = time();
             $userinfo->save();
             throw new Exception\VerifyFailedException('ERR_USER_PASSWORD_WRONG');
         }
-        $this->getDI()->getEventsManager()->fire('user:afterVerifyPassword', array('user'=>$this, 'userInDB'=>$userinfo));
+        $this->getDI()->getEventsManager()->fire('user:afterVerifyPassword',
+            array('user' => $this, 'userInDB' => $userinfo));
 
         $login = new Login();
         $login->id = $userinfo->id;
@@ -269,7 +303,7 @@ class Login extends User
         $token = new Entities\Tokens();
         $tokenInfo = $token::findFirst(array(
             "conditions" => "sessionId = :sessionId: AND token = :token: AND userHash = :userHash:",
-            "bind"       => array(
+            "bind" => array(
                 'sessionId' => $tokenArray[0],
                 'token' => $tokenArray[1],
                 'userHash' => $tokenArray[2],
