@@ -45,14 +45,19 @@ class Login extends User
     }
 
     /**
-     * @param string        $key
-     * @param string|int    $num    徽标数字，a 为不显示数字
+     * @param string $key
+     * @param string|int $num 徽标数字，a 为不显示数字
      */
     public static function addBadge($key, $num = 'a')
     {
         /** @var \Phalcon\Session\AdapterInterface $storage */
         $storage = self::getAuthStorage();
         $badges = $storage->get(self::INFO_KEY_BADGE);
+        if (is_null($badges)) {
+            $badges = array();
+        } else {
+            $badges = (array)$badges;
+        }
         $badges[$key] = $num;
         $storage->set(self::INFO_KEY_BADGE, $badges);
     }
@@ -86,7 +91,7 @@ class Login extends User
         $storage = Login::getAuthStorage();
         $currentUser = $storage->get(Login::AUTH_KEY_LOGIN);
         if ($currentUser) {
-            $currentUser =  (array)$currentUser;
+            $currentUser = (array)$currentUser;
             $currentUser['badges'] = $storage->get(self::INFO_KEY_BADGE);
             return $currentUser;
         }
