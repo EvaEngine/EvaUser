@@ -58,11 +58,16 @@ class RegisterController extends ControllerBase
     {
         $username = $this->request->get('username');
         $email = $this->request->get('email');
-
+        $loginedUser = Models\Login::getCurrentUser();
+        $extraCondition = '';
+        // 已登录用户表示当前为修改用户名，允许与当前用户名相同
+        if ($loginedUser['id'] > 0) {
+            $extraCondition .= ' AND id != ' . $loginedUser['id'];
+        }
         if ($username) {
-            $userinfo = Models\Login::findFirst(array("username = '$username'"));
+            $userinfo = Models\Login::findFirst(array("username = '$username' {$extraCondition}"));
         } elseif ($email) {
-            $userinfo = Models\Login::findFirst(array("email = '$email'"));
+            $userinfo = Models\Login::findFirst(array("email = '$email' {$extraCondition}"));
         } else {
             $userinfo = array();
         }
