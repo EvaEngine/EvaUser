@@ -14,6 +14,7 @@ class User extends Entities\Users
         'email',
         'status',
         'emailStatus',
+        'screenName',
         'avatar' => 'getAvatar',
         'roles' => 'getRoles',
     );
