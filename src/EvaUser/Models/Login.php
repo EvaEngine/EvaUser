@@ -76,7 +76,12 @@ class Login extends User
             $storage->set(self::INFO_KEY_BADGE, $badges);
         }
     }
-
+    public static function removeBadges()
+    {
+        /** @var \Phalcon\Session\AdapterInterface $storage */
+        $storage = self::getAuthStorage();
+        $storage->remove(self::INFO_KEY_BADGE);
+    }
     public static function getAuthStorage()
     {
         $di = DI::getDefault();
