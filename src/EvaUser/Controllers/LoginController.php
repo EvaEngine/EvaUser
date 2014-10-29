@@ -24,7 +24,7 @@ class LoginController extends ControllerBase
             try {
                 $loginUser = $user->loginByPassword($this->request->getPost('identify'), $this->request->getPost('password'));
                 $cookieDomain = $this->getDI()->getConfig()->user->loginCookieDomain;
-                if ($this->request->getPost('remember')) {
+                if ($loginUser->id && $this->request->getPost('remember')) {
                     $token = $user->getRememberMeToken();
                     if ($token) {
                         $cookies = $this->cookies->set(Login::LOGIN_COOKIE_REMEMBER_KEY, $token, time() + $user->getRememberMeTokenExpires());
@@ -35,7 +35,7 @@ class LoginController extends ControllerBase
                     }
                 }
 
-                if ($cookieDomain) {
+                if ($loginUser->id && $cookieDomain) {
                     $this->getDI()->getEventsManager()->attach(
                         'application:beforeSendResponse',
                         function($events, $application) use ($cookieDomain) {
