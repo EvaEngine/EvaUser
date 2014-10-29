@@ -23,7 +23,7 @@ class ProcessController extends ControllerBase implements JsonControllerInterfac
         if ($query) {
             $users = Models\UserManager::find(array(
                 "columns" => array('id', 'username', 'status'),
-                "conditions" => "username like '%$query%'",
+                "conditions" => "username = '$query'",
                 "limit" => 10,
             ));
             $users = $users ? $users->toArray() : array();
