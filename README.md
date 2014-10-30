@@ -50,25 +50,59 @@ $loginUser->loginByPassword('username/email', 'password');
 ```
 
 
+### 基于Cookie登录 
 
-----
-
-Login by Cookie Token
-
-Cookie Token string looks like: `session_id|random_token|user_hash`
-
-`random_token` be created when Cookie Token generated.
-
-`user_hash` algorithm actually is `md5($salt . $user->status . $user->password)`, so if user change password or changed status(like be blocked), cookie token will be expired automatically.
-
+产生Cookie String
 
 ``` php
-$loginUser = new Login();
-$loginUser->loginByCookie('cookie token string');
+$user = new Login();
+$loginUser = $user->loginByPassword('username', 'password');
+//获得Token String并存入数据库user_tokens表
+$token = $user->getRememberMeToken();
+//将Token String存入Cookie
+$cookies = $this->cookies->set(Login::LOGIN_COOKIE_REMEMBER_KEY, $token, time() + $user->getRememberMeTokenExpires());
 ```
 
-----
-Login by Third part token
+Cookie String的构成为 `session_id|random_token|user_hash`，其中
+- session_id 获得方法：`$this->getDI()->getSession()->getId()`  目的是允许复数个Session登录，并且便于管理
+- token      `md5(uniqid(rand(), true))`  防止碰撞
+- user_hash  `md5($this->tokenSalt . $userinfo->status . $userinfo->password)`  
+
+用户登录成功并勾选“记住密码”后，将Cookie String存入Cookie，最后cookie string形如：
+
+```
+realm:hnmijl3c50a75704o0v4lvb432%7C46b62e13fd4ca872c252b8585226e473%7C9fd6b849d330b3aba1f73c6153feee88;
+```
+
+PHPSESSID随session过期而过期，realm则设置一个非常长的过期时间。
+
+#### 重新登录过程：
+
+在所有页面监听`Dispatch:afterExecuteRoute`事件，处理流程如下：
+
+- 如果没有realm，不做处理
+- 如果用户已经登录，不做处理
+- 否则通过realm登录
+
+登录过程：
+
+```
+$login = new Login();
+$login->loginByCookie($cookie->get(Login::LOGIN_COOKIE_REMEMBER_KEY));
+```
+
+登录细节：
+
+1. 使用|将Cookie String分割
+2. 使用分割后的字符作为条件查询user_tokens表
+3. 将Cookie String中的user_hash与当前数据表中用户实际的user_hash进行对比，如果不一致则不进行登录，代表用户状态或者密码发生改变，此时自动登录强制失效
+4. 使用数据库中的userid自动登录
+5. 更新数据库中SessionID为当前用户SessionID（没有做）
+
+参考资料
+
+http://jaspan.com/improved_persistent_login_cookie_best_practice
+
 
 ### Register
 
