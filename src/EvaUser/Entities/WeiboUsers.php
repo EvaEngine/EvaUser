@@ -4,7 +4,7 @@ namespace Eva\EvaUser\Entities;
 
 class WeiboUsers extends \Eva\EvaEngine\Mvc\Model
 {
-    protected $tableName = 'weibo_user';
+    protected $tableName = 'weibo_users';
     /**
      *
      * @var integer
