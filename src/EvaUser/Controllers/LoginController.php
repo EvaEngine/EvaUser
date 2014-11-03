@@ -35,17 +35,6 @@ class LoginController extends ControllerBase
                     }
                 }
 
-                if ($loginUser->id && $cookieDomain) {
-                    $this->getDI()->getEventsManager()->attach(
-                        'application:beforeSendResponse',
-                        function($events, $application) use ($cookieDomain) {
-                            $di = $application->getDI();
-                            $sessionId = $di->getSession()->getId();
-                            setcookie('PHPSESSID', $sessionId, time() + 3600, '/', $cookieDomain);
-                        }
-                    );
-                }
-
                 if (!empty($_SERVER['HTTP_ORIGIN'])) {
                     $this->response->setHeader('Access-Control-Allow-Credentials', 'true');
                     $this->response->setHeader('Access-Control-Allow-Origin', $_SERVER['HTTP_ORIGIN']);
