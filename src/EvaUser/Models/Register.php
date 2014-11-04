@@ -75,6 +75,11 @@ class Register extends User
             throw new Exception\ResourceNotFoundException('ERR_USER_NOT_EXIST');
         }
 
+        if (!$userinfo->activationHash) {
+            $userinfo->activationHash = sha1(uniqid(mt_rand(), true));
+            $userinfo->save(); 
+        }
+
         $mailer = $this->getDI()->getMailer();
         $message = $this->getDI()->getMailMessage();
         $message->setTo(array(
@@ -87,9 +92,7 @@ class Register extends User
             'user' => $userinfo->toArray(),
             'url' => $message->toSystemUrl('/session/verify/' . urlencode($userinfo->username) . '/' . $userinfo->activationHash)
         ));
-
         $mailer->send($message->getMessage());
-
         return true;
     }
 
