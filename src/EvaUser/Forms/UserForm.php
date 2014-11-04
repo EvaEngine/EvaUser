@@ -3,6 +3,12 @@ namespace Eva\EvaUser\Forms;
 
 use Eva\EvaEngine\Form;
 
+/**
+ * Class UserForm
+ * @package Eva\EvaUser\Forms
+ *
+ * @SWG\Model(id="UserForm")
+ */
 class UserForm extends Form
 {
     /**
@@ -57,14 +63,16 @@ class UserForm extends Form
     public $screenName;
 
     /**
-     *
+     * 名（first name）
      * @var string
+     * @SWG\Property
      */
     public $firstName;
 
     /**
-     *
+     * 姓（last name）
      * @var string
+     * @SWG\Property
      */
     public $lastName;
 
@@ -82,8 +90,9 @@ class UserForm extends Form
     public $oldPassword;
 
     /**
-     *
+     * 性别, enum('male', 'female', 'other')
      * @var string
+     * @SWG\Property
      */
     public $gender;
 
@@ -177,6 +186,13 @@ class UserForm extends Form
      */
     public $providerType;
 
+    /**
+     *
+     * 用户详细资料
+     * @var ProfileForm
+     * @SWG\Property
+     */
+    private $profile;
     public function initialize($entity = null, $options = null)
     {
     }
