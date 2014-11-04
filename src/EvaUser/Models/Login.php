@@ -134,8 +134,8 @@ class Login extends User
 
     public function getRememberMeHash(Entities\Users $userinfo)
     {
-        //If user password or status changed, all user token will be unavailable
-        return md5($this->tokenSalt . $userinfo->status . $userinfo->password);
+        //If user info changed, all user token will be unavailable
+        return md5($this->rememberMeTokenSalt . $userinfo->username . $userinfo->email . $userinfo->status . $userinfo->password);
     }
 
     public function getRememberMeToken()
@@ -236,7 +236,7 @@ class Login extends User
                     function($events, $application) use ($cookieDomain) {
                         $di = $application->getDI();
                         $sessionId = $di->getSession()->getId();
-                        setcookie('PHPSESSID', $sessionId, time() + 3600, '/', $cookieDomain);
+                        $application->getDI()->getCookies()->get('PHPSESSID')->setValue($sessionId)->setDomain($cookieDomain);
                     }
                 );
             }
