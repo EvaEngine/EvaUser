@@ -176,25 +176,32 @@ class Users extends \Eva\EvaEngine\Mvc\Model
 
     protected $tableName = 'user_users';
 
-    public static $_cache = null;
+    public static $cache = null;
 
     private $cachePrefix = 'eva_blog_user_';
 
-    private $cacheTime = 3600;
+    private $cacheTime = 300;
 
     public function getCache()
     {
-        if($this->_cache === null){
-            $this->_cache =  $this->getDI()->get('modelsCache');
+        if(self::$cache === null){
+            /** @var \Phalcon\Cache\Backend\Libmemcached $cache */
+            $cache =  $this->getDI()->get('modelsCache');
+            self::$cache = $cache;
         }
-
-        return $this->_cache;
+        return self::$cache;
     }
 
     public function refreshCache()
     {
         $cacheKey = $this->getCacheKey();
-        $this->getCache()->remove($cacheKey);
+        $this->getCache()->delete($cacheKey);
+//        var_dump($error);
+//        $results = $this->stars;
+//        $error = $this->getCache()->save($cacheKey,$results,$this->cacheTime);
+//        $error = $this->getCache()->exists($cacheKey);
+
+
     }
 
     public function afterSave()
@@ -205,6 +212,7 @@ class Users extends \Eva\EvaEngine\Mvc\Model
     public function getStars()
     {
         $cacheKey = $this->getCacheKey();
+
         $results = $this->getCache()->get($cacheKey);
         if($results){
             return $results;
@@ -212,7 +220,6 @@ class Users extends \Eva\EvaEngine\Mvc\Model
 
         $results = $this->stars;
         $this->getCache()->save($cacheKey,$results,$this->cacheTime);
-
         return $results;
 
     }
