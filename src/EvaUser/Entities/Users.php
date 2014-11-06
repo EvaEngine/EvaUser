@@ -174,6 +174,54 @@ class Users extends \Eva\EvaEngine\Mvc\Model
 //     */
 //    public $extension = '00000000';
 
+    protected $tableName = 'user_users';
+
+    public static $_cache = null;
+
+    private $cachePrefix = 'eva_blog_user_';
+
+    private $cacheTime = 3600;
+
+    public function getCache()
+    {
+        if($this->_cache === null){
+            $this->_cache =  $this->getDI()->get('modelsCache');
+        }
+
+        return $this->_cache;
+    }
+
+    public function refreshCache()
+    {
+        $cacheKey = $this->getCacheKey();
+        $this->getCache()->remove($cacheKey);
+    }
+
+    public function afterSave()
+    {
+        $this->refreshCache();
+    }
+
+    public function getStars()
+    {
+        $cacheKey = $this->getCacheKey();
+        $results = $this->getCache()->get($cacheKey);
+        if($results){
+            return $results;
+        }
+
+        $results = $this->stars;
+        $this->getCache()->save($cacheKey,$results,$this->cacheTime);
+
+        return $results;
+
+    }
+
+    public function getCacheKey()
+    {
+        return $this->cachePrefix.$this->id;
+
+    }
 
     /**
      * Validations and business logic
@@ -193,7 +241,6 @@ class Users extends \Eva\EvaEngine\Mvc\Model
         }
     }
 
-    protected $tableName = 'user_users';
 
     public function isSuperUser()
     {
@@ -244,6 +291,15 @@ class Users extends \Eva\EvaEngine\Mvc\Model
             'userId',
             array(
                 'alias' => 'profile'
+            )
+        );
+
+        $this->hasMany(
+            'id',
+            'Eva\EvaBlog\Entities\Stars',
+            'userId',
+            array(
+                'alias' => 'stars'
             )
         );
 
