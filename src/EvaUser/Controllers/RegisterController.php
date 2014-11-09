@@ -58,6 +58,11 @@ class RegisterController extends ControllerBase
     {
         $username = $this->request->get('username');
         $email = $this->request->get('email');
+
+        if($this->hasQQ($username)){
+            $this->response->setStatusCode('409', 'User Already Exists');
+        }
+
         $loginedUser = Models\Login::getCurrentUser();
         $extraCondition = '';
         // 已登录用户表示当前为修改用户名，允许与当前用户名相同
@@ -81,5 +86,24 @@ class RegisterController extends ControllerBase
             'id' => $userinfo ? $userinfo->id : 0,
             'status' => $userinfo ? $userinfo->status : null,
         ));
+    }
+
+    /**
+     * 禁止用户名中含QQ号
+     * @param $username
+     * @return bool
+     */
+    public function hasQQ($username){
+        if($username){
+            $pos = stripos($username,'q');
+            if($pos !== false){
+                $num = preg_match_all('/\d/',$username);
+                if($num>6){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
