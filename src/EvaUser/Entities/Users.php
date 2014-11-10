@@ -195,7 +195,9 @@ class Users extends \Eva\EvaEngine\Mvc\Model
     public function refreshCache()
     {
         $cacheKey = $this->getCacheKey();
-        $this->getCache()->delete($cacheKey);
+        if($this->getCache()->exists($cacheKey)){
+            $this->getCache()->delete($cacheKey);
+        }
 //        var_dump($error);
 //        $results = $this->stars;
 //        $error = $this->getCache()->save($cacheKey,$results,$this->cacheTime);
@@ -204,10 +206,10 @@ class Users extends \Eva\EvaEngine\Mvc\Model
 
     }
 
-    public function afterSave()
-    {
-        $this->refreshCache();
-    }
+//    public function afterSave()
+//    {
+//        $this->refreshCache();
+//    }
 
     public function getStars()
     {
