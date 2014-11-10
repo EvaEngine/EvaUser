@@ -200,6 +200,7 @@ class ProfileForm extends Form
      * 自我介绍
      * @var string
      * @SWG\Property
+     * @Type(Textarea)
      */
     public $bio;
 

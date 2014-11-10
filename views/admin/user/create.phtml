@@ -328,10 +328,12 @@
                             <div class="space-4"></div>
 
                             <div class="form-group">
-                                <label for="form-field-comment" class="col-sm-3 control-label no-padding-right">Comment</label>
+                                <label for="form-field-comment" class="col-sm-3 control-label no-padding-right">Bio</label>
 
                                 <div class="col-sm-9">
-                                    <textarea id="form-field-comment"></textarea>
+                                    <?=$profileForm->render('bio', array(
+                                        'id' => 'form-field-comment'
+                                    ))?>
                                 </div>
                             </div>
 

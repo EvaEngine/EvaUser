@@ -50,7 +50,7 @@ class UserManager extends User
                 return;
             }
             $file = $files[0];
-            $file = $upload->upload($file);
+            $file = $upload->upload($file, 'userAvatar');
             if ($file) {
                 $this->avatarId = $file->id;
                 $this->avatar = $file->getFullUrl();
