@@ -176,61 +176,6 @@ class Users extends \Eva\EvaEngine\Mvc\Model
 
     protected $tableName = 'user_users';
 
-    public static $cache = null;
-
-    private $cachePrefix = 'eva_blog_user_';
-
-    private $cacheTime = 300;
-
-    public function getCache()
-    {
-        if(self::$cache === null){
-            /** @var \Phalcon\Cache\Backend\Libmemcached $cache */
-            $cache =  $this->getDI()->get('modelsCache');
-            self::$cache = $cache;
-        }
-        return self::$cache;
-    }
-
-    public function refreshCache()
-    {
-        $cacheKey = $this->getCacheKey();
-        if($this->getCache()->exists($cacheKey)){
-            $this->getCache()->delete($cacheKey);
-        }
-//        var_dump($error);
-//        $results = $this->stars;
-//        $error = $this->getCache()->save($cacheKey,$results,$this->cacheTime);
-//        $error = $this->getCache()->exists($cacheKey);
-
-
-    }
-
-//    public function afterSave()
-//    {
-//        $this->refreshCache();
-//    }
-
-    public function getStars()
-    {
-        $cacheKey = $this->getCacheKey();
-
-        $results = $this->getCache()->get($cacheKey);
-        if($results){
-            return $results;
-        }
-
-        $results = $this->stars;
-        $this->getCache()->save($cacheKey,$results,$this->cacheTime);
-        return $results;
-
-    }
-
-    public function getCacheKey()
-    {
-        return $this->cachePrefix.$this->id;
-
-    }
 
     /**
      * Validations and business logic
@@ -300,15 +245,6 @@ class Users extends \Eva\EvaEngine\Mvc\Model
             'userId',
             array(
                 'alias' => 'profile'
-            )
-        );
-
-        $this->hasMany(
-            'id',
-            'Eva\EvaBlog\Entities\Stars',
-            'userId',
-            array(
-                'alias' => 'stars'
             )
         );
 
