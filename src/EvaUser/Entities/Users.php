@@ -4,7 +4,7 @@ namespace Eva\EvaUser\Entities;
 
 use Phalcon\Mvc\Model\Validator\Email as Email;
 
-class Users extends \Eva\EvaEngine\Mvc\Model
+class Users extends \Eva\EvaEngine\Mvc\Model implements CommentUser
 {
     /**
      *
@@ -176,6 +176,8 @@ class Users extends \Eva\EvaEngine\Mvc\Model
 
     protected $tableName = 'user_users';
 
+    const USER_TYPE = 'wscn';
+
 
     /**
      * Validations and business logic
@@ -224,6 +226,11 @@ class Users extends \Eva\EvaEngine\Mvc\Model
         }
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function getAvatar()
     {
         if ($this->avatar) {
@@ -235,6 +242,11 @@ class Users extends \Eva\EvaEngine\Mvc\Model
     public function getName()
     {
         return $this->screenName ?: $this->username;
+    }
+
+    public function getUserType()
+    {
+        return self::USER_TYPE;
     }
 
     public function initialize()
