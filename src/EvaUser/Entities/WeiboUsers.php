@@ -31,6 +31,51 @@ class WeiboUsers extends \Eva\EvaEngine\Mvc\Model implements CommentUser
 
     const USER_TYPE='weibo';
 
+
+    public $cachePrefix = 'eva_user_weibo_users_';
+
+    public $cacheTime = 86400;  //一天
+
+    public function getCache()
+    {
+        /** @var \Phalcon\Cache\Backend\Libmemcached $cache */
+        $cache =  $this->getDI()->get('modelsCache');
+        return $cache;
+    }
+
+    public function createCacheKey($params){
+        ksort($params);
+        $str = $this->cachePrefix;
+        foreach($params as $k=>$v){
+            $str .= $k.'_'.$v.'_';
+        }
+
+        return $str;
+    }
+
+    public function refreshCache($params)
+    {
+        $cacheKey = $this->createCacheKey($params);
+        if($this->getCache()->exists($cacheKey)){
+            $this->getCache()->delete($cacheKey);
+        }
+    }
+
+
+    public function afterSave()
+    {
+//        $this->refreshCache(array('userId'=>$this->userId));
+//        $this->refreshCache(array('postId'=>$this->userId));
+//        $this->refreshCache(array('userId'=>$this->userId,'postId'=>$this->postId));
+    }
+
+    public function afterDelete()
+    {
+//        $this->refreshCache(array('userId'=>$this->userId));
+//        $this->refreshCache(array('postId'=>$this->userId));
+//        $this->refreshCache(array('userId'=>$this->userId,'postId'=>$this->postId));
+    }
+
     public function getId()
     {
         return $this->avatar;
