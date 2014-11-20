@@ -178,6 +178,8 @@ class Users extends \Eva\EvaEngine\Mvc\Model implements CommentUser
 
     const USER_TYPE = 'wscn';
 
+    const STATE_ACTIVE = 'active';
+
 
     /**
      * Validations and business logic
