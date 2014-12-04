@@ -47,6 +47,12 @@ return array(
         'controller' => 'Admin\Logout',
     ),
 
+    '/admin/session/:action' => array(
+        'module' => 'EvaUser',
+        'controller' => 'Admin\Session',
+        'action' => 1,
+    ),
+
     '/admin/session/verify/(\w+)/(\w+)' => array(
         'module' => 'EvaUser',
         'controller' => 'Admin\Session',
@@ -63,9 +69,5 @@ return array(
         'code' => 2,
     ),
 
-    '/admin/session/:action' => array(
-        'module' => 'EvaUser',
-        'controller' => 'Admin\Session',
-        'action' => 1,
-    ),
+
 );
