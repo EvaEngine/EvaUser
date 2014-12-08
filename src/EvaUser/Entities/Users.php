@@ -235,11 +235,11 @@ class Users extends \Eva\EvaEngine\Mvc\Model implements CommentUser
 
     public function getAvatar()
     {
-        if ($this->avatar) {
+        if (!$this->avatar) {
             return 'http://avatar.cdn.wallstcn.com/default';
         }
 //        return 'http://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email)));
-        return '';
+        return $this->avatar;
     }
 
     public function getName()
