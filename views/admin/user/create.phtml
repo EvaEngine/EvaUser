@@ -219,6 +219,7 @@
                                         'placeholder' => 'Username',
                                         'class' => 'col-xs-12 col-sm-6',
                                         'required' => 'required',
+                                        'autocomplete'=>'off'
                                     ))?>
                                 </div>
                             </div>
@@ -229,6 +230,7 @@
                                     <?=$form->render('screenName', array(
                                         'placeholder' => 'Screen Name',
                                         'class' => 'col-xs-12 col-sm-6',
+                                        'autocomplete'=>'off'
                                     ))?>
                                 </div>
                             </div>
@@ -242,12 +244,14 @@
                                             <?=$form->render('firstName', array(
                                                 'placeholder' => 'First Name',
                                                 'class' => 'form-control',
+                                                'autocomplete'=>'off'
                                             ))?>
                                         </div>
                                         <div class="col-xs-3">
                                             <?=$form->render('lastName', array(
                                                 'placeholder' => 'Last Name',
                                                 'class' => 'form-control',
+                                                'autocomplete'=>'off'
                                             ))?>
                                         </div>
                                     </div>
@@ -262,7 +266,8 @@
                                         <?=$form->render('email', array(
                                             'class' => 'col-xs-12 col-sm-6',
                                             'required' => 'required',
-                                            'data-parsley-type' => 'email'
+                                            'data-parsley-type' => 'email',
+                                            'autocomplete'=>'off'
                                         ))?>
                                 </div>
                             </div>
@@ -273,6 +278,7 @@
                                 <div class="col-sm-9">
                                         <?=$form->render('status', array(
                                             'class' => '',
+                                            'autocomplete'=>'off'
                                         ))?>
                                 </div>
                             </div>
@@ -297,6 +303,7 @@
                                                 'placeholder' => 'yyyy-mm-dd',
                                                 'data-date-format' => 'yyyy-mm-dd',
                                                 'class' => 'input-medium date-picker',
+                                                'autocomplete'=>'off'
                                             ))?>
                                             <span class="input-group-addon">
                                                 <i class="icon-calendar"></i>
@@ -332,7 +339,8 @@
 
                                 <div class="col-sm-9">
                                     <?=$profileForm->render('bio', array(
-                                        'id' => 'form-field-comment'
+                                        'id' => 'form-field-comment',
+                                        'autocomplete'=>'off'
                                     ))?>
                                 </div>
                             </div>
@@ -351,6 +359,7 @@
                                     <span class="input-icon input-icon-right">
                                         <?=$profileForm->render('site', array(
                                             'class' => '',
+                                            'autocomplete'=>'off'
                                         ))?>
                                         <i class="icon-globe"></i>
                                     </span>
@@ -366,6 +375,7 @@
                                     <span class="input-icon input-icon-right">
                                         <?=$form->render('mobile', array(
                                             'class' => '',
+                                            'autocomplete'=>'off'
                                         ))?>
                                         <i class="icon-phone icon-flip-horizontal"></i>
                                     </span>
