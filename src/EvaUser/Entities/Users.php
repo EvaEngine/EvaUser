@@ -254,6 +254,19 @@ class Users extends \Eva\EvaEngine\Mvc\Model implements CommentUser
 
     public function initialize()
     {
+        $this->hasManyToMany(
+            'id',
+            'Eva\EvaPermission\Entities\UsersRoles',
+            'userId',
+            'roleId',
+            'Eva\EvaPermission\Entities\Roles',
+            'id',
+            array(
+                'alias' => 'roles'
+            )
+        );
+
+
         $this->hasOne(
             'id',
             'Eva\EvaUser\Entities\Profiles',
