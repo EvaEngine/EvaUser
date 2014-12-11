@@ -1,5 +1,5 @@
 {
-    "name": "evaengine/evauser",
+    "name": "evaengine/eva-user",
     "description": "Standard User Module of EvaEngine",
     "license": "BSD-3-Clause",
     "minimum-stability": "dev",
