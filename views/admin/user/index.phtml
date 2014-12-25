@@ -183,14 +183,14 @@
                                         <i class="icon-edit bigger-120"></i>
                                     </a>
 
-                                    <button class="btn btn-xs btn-warning ajax-form-sumbit" data-ajax-form="1" date-method="put" data-form-action="/admin/user/process/status/<?=$item->id?>" data-callback="window.location.reload();">
+                                    <button class="btn btn-xs btn-danger ajax-form-sumbit" data-ajax-form="1" date-method="put" data-form-action="/admin/user/process/status/<?=$item->id?>" data-callback="window.location.reload();">
                                         <input type="hidden" data-name="status" value="deleted" >
-                                        <i class="icon-eye-close bigger-120"></i>
-                                    </button>
-
-                                    <button class="btn btn-xs btn-danger ajax-form-sumbit" data-ajax-form="1" date-method="delete" data-form-action="/admin/user/process/delete/<?=$item->id?>" data-confirm="1" data-confirm-message="<?=sprintf('User %s will be deleted, are you sure?', $item->username)?>" data-callback="form.closest('tr').hide();">
                                         <i class="icon-trash bigger-120"></i>
                                     </button>
+
+<!--                                    <button class="btn btn-xs btn-danger ajax-form-sumbit" data-ajax-form="1" date-method="delete" data-form-action="/admin/user/process/delete/--><?//=$item->id?><!--" data-confirm="1" data-confirm-message="--><?//=sprintf('User %s will be deleted, are you sure?', $item->username)?><!--" data-callback="form.closest('tr').hide();">-->
+<!--                                        <i class="icon-trash bigger-120"></i>-->
+<!--                                    </button>-->
 
                                     <?if($this->moduleManager->hasModule('EvaPermission')):?>
                                     <a class="btn btn-xs btn-info" href="/admin/permission/apikey/create?uid=<?=$item->id?>">
