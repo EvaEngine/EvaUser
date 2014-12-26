@@ -230,7 +230,7 @@ class Login extends User
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
             $cookieDomain = $this->getDI()->getConfig()->user->loginCookieDomain;
 
-            $cookies = $this->getDI()->getCookies()->set(Login::LOGIN_COOKIE_KEY, $userinfo->id);
+            $cookies = $this->getDI()->getCookies()->setHttpOnly(false)->set(Login::LOGIN_COOKIE_KEY, $userinfo->id);
             if ($cookieDomain) {
                 $cookie = $cookies->get(Login::LOGIN_COOKIE_KEY);
                 $cookie->setDomain($cookieDomain);
