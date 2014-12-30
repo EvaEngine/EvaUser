@@ -56,17 +56,17 @@
 
                     <div class="space space-4"></div>
 
-                    <a class="btn btn-sm btn-block" href="#">
+                    <a class="btn btn-sm btn-block hide" href="#">
                         <i class="icon-envelope-alt bigger-110"></i>
                         <span class="bigger-110">Resend Active Email</span>
                     </a>
 
-                    <a class="btn btn-sm btn-block" href="<?=$item->email?>">
+                    <a class="btn btn-sm btn-block hide" href="<?=$item->email?>">
                         <i class="icon-envelope-alt bigger-110"></i>
                         <span class="bigger-110">Resend Reset Password Email</span>
                     </a>
 
-                    <a class="btn btn-sm btn-block" href="<?=$item->email?>">
+                    <a class="btn btn-sm btn-block hide" href="<?=$item->email?>">
                         <i class="icon-envelope-alt bigger-110"></i>
                         <span class="bigger-110">Block This User</span>
                     </a>
@@ -104,23 +104,31 @@
                             </div>
                         </div>
 
+                        <?if(!empty($item->profile)):?>
+                        <div class="profile-info-row">
+                            <div class="profile-info-name"> Birthday </div>
+                            <div class="profile-info-value">
+                                <span><?=$item->profile->birthday?></span>
+                            </div>
+                        </div>
+                        <?endif?>
+
+
+                        <?if(!empty($item->profile)):?>
                         <div class="profile-info-row">
                             <div class="profile-info-name"> Location </div>
 
                             <div class="profile-info-value">
                                 <i class="icon-map-marker light-orange bigger-110"></i>
-                                <span>Netherlands</span>
-                                <span>Amsterdam</span>
+                                <span><?=$item->profile->country?></span>
+                                <span><?=$item->profile->province?></span>
+                                <span><?=$item->profile->city?></span>
+                                <span><?=$item->profile->state?></span>
+                                <span><?=$item->profile->address?></span>
                             </div>
                         </div>
+                        <?endif?>
 
-                        <div class="profile-info-row">
-                            <div class="profile-info-name"> Age </div>
-
-                            <div class="profile-info-value">
-                                <span>38</span>
-                            </div>
-                        </div>
 
                         <div class="profile-info-row">
                             <div class="profile-info-name"> Joined </div>
@@ -140,7 +148,7 @@
 
                     <div class="hr hr-8 dotted"></div>
 
-                    <div class="profile-user-info">
+                    <div class="profile-user-info hide">
                         <div class="profile-info-row">
                             <div class="profile-info-name"> Social</div>
 
@@ -184,14 +192,14 @@
                     </li>
 
                     <li>
-                    <a href="#edit-settings" data-toggle="tab">
+                    <a href="#edit-settings" data-toggle="tab" class="hide">
                         <i class="purple icon-cog bigger-125"></i>
                         Settings
                     </a>
                     </li>
 
                     <li>
-                    <a href="#edit-password" data-toggle="tab">
+                    <a href="#edit-password" data-toggle="tab" class="hide">
                         <i class="blue icon-key bigger-125"></i>
                         Password
                     </a>
@@ -382,45 +390,6 @@
                                 </div>
                             </div>
 
-                            <div class="space"></div>
-                            <h4 class="header blue bolder smaller">Social</h4>
-
-                            <div class="form-group">
-                                <label for="form-field-facebook" class="col-sm-3 control-label no-padding-right">Facebook</label>
-
-                                <div class="col-sm-9">
-                                    <span class="input-icon">
-                                        <input type="text" id="form-field-facebook" value="facebook_alexdoe">
-                                        <i class="icon-facebook blue"></i>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="space-4"></div>
-
-                            <div class="form-group">
-                                <label for="form-field-twitter" class="col-sm-3 control-label no-padding-right">Twitter</label>
-
-                                <div class="col-sm-9">
-                                    <span class="input-icon">
-                                        <input type="text" id="form-field-twitter" value="twitter_alexdoe">
-                                        <i class="icon-twitter light-blue"></i>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="space-4"></div>
-
-                            <div class="form-group">
-                                <label for="form-field-gplus" class="col-sm-3 control-label no-padding-right">Google+</label>
-
-                                <div class="col-sm-9">
-                                    <span class="input-icon">
-                                        <input type="text" id="form-field-gplus" value="google_alexdoe">
-                                        <i class="icon-google-plus red"></i>
-                                    </span>
-                                </div>
-                            </div>
 
                             <div class="clearfix form-actions">
                                 <div class="col-md-offset-3 col-md-9">
@@ -440,7 +409,7 @@
                         </form>
                     </div><!--tab pane end-->
 
-                    <div class="tab-pane" id="edit-settings">
+                    <div class="tab-pane hide" id="edit-settings">
                         <div class="space-10"></div>
 
                         <div>
@@ -477,7 +446,7 @@
                         </div>
                     </div><!--tab pane end-->
 
-                    <div class="tab-pane" id="edit-password">
+                    <div class="tab-pane hide" id="edit-password">
                         <div class="space-10"></div>
 
                         <div class="form-group">
