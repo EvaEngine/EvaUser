@@ -491,14 +491,17 @@
 </div><!-- /.page-content -->
 
 <script>
-    $(document).ready(function(){
+    require(['moment','jquery'],function(){
+        $(document).ready(function(){
             var updateCreateTime = function(){
-                    var day = $('input[name=day]').val();
-                    var time = $('input[name=time]').val();
-                    time = time.length == 7 ? '0' + time : time;
-                    var timestamp = moment(day + ' ' + time).format('X');
-                    $('input[name=createdAt]').val(timestamp);
+                var day = $('input[name=day]').val();
+                var time = $('input[name=time]').val();
+                time = time.length == 7 ? '0' + time : time;
+                var timestamp = moment(day + ' ' + time).format('X');
+                $('input[name=createdAt]').val(timestamp);
             }
             $('input[name=day], input[name=time]').on('change', updateCreateTime);
-    });
+        });
+    })
+
 </script>
