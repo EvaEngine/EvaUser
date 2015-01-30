@@ -236,16 +236,10 @@ class Login extends User
             $cookie->setHttpOnly(false);
 
             if ($cookieDomain) {
+                //Set PHPSESSIONID domain
+                session_set_cookie_params(0, '/', $cookieDomain);
                 $cookie = $cookies->get(Login::LOGIN_COOKIE_KEY);
                 $cookie->setDomain($cookieDomain);
-                $this->getDI()->getEventsManager()->attach(
-                    'application:beforeSendResponse',
-                    function($events, $application) use ($cookieDomain) {
-                        $di = $application->getDI();
-                        $sessionId = $di->getSession()->getId();
-                        $application->getDI()->getCookies()->get('PHPSESSID')->setValue($sessionId)->setDomain($cookieDomain);
-                    }
-                );
             }
         }
 
