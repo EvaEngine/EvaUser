@@ -76,12 +76,14 @@ class Login extends User
             $storage->set(self::INFO_KEY_BADGE, $badges);
         }
     }
+
     public static function removeBadges()
     {
         /** @var \Phalcon\Session\AdapterInterface $storage */
         $storage = self::getAuthStorage();
         $storage->remove(self::INFO_KEY_BADGE);
     }
+
     public static function getAuthStorage()
     {
         $di = DI::getDefault();
@@ -256,15 +258,20 @@ class Login extends User
      */
     public function loginByPassword($identify, $password)
     {
-        if (false === strpos($identify, '@')) {
-            $this->assign(array(
-                'username' => $identify,
-                'password' => $password,
-            ));
-        } else {
+        if (false !== strpos($identify, '@')) {
             $this->assign(array(
                 'email' => $identify,
                 'password' => $password
+            ));
+        } elseif (preg_match('/\d+/', $identify)) {
+            $this->assign(array(
+                'mobile' => $identify,
+                'password' => $password
+            ));
+        } else {
+            $this->assign(array(
+                'username' => $identify,
+                'password' => $password,
             ));
         }
         $this->getDI()->getEventsManager()->fire('user:beforeLoginByPassword', $this);
@@ -275,6 +282,8 @@ class Login extends User
             $userinfo = self::findFirst("username = '$this->username'");
         } elseif ($this->email) {
             $userinfo = self::findFirst("email = '$this->email'");
+        } elseif ($this->mobile) {
+            $userinfo = self::findFirst("mobile = '$this->mobile'");
         } else {
             throw new Exception\InvalidArgumentException('ERR_USER_NO_USERNAME_OR_EMAIL_INPUT');
         }

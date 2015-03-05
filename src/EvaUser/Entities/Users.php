@@ -116,6 +116,18 @@ class Users extends \Eva\EvaEngine\Mvc\Model implements CommentUser
 
     /**
      *
+     * @var string
+     */
+    public $mobileStatus = 'inactive';
+
+    /**
+     *
+     * @var integer
+     */
+    public $mobileConfirmedAt;
+
+    /**
+     *
      * @var integer
      */
     public $createdAt;
