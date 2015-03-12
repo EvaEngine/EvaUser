@@ -101,12 +101,46 @@ class RegisterController extends ControllerBase
         }
     }
 
+    public function codeAction()
+    {
+        $mobile = '18621301580';
+
+        $cache = $this->getDI()->get('modelsCache');
+
+        $cacheKey = 'sms_code_' . $mobile;
+
+        $now = time();
+        if ($cache->exists($cacheKey)) {
+            $data = $cache->get($cacheKey);
+
+            //60s内不重复发送
+            if (($now - $data['timestamp']) < 60) {
+                return;
+            }
+        }
+
+        /** @var \Eva\EvaSms\Sender $sender */
+        $sender = $this->getDI()->getSmsSender();
+        $code = mt_rand(100000, 999999);
+        $result = $sender->sendTemplateMessage($mobile, 'BT84t3', ['number' => $code]);
+
+        $data['timestamp'] = $now;
+        $data['code'] = $code;
+
+        //一小时内有效
+        $cacheTime = 1 * 60 * 60;
+        $cache->save($cacheKey, $data, $cacheTime);
+
+
+        return $this->showResponseAsJson($result);
+    }
+
     public function checkAction()
     {
         $username = $this->request->get('username');
         $email = $this->request->get('email');
 
-        if($this->hasQQ($username)){
+        if ($this->hasQQ($username)) {
             $this->response->setStatusCode('409', 'User Already Exists');
         }
 
@@ -140,12 +174,13 @@ class RegisterController extends ControllerBase
      * @param $username
      * @return bool
      */
-    public function hasQQ($username){
-        if($username){
-            $pos = stripos($username,'q');
-            if($pos !== false){
-                $num = preg_match_all('/\d/',$username);
-                if($num>6){
+    public function hasQQ($username)
+    {
+        if ($username) {
+            $pos = stripos($username, 'q');
+            if ($pos !== false) {
+                $num = preg_match_all('/\d/', $username);
+                if ($num > 6) {
                     return true;
                 }
             }
