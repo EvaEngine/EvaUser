@@ -103,7 +103,8 @@ class RegisterController extends ControllerBase
 
     public function codeAction()
     {
-        $mobile = '18621301580';
+
+        $mobile = $this->request->getPost('mobile');
 
         $cache = $this->getDI()->get('modelsCache');
 
@@ -131,9 +132,29 @@ class RegisterController extends ControllerBase
         $cacheTime = 1 * 60 * 60;
         $cache->save($cacheKey, $data, $cacheTime);
 
-        $data['mobile'] = $mobile;
 
-        return $this->showResponseAsJson($data);
+        return $this->showResponseAsJson($result);
+    }
+
+    public function codeCheckAction()
+    {
+        $mobile = $this->request->getPost('mobile');
+        $code = $this->request->getPost('code');
+
+        $cache = $this->getDI()->get('modelsCache');
+
+        $cacheKey = 'sms_code_' . $mobile;
+
+        $result = false;
+        if ($cache->exists($cacheKey)) {
+            $data = $cache->get($cacheKey);
+
+            if ($data['code'] == $code) {
+                $result = true;
+            }
+        }
+
+        return $this->showResponseAsJson($result);
     }
 
     public function checkAction()
