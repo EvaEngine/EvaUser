@@ -61,37 +61,35 @@ class RegisterController extends ControllerBase
         }
 
         if ($this->request->isAjax() || $this->request->get('ajax')) {
-            $form = new Forms\RegisterForm();
+            $form = new Forms\MobileRegisterForm();
             if ($form->isValid($this->request->getPost()) === false) {
                 return $this->showInvalidMessagesAsJson($form);
             }
             $user = new Models\Register();
             $user->assign(array(
-                'username' => $this->request->getPost('username'),
-                'email' => $this->request->getPost('email'),
+                'mobile' => $this->request->getPost('mobile'),
                 'password' => $this->request->getPost('password'),
             ));
             try {
-                $registerUser = $user->register();
+                $registerUser = $user->registerByMobile();
                 return $this->showResponseAsJson($registerUser);
             } catch (\Exception $e) {
                 return $this->showExceptionAsJson($e, $user->getMessages());
             }
         } else {
-            $form = new Forms\RegisterForm();
+            $form = new Forms\MobileRegisterForm();
             if ($form->isValid($this->request->getPost()) === false) {
                 $this->showInvalidMessages($form);
                 return $this->redirectHandler($this->getDI()->getConfig()->user->registerFailedRedirectUri, 'error');
             }
             $user = new Models\Register();
             $user->assign(array(
-                'username' => $this->request->getPost('username'),
-                'email' => $this->request->getPost('email'),
+                'mobile' => $this->request->getPost('mobile'),
                 'password' => $this->request->getPost('password'),
             ));
 
             try {
-                $user->register();
+                $user->registerByMobile();
             } catch (\Exception $e) {
                 $this->showException($e, $user->getMessages());
                 return $this->redirectHandler($this->getDI()->getConfig()->user->registerFailedRedirectUri, 'error');
@@ -161,6 +159,7 @@ class RegisterController extends ControllerBase
     {
         $username = $this->request->get('username');
         $email = $this->request->get('email');
+        $mobile = $this->request->get('mobile');
 
         if ($this->hasQQ($username)) {
             $this->response->setStatusCode('409', 'User Already Exists');
@@ -176,6 +175,8 @@ class RegisterController extends ControllerBase
             $userinfo = Models\Login::findFirst(array("username = '$username' {$extraCondition}"));
         } elseif ($email) {
             $userinfo = Models\Login::findFirst(array("email = '$email' {$extraCondition}"));
+        } elseif ($mobile) {
+            $userinfo = Models\Login::findFirst(array("mobile = '$mobile' {$extraCondition}"));
         } else {
             $userinfo = array();
         }
