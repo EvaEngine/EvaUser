@@ -131,8 +131,9 @@ class RegisterController extends ControllerBase
         $cacheTime = 1 * 60 * 60;
         $cache->save($cacheKey, $data, $cacheTime);
 
+        $data['mobile'] = $mobile;
 
-        return $this->showResponseAsJson($result);
+        return $this->showResponseAsJson($data);
     }
 
     public function checkAction()

@@ -52,6 +52,33 @@ class Register extends User
         return $this;
     }
 
+    public function registerByMobile($disablePassword = false)
+    {
+        $this->getDI()->getEventsManager()->fire('user:beforeRegister', $this);
+
+        $userinfo = self::findFirst("mobile = '$this->mobile'");
+        if ($userinfo) {
+            throw new Exception\ResourceConflictException('ERR_USER_mobile_ALREADY_TAKEN');
+        }
+
+        $this->status = $this->status ?: 'inactive';
+        $this->emailStatus = $this->emailStatus ?: 'inactive';
+        $this->accountType = $this->accountType ?: 'basic';
+        $this->password = $disablePassword ? null : self::passwordHash($this->password);
+        $this->activationHash = sha1(uniqid(mt_rand(), true));
+        $this->createdAt = time();
+        $this->providerType = $this->providerType ?: 'DEFAULT';
+
+        if ($this->save() == false) {
+            throw new Exception\RuntimeException('ERR_USER_CREATE_FAILED');
+        }
+
+        $this->sendVerificationEmail($this->username);
+
+        $this->getDI()->getEventsManager()->fire('user:afterRegister', $this);
+        return $this;
+    }
+
     public function sendVerificationEmail($identify, $forceSend = false)
     {
         if (false === $forceSend && $this->getDI()->getConfig()->mailer->async) {
