@@ -263,7 +263,7 @@ class Login extends User
                 'email' => $identify,
                 'password' => $password
             ));
-        } elseif (preg_match('/\d+/', $identify)) {
+        } elseif (preg_match('/^1\d{10}/', $identify)) {
             $this->assign(array(
                 'mobile' => $identify,
                 'password' => $password
