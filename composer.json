@@ -15,7 +15,7 @@
         "ircmaxell/password-compat": "dev-master"
     },
     "suggest": {
-        "evaengine/evafilesystem": "dev-master"
+        "evaengine/eva-filesystem": "dev-master"
     },
     "autoload": {
         "classmap": ["Module.php"],
