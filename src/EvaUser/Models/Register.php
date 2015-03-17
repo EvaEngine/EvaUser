@@ -36,6 +36,7 @@ class Register extends User
 
         $this->status = $this->status ?: 'inactive';
         $this->emailStatus = $this->emailStatus ?: 'inactive';
+        $this->mobileStatus = $this->mobileStatus ?: 'inactive';
         $this->accountType = $this->accountType ?: 'basic';
         $this->password = $disablePassword ? null : self::passwordHash($this->password);
         $this->activationHash = sha1(uniqid(mt_rand(), true));
@@ -55,14 +56,19 @@ class Register extends User
     public function registerByMobile($disablePassword = false)
     {
         $this->getDI()->getEventsManager()->fire('user:beforeRegister', $this);
+        $userinfo = self::findFirst("username = '$this->username'");
+        if ($userinfo) {
+            throw new Exception\ResourceConflictException('ERR_USER_USERNAME_ALREADY_TAKEN');
+        }
 
         $userinfo = self::findFirst("mobile = '$this->mobile'");
         if ($userinfo) {
-            throw new Exception\ResourceConflictException('ERR_USER_mobile_ALREADY_TAKEN');
+            throw new Exception\ResourceConflictException('ERR_USER_MOBILE_ALREADY_TAKEN');
         }
 
         $this->status = $this->status ?: 'inactive';
         $this->emailStatus = $this->emailStatus ?: 'inactive';
+        $this->mobileStatus = $this->mobileStatus ?: 'inactive';
         $this->accountType = $this->accountType ?: 'basic';
         $this->password = $disablePassword ? null : self::passwordHash($this->password);
         $this->activationHash = sha1(uniqid(mt_rand(), true));
@@ -104,7 +110,7 @@ class Register extends User
 
         if (!$userinfo->activationHash) {
             $userinfo->activationHash = sha1(uniqid(mt_rand(), true));
-            $userinfo->save(); 
+            $userinfo->save();
         }
 
         $mailer = $this->getDI()->getMailer();
@@ -124,11 +130,11 @@ class Register extends User
     }
 
     /**
-    * checks the email/verification code combination and set the user's activation status to active in the database
-    * @param int $username
-    * @param string $activationCode
-    * @return bool success status
-    */
+     * checks the email/verification code combination and set the user's activation status to active in the database
+     * @param int $username
+     * @param string $activationCode
+     * @return bool success status
+     */
     public function verifyNewUser($username, $activationCode)
     {
         $userinfo = self::findFirst("username = '$username'");
@@ -157,5 +163,54 @@ class Register extends User
         }
 
         return true;
+    }
+
+    public function mobileCaptcha($mobile)
+    {
+        $cache = $this->getDI()->get('modelsCache');
+
+        $cacheKey = 'sms_captcha_' . $mobile;
+//        dd($cacheKey);
+
+        $now = time();
+        if ($cache->exists($cacheKey)) {
+            $data = $cache->get($cacheKey);
+            //60s内不重复发送
+            if (($now - $data['timestamp']) < 60) {
+                return;
+            }
+        }
+
+        /** @var \Eva\EvaSms\Sender $sender */
+        $sender = $this->getDI()->getSmsSender();
+        $captcha = mt_rand(100000, 999999);
+        $result = $sender->sendTemplateMessage($mobile, 'BT84t3', ['number' => $captcha]);
+
+        $data['timestamp'] = $now;
+        $data['captcha'] = $captcha;
+
+        //一小时内有效
+        $cacheTime = 1 * 60 * 60;
+        $cache->save($cacheKey, $data, $cacheTime);
+
+        return $result;
+    }
+
+    public function mobileCaptchaCheck($mobile, $captcha)
+    {
+
+        $cache = $this->getDI()->get('modelsCache');
+
+        $cacheKey = 'sms_captcha_' . $mobile;
+//        dd($cacheKey);
+        $result = false;
+        if ($cache->exists($cacheKey)) {
+            $data = $cache->get($cacheKey);
+
+            if ($data['captcha'] == $captcha) {
+                $result = true;
+            }
+        }
+        return $result;
     }
 }

@@ -24,6 +24,11 @@ use Phalcon\Validation\Validator\Regex;
 class MobileRegisterForm extends Form
 {
     /**
+     * @SWG\Property(name="username",type="string",description="Username, allow alphanumeric and underline")
+     */
+    public $username;
+
+    /**
      * @SWG\Property(name="mobile",type="string",description="Mobile number")
      */
     public $mobile;
@@ -33,8 +38,32 @@ class MobileRegisterForm extends Form
      */
     public $password;
 
+    /**
+     * @SWG\Property(name="captcha",type="string",description="Mobile captcha")
+     */
+    public $captcha;
+
     public function initialize($entity = null, $options = null)
     {
+        $name = new Text('username');
+        $name->setLabel('Name');
+        $name->addValidators(array(
+            new PresenceOf(array(
+                'message' => 'Username is required'
+            )),
+            new Regex(array(
+                'pattern' => '/[0-9a-zA-Z_]+/',
+                'message' => 'Username is alphanumerics and underline only'
+            )),
+            new StringLength(array(
+                'min' => 4,
+                'max' => 24,
+                'messageMinimum' => 'Username is too short. Minimum 4 characters',
+                'messageMaximum' => 'Username is too long. Maximum 24 characters'
+            )),
+        ));
+        $this->add($name);
+
         $mobile = new Text('mobile');
         $mobile->setLabel('Mobile');
         $mobile->addValidators(array(
@@ -42,7 +71,7 @@ class MobileRegisterForm extends Form
                 'message' => 'Mobile is required'
             )),
             new Regex(array(
-                'pattern' => '/[0-9]+/',
+                'pattern' => '/^\d+$/',
                 'message' => 'Mobile is number only'
             )),
         ));
@@ -74,6 +103,17 @@ class MobileRegisterForm extends Form
             'message' => 'Terms and conditions must be accepted'
         )));
         $this->add($terms);
+
+
+        // Captcha
+        $captcha = new Text('captcha');
+        $captcha->setLabel('Captcha');
+        $captcha->addValidators(array(
+            new PresenceOf(array(
+                'message' => 'The captcha is required'
+            )),
+        ));
+        $this->add($captcha);
 
         /*
         // CSRF
