@@ -23,7 +23,6 @@ class Register extends User
     public function register($disablePassword = false)
     {
         $this->getDI()->getEventsManager()->fire('user:beforeRegister', $this);
-
         $userinfo = self::findFirst("username = '$this->username'");
         if ($userinfo) {
             throw new Exception\ResourceConflictException('ERR_USER_USERNAME_ALREADY_TAKEN');
@@ -53,9 +52,10 @@ class Register extends User
         return $this;
     }
 
-    public function registerByMobile($disablePassword = false)
+    public function registerByMobile($captcha)
     {
         $this->getDI()->getEventsManager()->fire('user:beforeRegister', $this);
+
         $userinfo = self::findFirst("username = '$this->username'");
         if ($userinfo) {
             throw new Exception\ResourceConflictException('ERR_USER_USERNAME_ALREADY_TAKEN');
@@ -66,11 +66,16 @@ class Register extends User
             throw new Exception\ResourceConflictException('ERR_USER_MOBILE_ALREADY_TAKEN');
         }
 
+        if (!$this->mobileCaptchaCheck($this->mobile, $captcha)) {
+            throw new Exception\RuntimeException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED');
+        }
+
+
         $this->status = $this->status ?: 'inactive';
         $this->emailStatus = $this->emailStatus ?: 'inactive';
-        $this->mobileStatus = $this->mobileStatus ?: 'inactive';
+        $this->mobileStatus = $this->mobileStatus ?: 'active';
         $this->accountType = $this->accountType ?: 'basic';
-        $this->password = $disablePassword ? null : self::passwordHash($this->password);
+        $this->password = self::passwordHash($this->password);
         $this->activationHash = sha1(uniqid(mt_rand(), true));
         $this->createdAt = time();
         $this->providerType = $this->providerType ?: 'DEFAULT';
@@ -78,8 +83,6 @@ class Register extends User
         if ($this->save() == false) {
             throw new Exception\RuntimeException('ERR_USER_CREATE_FAILED');
         }
-
-        $this->sendVerificationEmail($this->username);
 
         $this->getDI()->getEventsManager()->fire('user:afterRegister', $this);
         return $this;

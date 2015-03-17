@@ -198,17 +198,20 @@ class Users extends \Eva\EvaEngine\Mvc\Model implements CommentUser
      */
     public function validation()
     {
-        $this->validate(
-            new Email(
-                array(
-                    "field" => "email",
-                    "required" => true,
+        if (empty($this->mobile)) {
+            $this->validate(
+                new Email(
+                    array(
+                        "field" => "email",
+                        "required" => true,
+                    )
                 )
-            )
-        );
-        if ($this->validationHasFailed() == true) {
-            return false;
+            );
+            if ($this->validationHasFailed() == true) {
+                return false;
+            }
         }
+
     }
 
 
