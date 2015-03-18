@@ -71,7 +71,7 @@ class Register extends User
         }
 
 
-        $this->status = $this->status ?: 'inactive';
+        $this->status = 'active';
         $this->emailStatus = $this->emailStatus ?: 'inactive';
         $this->mobileStatus = $this->mobileStatus ?: 'active';
         $this->accountType = $this->accountType ?: 'basic';
