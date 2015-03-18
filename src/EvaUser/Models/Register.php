@@ -88,6 +88,17 @@ class Register extends User
         return $this;
     }
 
+    public function mobileCheck($mobile)
+    {
+
+        $userinfo = self::findFirst("mobile = '$mobile'");
+        if ($userinfo) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function sendVerificationEmail($identify, $forceSend = false)
     {
         if (false === $forceSend && $this->getDI()->getConfig()->mailer->async) {
