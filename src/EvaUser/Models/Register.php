@@ -198,7 +198,8 @@ class Register extends User
         /** @var \Eva\EvaSms\Sender $sender */
         $sender = $this->getDI()->getSmsSender();
         $captcha = mt_rand(100000, 999999);
-        $result = $sender->sendTemplateMessage($mobile, 'BT84t3', ['number' => $captcha]);
+        $templateId = $this->getDI()->getConfig()->smsSender->templates->verifyCode;
+        $result = $sender->sendTemplateMessage($mobile, $templateId, ['number' => $captcha]);
 
         $data['timestamp'] = $now;
         $data['captcha'] = $captcha;

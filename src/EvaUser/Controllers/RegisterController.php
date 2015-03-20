@@ -121,7 +121,8 @@ class RegisterController extends ControllerBase
         /** @var \Eva\EvaSms\Sender $sender */
         $sender = $this->getDI()->getSmsSender();
         $code = mt_rand(100000, 999999);
-        $result = $sender->sendTemplateMessage($mobile, 'BT84t3', ['number' => $code]);
+        $templateId = $this->getDI()->getConfig()->smsSender->templates->verifyCode;
+        $result = $sender->sendTemplateMessage($mobile, $templateId, ['number' => $code]);
 
         $data['timestamp'] = $now;
         $data['code'] = $code;
