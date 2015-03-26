@@ -107,6 +107,7 @@ class Login extends User
             'username' => 'Guest',
             'status' => '',
             'email' => '',
+            'mobile' => '',
             'screenName' => '',
             'avatar' => '',
 
@@ -189,6 +190,7 @@ class Login extends User
             'id' => $userinfo->id,
             'username' => $userinfo->username,
             'status' => $userinfo->status,
+            'mobile' => $userinfo->mobile,
             'email' => $userinfo->email,
             'screenName' => $userinfo->screenName,
             'avatar' => $userinfo->getAvatar(),
