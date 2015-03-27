@@ -18,4 +18,13 @@ return array(
         'cookieTokenExpired' => 500000,
         'loginCookieDomain' => '',
     ),
+    'validateConfig' => array(
+        'wsdlURL' => "http://gboss.id5.cn/services/QueryValidatorServices?wsdl",
+        'partner' => "ANXXService",
+        'partnerPW' => "ANXXService_V)~6L!s)",
+        'Key' => "12345678",
+        'iv' => "12345678",
+        'type' =>'1A020201',
+        'supportClass' => array ("1A020201" => "Name,CardNum" )
+    )
 );
