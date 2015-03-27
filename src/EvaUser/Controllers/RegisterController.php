@@ -61,7 +61,10 @@ class RegisterController extends ControllerBase
         }
 
         $data = $this->request->getPost();
+        //配资姓名不需要username 和 email ，但是去掉对原有的登录系统又风险，所以先做个假的
         $data['username'] = 'wscn_mobile_'.$data['mobile'];
+        $data['email'] = $data['mobile'].'@fake.wallstreetcn.com';
+
 
         if ($this->request->isAjax() || $this->request->get('ajax')) {
             $form = new Forms\MobileRegisterForm();
@@ -70,6 +73,7 @@ class RegisterController extends ControllerBase
             }
             $user = new Models\Register();
             $user->assign(array(
+                'email' => $data['email'],
                 'username' => $data['username'],
                 'mobile' => $this->request->getPost('mobile'),
                 'password' => $this->request->getPost('password'),
