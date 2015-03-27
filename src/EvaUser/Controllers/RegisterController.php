@@ -70,6 +70,7 @@ class RegisterController extends ControllerBase
             }
             $user = new Models\Register();
             $user->assign(array(
+                'username' => $data['username'],
                 'mobile' => $this->request->getPost('mobile'),
                 'password' => $this->request->getPost('password'),
             ));
@@ -89,6 +90,7 @@ class RegisterController extends ControllerBase
             }
             $user = new Models\Register();
             $user->assign(array(
+                'username' => $data['username'],
                 'mobile' => $this->request->getPost('mobile'),
                 'password' => $this->request->getPost('password'),
             ));
