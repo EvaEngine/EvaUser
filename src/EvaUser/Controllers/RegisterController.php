@@ -60,6 +60,9 @@ class RegisterController extends ControllerBase
             return;
         }
 
+        $data = $this->request->getPost();
+        $data['username'] = 'wscn_mobile_'.$data['mobile'];
+
         if ($this->request->isAjax() || $this->request->get('ajax')) {
             $form = new Forms\MobileRegisterForm();
             if ($form->isValid($this->request->getPost()) === false) {
@@ -70,8 +73,10 @@ class RegisterController extends ControllerBase
                 'mobile' => $this->request->getPost('mobile'),
                 'password' => $this->request->getPost('password'),
             ));
+
+            $captcha = $this->request->getPost('captcha');
             try {
-                $registerUser = $user->registerByMobile();
+                $registerUser = $user->registerByMobile($captcha);
                 return $this->showResponseAsJson($registerUser);
             } catch (\Exception $e) {
                 return $this->showExceptionAsJson($e, $user->getMessages());
@@ -88,8 +93,9 @@ class RegisterController extends ControllerBase
                 'password' => $this->request->getPost('password'),
             ));
 
+            $captcha = $this->request->getPost('captcha');
             try {
-                $user->registerByMobile();
+                $user->registerByMobile($captcha);
             } catch (\Exception $e) {
                 $this->showException($e, $user->getMessages());
                 return $this->redirectHandler($this->getDI()->getConfig()->user->registerFailedRedirectUri, 'error');
@@ -99,60 +105,31 @@ class RegisterController extends ControllerBase
         }
     }
 
-    public function codeAction()
-    {
 
+    public function mobileCaptchaAction()
+    {
         $mobile = $this->request->getPost('mobile');
 
-        $cache = $this->getDI()->get('modelsCache');
+        $registerModel = new Models\Register();
+        $result = $registerModel->mobileCaptcha($mobile);
 
-        $cacheKey = 'sms_code_' . $mobile;
+        $data = array('mobile'=>$mobile,'timestamp'=>time());
 
-        $now = time();
-        if ($cache->exists($cacheKey)) {
-            $data = $cache->get($cacheKey);
-
-            //60s内不重复发送
-            if (($now - $data['timestamp']) < 60) {
-                return;
-            }
-        }
-
-        /** @var \Eva\EvaSms\Sender $sender */
-        $sender = $this->getDI()->getSmsSender();
-        $code = mt_rand(100000, 999999);
-        $result = $sender->sendTemplateMessage($mobile, 'BT84t3', ['number' => $code]);
-
-        $data['timestamp'] = $now;
-        $data['code'] = $code;
-
-        //一小时内有效
-        $cacheTime = 1 * 60 * 60;
-        $cache->save($cacheKey, $data, $cacheTime);
-
-
-        return $this->showResponseAsJson($result);
+        return $this->showResponseAsJson($data);
     }
 
-    public function codeCheckAction()
+
+    public function mobileCaptchaCheckAction()
     {
         $mobile = $this->request->getPost('mobile');
-        $code = $this->request->getPost('code');
+        $captcha = $this->request->getPost('captcha');
 
-        $cache = $this->getDI()->get('modelsCache');
+        $registerModel = new Models\Register();
+        $result = $registerModel->mobileCaptchaCheck($mobile, $captcha);
 
-        $cacheKey = 'sms_code_' . $mobile;
+        $data = array('mobile'=>$mobile,'result'=>$result);
 
-        $result = false;
-        if ($cache->exists($cacheKey)) {
-            $data = $cache->get($cacheKey);
-
-            if ($data['code'] == $code) {
-                $result = true;
-            }
-        }
-
-        return $this->showResponseAsJson($result);
+        return $this->showResponseAsJson($data);
     }
 
     public function checkAction()
