@@ -65,7 +65,7 @@ class RegisterController extends ControllerBase
 
         if ($this->request->isAjax() || $this->request->get('ajax')) {
             $form = new Forms\MobileRegisterForm();
-            if ($form->isValid($this->request->getPost()) === false) {
+            if ($form->isValid($data) === false) {
                 return $this->showInvalidMessagesAsJson($form);
             }
             $user = new Models\Register();
@@ -83,7 +83,7 @@ class RegisterController extends ControllerBase
             }
         } else {
             $form = new Forms\MobileRegisterForm();
-            if ($form->isValid($this->request->getPost()) === false) {
+            if ($form->isValid($data) === false) {
                 $this->showInvalidMessages($form);
                 return $this->redirectHandler($this->getDI()->getConfig()->user->registerFailedRedirectUri, 'error');
             }
