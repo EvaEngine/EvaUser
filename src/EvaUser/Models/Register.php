@@ -56,10 +56,12 @@ class Register extends User
     {
         $this->getDI()->getEventsManager()->fire('user:beforeRegister', $this);
 
-        $userinfo = self::findFirst("username = '$this->username'");
-        if ($userinfo) {
-            throw new Exception\ResourceConflictException('ERR_USER_USERNAME_ALREADY_TAKEN');
-        }
+        //手机注册要和username+email的登陆系统打通，
+        //为了避免潜在的风险，username 是根据mobile生成的，mobile一样，username一定一样
+//        $userinfo = self::findFirst("username = '$this->username'");
+//        if ($userinfo) {
+//            throw new Exception\ResourceConflictException('ERR_USER_USERNAME_ALREADY_TAKEN');
+//        }
 
         $userinfo = self::findFirst("mobile = '$this->mobile'");
         if ($userinfo) {
