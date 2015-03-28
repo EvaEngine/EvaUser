@@ -66,9 +66,9 @@ class Register extends User
             throw new Exception\ResourceConflictException('ERR_USER_MOBILE_ALREADY_TAKEN');
         }
 
-//        if (!$this->mobileCaptchaCheck($this->mobile, $captcha)) {
-//            throw new Exception\RuntimeException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED');
-//        }
+        if (!$this->mobileCaptchaCheck($this->mobile, $captcha)) {
+            throw new Exception\RuntimeException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED');
+        }
 
 
         $this->status = 'active';
