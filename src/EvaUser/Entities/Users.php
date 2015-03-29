@@ -180,6 +180,11 @@ class Users extends \Eva\EvaEngine\Mvc\Model implements CommentUser
      */
     public $providerType = 'DEFAULT';
 
+    /**
+     * @var string
+     */
+    public $auth;
+
 //    /**
 //     *
 //     * @var string 扩展字段
