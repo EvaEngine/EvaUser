@@ -282,6 +282,11 @@ class Users extends \Eva\EvaEngine\Mvc\Model implements CommentUser
                 'alias' => 'profile'
             )
         );
+        $this->hasOne('id', 'Eva\EvaUser\Entities\RealnameAuth', 'userId',
+            array(
+                'alias' => 'Auth'
+            )
+        );
 
         parent::initialize();
     }
