@@ -30,6 +30,7 @@ class ValidateController extends ControllerBase
         $partner = $DES->encrypt($config->partner);
         $partnerPW = $DES->encrypt($config->partnerPW);
         $type = $DES->encrypt($config->type);
+        $userData='';
         if(count($param) > 1){
             foreach ($param as $k => $v) {
                 $userData .= $this->formatParam($config->type,$v).';';

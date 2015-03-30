@@ -3,7 +3,7 @@ namespace Eva\EvaUser\Tasks;
 
 use Eva\EvaEngine\Tasks\TaskBase;
 use Phalcon\Mvc\Model\Query;
-use Eva\EvaUser\Models\RealnameAuth;
+use Eva\EvaUser\Entities\RealnameAuth;
 use Eva\EvaUser\Controllers\ValidateController;
 use Eva\EvaUser\Entities\UserAuththread;
 class AuthTask extends TaskBase {
