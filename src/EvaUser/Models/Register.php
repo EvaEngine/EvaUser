@@ -76,6 +76,7 @@ class Register extends User
         $this->status = 'active';
         $this->emailStatus = $this->emailStatus ?: 'inactive';
         $this->mobileStatus = $this->mobileStatus ?: 'active';
+        $this->mobileConfirmedAt = time();
         $this->accountType = $this->accountType ?: 'basic';
         $this->password = self::passwordHash($this->password);
         $this->activationHash = sha1(uniqid(mt_rand(), true));
