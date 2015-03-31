@@ -9,7 +9,7 @@ use Eva\EvaUser\Entities\UserAuththread;
 class AuthTask extends TaskBase {
 
     public function indexAction() {
-        $userData = RealnameAuth::find(array('status=0', 'limit' => 200));
+        $userData = RealnameAuth::find(array('status=4', 'limit' => 200));
         $idArray = array();
         if ($userData) {
             foreach ($userData as $k => $v) {
