@@ -41,6 +41,6 @@ class UserController extends ControllerBase implements SessionAuthorityControlle
         } catch (Exception\LogicException $e) {
             return $this->showExceptionAsJson($e);
         }
-        return $this->showResponseAsJson(['mobile' => $bindingForm->mobile, 'status' => true]);
+        return $this->showResponseAsJson(['mobile' => $data['mobile'], 'status' => true]);
     }
 }
