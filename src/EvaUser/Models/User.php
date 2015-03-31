@@ -19,6 +19,18 @@ class User extends Entities\Users
         'avatar' => 'getAvatar',
         'roles' => 'getRoles',
     );
+    // 登录后写入到 session 的数据
+    public static $dumpForAuth = array(
+        'id',
+        'username',
+        'status',
+        'email',
+        'emailStatus',
+        'mobile',
+        'mobileStatus',
+        'screenName',
+        'avatar' => 'getAvatar',
+    );
 
     public function beforeSave()
     {
@@ -205,26 +217,32 @@ class User extends Entities\Users
         if (!$user->mobileCaptchaCheck($mobile, $captcha)) {
             throw new Exception\InvalidArgumentException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED');
         }
-        $user->mobile = $captcha;
+        $user->mobile = $mobile;
         $user->mobileStatus = 'active';
+        $user->mobileConfirmedAt = time();
         return $user->save();
     }
 
+    /**
+     * 验证手机验证码是否有效
+     *
+     * @param string $mobile 手机号
+     * @param string $captcha 验证码
+     * @return bool
+     * @throws Exception\InvalidArgumentException
+     */
     public function mobileCaptchaCheck($mobile, $captcha)
     {
 
         $cache = $this->getDI()->get('modelsCache');
 
         $cacheKey = 'sms_captcha_' . $mobile;
-//        dd($cacheKey);
-        $result = false;
         if ($cache->exists($cacheKey)) {
             $data = $cache->get($cacheKey);
-
             if ($data['captcha'] == $captcha) {
-                $result = true;
+                return true;
             }
         }
-        return $result;
+        throw new Exception\InvalidArgumentException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED');
     }
 }

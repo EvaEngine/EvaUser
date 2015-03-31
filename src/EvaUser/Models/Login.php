@@ -107,7 +107,9 @@ class Login extends User
             'username' => 'Guest',
             'status' => '',
             'email' => '',
+            'emailStatus' => 'inactive',
             'mobile' => '',
+            'mobileStatus' => 'inactive',
             'screenName' => '',
             'avatar' => '',
 
@@ -186,15 +188,7 @@ class Login extends User
 
     public function userToAuthIdentity(Entities\Users $userinfo)
     {
-        return array(
-            'id' => $userinfo->id,
-            'username' => $userinfo->username,
-            'status' => $userinfo->status,
-            'mobile' => $userinfo->mobile,
-            'email' => $userinfo->email,
-            'screenName' => $userinfo->screenName,
-            'avatar' => $userinfo->getAvatar(),
-        );
+        return $userinfo->dump(User::$dumpForAuth);
     }
 
     /**

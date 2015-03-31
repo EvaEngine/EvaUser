@@ -4,6 +4,7 @@ namespace Eva\EvaUser\Controllers;
 
 use Eva\EvaUser\Models;
 use Eva\EvaUser\Forms;
+use Eva\EvaEngine\Exception;
 
 class SessionController extends ControllerBase
 {
@@ -48,8 +49,8 @@ class SessionController extends ControllerBase
             } catch (\Exception $e) {
                 // 邮箱未激活，直接发送验证邮件
                 if ($e->getCode() == 1000) {
-                   $registerUser = new Models\Register();
-                   $registerUser->sendVerificationEmail($email);
+                    $registerUser = new Models\Register();
+                    $registerUser->sendVerificationEmail($email);
                 }
                 return $this->showExceptionAsJson($e, $user->getMessages());
             }
@@ -71,6 +72,44 @@ class SessionController extends ControllerBase
                 return $this->redirectHandler($this->getDI()->getConfig()->user->resetFailedRedirectUri);
             }
             return $this->redirectHandler($this->getDI()->getConfig()->user->resetSuccessRedirectUri);
+        }
+    }
+
+    public function resetByMobileAction()
+    {
+        $mobile = $this->request->getPost('mobile');
+        $captcha = $this->request->getPost('captcha');
+        /** @var \Eva\EvaUser\Models\ResetPassword $user */
+        $user = Models\User::findFirst("mobile='{$mobile}' AND mobileStatus='active'");
+        if (!$user) {
+            throw new Exception\ResourceNotFoundException('ERR_USER_NOT_EXIST');
+        }
+        if ($user->mobileStatus != 'active') {
+            throw new Exception\InvalidArgumentException('ERR_MOBILE_INACTIVATED');
+        }
+        if ($user->mobileCaptchaCheck($mobile, $captcha)) {
+
+            $resetPassword = new Models\ResetPassword();
+
+
+            $form = new Forms\MobileResetPasswordForm();
+            if ($form->isValid($this->request->getPost()) === false) {
+                return $this->showInvalidMessagesAsJson($form);
+            }
+
+            $resetPassword->assign(
+                array(
+                    'username' => $user->username,
+                    'password' => $this->request->getPost('password'),
+                )
+            );
+            try {
+                $resetPassword->resetPassword();
+                $this->flashSession->success('SUCCESS_USER_PASSWORD_RESET');
+            } catch (\Exception $e) {
+                return $this->showExceptionAsJson($e, $user->getMessages());
+            }
+            return $this->showResponseAsJson('SUCCESS_USER_PASSWORD_RESET');
         }
     }
 
