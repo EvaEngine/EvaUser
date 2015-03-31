@@ -5,6 +5,7 @@ namespace Eva\EvaUser\Models;
 use Eva\EvaUser\Entities;
 use Eva\EvaEngine\Exception;
 use Eva\EvaFileSystem\Models\Upload as UploadModel;
+use Eva\EvaUser\Forms\MobileBindingForm;
 
 class User extends Entities\Users
 {
@@ -182,5 +183,51 @@ class User extends Entities\Users
         }
 
         return $user;
+    }
+
+    /**
+     *
+     * 绑定手机号码
+     *
+     * @param MobileBindingForm $bindingForm
+     * @return bool
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\UnauthorizedException
+     */
+    public static function bindMobile(MobileBindingForm $bindingForm)
+    {
+        if (!$bindingForm->isValid()) {
+            throw new Exception\InvalidArgumentException($bindingForm->getMessages());
+        }
+        /** @var User $user */
+        $user = static::findFirst('id=' . $bindingForm->userId);
+        if (!$user) {
+            throw new Exception\UnauthorizedException('ERR_USER_NOT_EXIST');
+        }
+
+        if (!$user->mobileCaptchaCheck($bindingForm->mobile, $bindingForm->captcha)) {
+            throw new Exception\InvalidArgumentException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED');
+        }
+        $user->mobile = $bindingForm->captcha;
+        $user->mobileStatus = 'active';
+        return $user->save();
+    }
+
+    public function mobileCaptchaCheck($mobile, $captcha)
+    {
+
+        $cache = $this->getDI()->get('modelsCache');
+
+        $cacheKey = 'sms_captcha_' . $mobile;
+//        dd($cacheKey);
+        $result = false;
+        if ($cache->exists($cacheKey)) {
+            $data = $cache->get($cacheKey);
+
+            if ($data['captcha'] == $captcha) {
+                $result = true;
+            }
+        }
+        return $result;
     }
 }

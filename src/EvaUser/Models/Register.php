@@ -213,21 +213,5 @@ class Register extends User
         return $result;
     }
 
-    public function mobileCaptchaCheck($mobile, $captcha)
-    {
 
-        $cache = $this->getDI()->get('modelsCache');
-
-        $cacheKey = 'sms_captcha_' . $mobile;
-//        dd($cacheKey);
-        $result = false;
-        if ($cache->exists($cacheKey)) {
-            $data = $cache->get($cacheKey);
-
-            if ($data['captcha'] == $captcha) {
-                $result = true;
-            }
-        }
-        return $result;
-    }
 }
