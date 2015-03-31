@@ -186,29 +186,26 @@ class User extends Entities\Users
     }
 
     /**
-     *
-     * 绑定手机号码
-     *
-     * @param MobileBindingForm $bindingForm
+     * @param $mobile
+     * @param $captcha
+     * @param $userId
      * @return bool
      * @throws Exception\InvalidArgumentException
      * @throws Exception\UnauthorizedException
      */
-    public static function bindMobile(MobileBindingForm $bindingForm)
+    public static function bindMobile($mobile, $captcha, $userId)
     {
-        if (!$bindingForm->isValid()) {
-            throw new Exception\InvalidArgumentException($bindingForm->getMessages());
-        }
+
         /** @var User $user */
-        $user = static::findFirst('id=' . $bindingForm->userId);
+        $user = static::findFirst('id=' . $userId);
         if (!$user) {
             throw new Exception\UnauthorizedException('ERR_USER_NOT_EXIST');
         }
 
-        if (!$user->mobileCaptchaCheck($bindingForm->mobile, $bindingForm->captcha)) {
+        if (!$user->mobileCaptchaCheck($mobile, $captcha)) {
             throw new Exception\InvalidArgumentException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED');
         }
-        $user->mobile = $bindingForm->captcha;
+        $user->mobile = $captcha;
         $user->mobileStatus = 'active';
         return $user->save();
     }

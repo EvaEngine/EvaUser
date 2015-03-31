@@ -15,7 +15,10 @@ use Eva\EvaUser\Models\Login;
 use Eva\EvaUser\Models\User;
 use Eva\EvaEngine\Exception;
 
-
+/**
+ * @resourceName("Users frontend")
+ * @resourceDescription("Users frontend")
+ */
 class UserController extends ControllerBase implements SessionAuthorityControllerInterface
 {
     /**
@@ -24,13 +27,15 @@ class UserController extends ControllerBase implements SessionAuthorityControlle
      */
     public function bindMobileAction()
     {
-        $bindingForm = new MobileBindingForm();
+        $bindingForm = new MobileBindingForm(new User());
         $curUser = Login::getCurrentUser();
-        $bindingForm->userId = $curUser['id'];
-        $bindingForm->captcha = $this->request->getPut('captcha');
-        $bindingForm->mobile = $this->request->getPut('mobile');
+        $data = $this->request->getPut();
+        $data['userId'] = $curUser['id'];
+        if (!$bindingForm->isValid($data)) {
+            return $this->showInvalidMessagesAsJson($bindingForm);
+        }
         try {
-            if (!User::bindMobile($bindingForm)) {
+            if (!User::bindMobile($data['mobile'], $data['captcha'], $data['userId'])) {
                 return $this->showErrorMessageAsJson(400, 'BIND_MOBILE_FAILURE');
             }
         } catch (Exception\LogicException $e) {
