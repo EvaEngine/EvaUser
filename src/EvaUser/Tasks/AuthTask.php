@@ -24,7 +24,7 @@ class AuthTask extends TaskBase {
 
             // file_put_contents('./aaa.txt', $xmlString );
             $obj = (array)simplexml_load_string($xmlString, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
-
+            $arr=array();
             if ($obj['message']->status == 0) { //本次请求成功
                 foreach ($obj['policeCheckInfos'] as $v) {
                     if ($v->message->status == 0) { //这次身份证可以验证
