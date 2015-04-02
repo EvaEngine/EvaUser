@@ -208,8 +208,8 @@ class User extends Entities\Users
     public static function bindMobile($mobile, $captcha, $userId)
     {
 
-        /** @var User $user */
-        $user = static::findFirst('id=' . $userId);
+        /** @var Login $user */
+        $user = Login::findFirst('id=' . $userId);
         if (!$user) {
             throw new Exception\UnauthorizedException('ERR_USER_NOT_EXIST');
         }
@@ -220,7 +220,9 @@ class User extends Entities\Users
         $user->mobile = $mobile;
         $user->mobileStatus = 'active';
         $user->mobileConfirmedAt = time();
-        return $user->save();
+        $saved = $user->save();
+        $user->login();
+        return $saved;
     }
 
     /**
