@@ -33,7 +33,7 @@ class RealnameAuth extends Model
      * @SWG\Property
      */
     public $cardNum;
-    public $status = 4;
+    public $status = 3;
     public $createTime;
     protected $tableName = 'user_realname_auth';
 
