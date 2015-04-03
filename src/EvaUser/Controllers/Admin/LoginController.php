@@ -11,6 +11,8 @@ class LoginController extends ControllerBase
     public function indexAction()
     {
         $this->view->changeRender('admin/login/index');
+        $this->dispatcher->setParam('loginSuccessRedirectUri', '/admin/dashboard');
+
         $this->dispatcher->forward(array(
             'namespace' => 'Eva\EvaUser\Controllers',
             'controller' => 'login',
