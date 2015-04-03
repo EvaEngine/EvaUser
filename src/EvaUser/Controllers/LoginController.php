@@ -65,7 +65,12 @@ class LoginController extends ControllerBase
                     }
                 }
                 //$this->flashSession->success('SUCCESS_USER_LOGGED_IN');
-                return $this->redirectHandler($this->getDI()->getConfig()->user->loginSuccessRedirectUri);
+                $loginSuccessRedirectUri = $this->dispatcher->getParam('loginSuccessRedirectUri');
+                if (empty($loginSuccessRedirectUri)) {
+                    $loginSuccessRedirectUri = '/';
+                }
+
+                return $this->response->redirect($loginSuccessRedirectUri);
             } catch (\Exception $e) {
                 $this->showException($e, $user->getMessages());
                 return $this->redirectHandler($this->getDI()->getConfig()->user->loginFailedRedirectUri, 'error');
