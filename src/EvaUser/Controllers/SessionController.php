@@ -75,6 +75,14 @@ class SessionController extends ControllerBase
         }
     }
 
+    public function sendResetCaptchaAction(){
+        $mobile = $this->request->getPost('mobile');
+        $registerModel = new Models\Register();
+        $registerModel->mobileCaptcha($mobile,$type=1);
+        $data = array('mobile'=>$mobile,'timestamp'=>time());
+        return $this->showResponseAsJson($data);
+    }
+
     public function resetByMobileAction()
     {
         $mobile = $this->request->getPost('mobile');

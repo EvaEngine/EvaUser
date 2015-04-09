@@ -181,8 +181,12 @@ class Register extends User
 
         return true;
     }
-
-    public function mobileCaptcha($mobile)
+    /**
+     * @param $mobile
+     * @param int $type 这个type是用来区分短信的模板类别 为空时发送注册短信,true则为发送重置密码短信.SessionController->sendResetCaptcha也调用这个
+     * @return mixed|void
+     */
+    public function mobileCaptcha($mobile,$type = 0)
     {
         $cache = $this->getDI()->get('modelsCache');
 
@@ -201,7 +205,12 @@ class Register extends User
         /** @var \Eva\EvaSms\Sender $sender */
         $sender = $this->getDI()->getSmsSender();
         $captcha = mt_rand(100000, 999999);
-        $templateId = $this->getDI()->getConfig()->smsSender->templates->verifyCode;
+        if($type){
+            $templateId = $this->getDI()->getConfig()->smsSender->templates->resetPassword;
+        }else{
+            $templateId = $this->getDI()->getConfig()->smsSender->templates->verifyCode;
+        }
+
         $result = $sender->sendTemplateMessage($mobile, $templateId, ['number' => $captcha]);
 
         $data['timestamp'] = $now;
