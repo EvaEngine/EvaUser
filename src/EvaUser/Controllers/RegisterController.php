@@ -67,7 +67,7 @@ class RegisterController extends ControllerBase
         $data = $this->request->getPost();
         //配资姓名不需要username 和 email ，但是去掉对原有的登录系统又风险，所以先做个假的
 //        $data['username'] = 'wscn_mobile_'.$data['mobile'];
-        $randomNumber = mt_rand(10000, 99999);
+        $randomNumber = chr(mt_rand(97, 122));
         $data['username'] = $data['mobile'] . '_' . $randomNumber;
         $data['email'] = $data['mobile'] . '@fake.wallstreetcn.com';
         $data['screenName'] =
