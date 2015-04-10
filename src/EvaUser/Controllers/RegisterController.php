@@ -26,6 +26,7 @@ class RegisterController extends ControllerBase
             ));
             try {
                 $registerUser = $user->register();
+
                 return $this->showResponseAsJson($registerUser);
             } catch (\Exception $e) {
                 return $this->showExceptionAsJson($e, $user->getMessages());
@@ -34,6 +35,7 @@ class RegisterController extends ControllerBase
             $form = new Forms\RegisterForm();
             if ($form->isValid($this->request->getPost()) === false) {
                 $this->showInvalidMessages($form);
+
                 return $this->redirectHandler($this->getDI()->getConfig()->user->registerFailedRedirectUri, 'error');
             }
             $user = new Models\Register();
@@ -47,9 +49,11 @@ class RegisterController extends ControllerBase
                 $user->register();
             } catch (\Exception $e) {
                 $this->showException($e, $user->getMessages());
+
                 return $this->redirectHandler($this->getDI()->getConfig()->user->registerFailedRedirectUri, 'error');
             }
             $this->flashSession->success('SUCCESS_USER_REGISTERED_ACTIVE_MAIL_SENT');
+
             return $this->redirectHandler($this->getDI()->getConfig()->user->registerSuccessRedirectUri);
         }
     }
@@ -62,9 +66,12 @@ class RegisterController extends ControllerBase
 
         $data = $this->request->getPost();
         //配资姓名不需要username 和 email ，但是去掉对原有的登录系统又风险，所以先做个假的
-        $data['username'] = 'wscn_mobile_'.$data['mobile'];
-        $data['email'] = $data['mobile'].'@fake.wallstreetcn.com';
-
+//        $data['username'] = 'wscn_mobile_'.$data['mobile'];
+        $randomNumber = mt_rand(10000, 99999);
+        $data['username'] = $data['mobile'] . '_' . $randomNumber;
+        $data['email'] = $data['mobile'] . '@fake.wallstreetcn.com';
+        $data['screenName'] =
+            substr($data['mobile'], 0, 3) . '******' . substr($data['mobile'], -2) . '_' . $randomNumber;
 
         if ($this->request->isAjax() || $this->request->get('ajax')) {
             $form = new Forms\MobileRegisterForm();
@@ -77,11 +84,13 @@ class RegisterController extends ControllerBase
                 'username' => $data['username'],
                 'mobile' => $this->request->getPost('mobile'),
                 'password' => $this->request->getPost('password'),
+                'screenName' => $data['screenName']
             ));
 
             $captcha = $this->request->getPost('captcha');
             try {
                 $registerUser = $user->registerByMobile($captcha);
+
                 return $this->showResponseAsJson($registerUser);
             } catch (\Exception $e) {
                 return $this->showExceptionAsJson($e, $user->getMessages());
@@ -90,6 +99,7 @@ class RegisterController extends ControllerBase
             $form = new Forms\MobileRegisterForm();
             if ($form->isValid($data) === false) {
                 $this->showInvalidMessages($form);
+
                 return $this->redirectHandler($this->getDI()->getConfig()->user->registerFailedRedirectUri, 'error');
             }
             $user = new Models\Register();
@@ -104,9 +114,11 @@ class RegisterController extends ControllerBase
                 $user->registerByMobile($captcha);
             } catch (\Exception $e) {
                 $this->showException($e, $user->getMessages());
+
                 return $this->redirectHandler($this->getDI()->getConfig()->user->registerFailedRedirectUri, 'error');
             }
             $this->flashSession->success('SUCCESS_USER_REGISTERED_ACTIVE_MAIL_SENT');
+
             return $this->redirectHandler($this->getDI()->getConfig()->user->registerSuccessRedirectUri);
         }
     }
@@ -119,7 +131,7 @@ class RegisterController extends ControllerBase
         $registerModel = new Models\Register();
         $result = $registerModel->mobileCaptcha($mobile);
 
-        $data = array('mobile'=>$mobile,'timestamp'=>time());
+        $data = array('mobile' => $mobile, 'timestamp' => time());
 
         return $this->showResponseAsJson($data);
     }
@@ -133,7 +145,7 @@ class RegisterController extends ControllerBase
         $registerModel = new Models\Register();
         $result = $registerModel->mobileCaptchaCheck($mobile, $captcha);
 
-        $data = array('mobile'=>$mobile,'result'=>$result);
+        $data = array('mobile' => $mobile, 'result' => $result);
 
         return $this->showResponseAsJson($data);
     }
