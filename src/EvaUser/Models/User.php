@@ -66,6 +66,7 @@ class User extends Entities\Users
         if (!$user->save()) {
             throw new Exception\RuntimeException('ERR_USER_CHANGE_PASSWORD_FAILED');
         }
+
         return $user;
     }
 
@@ -127,6 +128,7 @@ class User extends Entities\Users
         if (!$user) {
             throw new Exception\ResourceNotFoundException('ERR_USER_NOT_EXIST');
         }
+
         return $this->sendChangeEmailVerificationEmail($user->username, $newEmail);
     }
 
@@ -144,6 +146,7 @@ class User extends Entities\Users
                     )
                 )
             );
+
             return true;
         }
 
@@ -198,6 +201,42 @@ class User extends Entities\Users
     }
 
     /**
+     * 修改手机号
+     *
+     * @param string $newMobile 新手机号
+     * @param string $newCaptcha 新手机号验证码
+     * @param string $oldCaptcha 旧手机号验证码
+     * @return bool
+     * @throws Exception\InvalidArgumentException
+     */
+    public function changeMobile($newMobile, $newCaptcha, $oldCaptcha = null)
+    {
+        // 如果之前的手机号码未激活，在现在是激活手机号的操作；
+        if ($this->mobileStatus == 'inactive') {
+            if (!$this->mobileCaptchaCheck($newMobile, $newCaptcha)) {
+                throw new Exception\InvalidArgumentException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED');
+            }
+
+            $this->mobile = $newMobile;
+            $this->mobileStatus = 'active';
+
+            return $this->save();
+            // 已激活的手机号修改必须先验证原来的手机验证码
+        } else {
+            if (!$this->mobileCaptchaCheck($this->mobile, $oldCaptcha)) {
+                throw new Exception\InvalidArgumentException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED, ' . $this->mobile);
+            }
+            if (!$this->mobileCaptchaCheck($newMobile, $newCaptcha)) {
+                throw new Exception\InvalidArgumentException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED, ' . $newCaptcha);
+            }
+            $this->mobile = $newMobile;
+            $this->mobileStatus = 'active';
+
+            return $this->save();
+        }
+    }
+
+    /**
      * @param $mobile
      * @param $captcha
      * @param $userId
@@ -222,6 +261,7 @@ class User extends Entities\Users
         $user->mobileConfirmedAt = time();
         $saved = $user->save();
         $user->login();
+
         return $saved;
     }
 
