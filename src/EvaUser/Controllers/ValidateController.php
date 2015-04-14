@@ -9,12 +9,11 @@ namespace Eva\EvaUser\Controllers;
 
 use Eva\EvaUser\Models;
 use Eva\EvaUser\Forms;
-use Eva\EvaUser\Models\Login;
 use Eva\EvaUser\Models\Des;
 class ValidateController extends ControllerBase
 {
     /**
-     * @param string $param 查询参数
+     * @param array $param 查询参数(二维数组)
      * @return string
      */
     function getData($param) {
@@ -23,7 +22,7 @@ class ValidateController extends ControllerBase
             $soap = new \SoapClient($config->wsdlURL,array("connection_timeout" => 15));
         }
         catch(Exception $e) {
-            return "Linkerror";
+            return "LinkError";
         }
         $DES = new Des ( $config->Key, $config->iv );
         //@todo 加密数据
@@ -68,9 +67,10 @@ class ValidateController extends ControllerBase
         }
         $keys = array();
         $values = array();
+
         foreach ($params as $key => $value) {
             $keys[] = $key;
-            $values[] = strtoupper($value);
+            $values[] = $value;
         }
         $param = str_replace($keys, $values, $supportClass[$queryType]);
         return $param;
