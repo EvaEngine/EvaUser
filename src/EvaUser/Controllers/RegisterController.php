@@ -67,11 +67,12 @@ class RegisterController extends ControllerBase
         $data = $this->request->getPost();
         //配资姓名不需要username 和 email ，但是去掉对原有的登录系统又风险，所以先做个假的
 //        $data['username'] = 'wscn_mobile_'.$data['mobile'];
-        $randomNumber = chr(mt_rand(97, 122));
-        $data['username'] = $data['mobile'] . '_' . $randomNumber;
+//        $randomNumber = chr(mt_rand(97, 122));
+//        $data['username'] = $data['mobile'] . '_' . $randomNumber;
+        $data['username'] = uniqid() . substr($data['mobile'], 7);
         $data['email'] = $data['mobile'] . '@fake.wallstreetcn.com';
-        $data['screenName'] =
-            substr($data['mobile'], 0, 3) . '******' . substr($data['mobile'], -2) . '_' . $randomNumber;
+//        $data['screenName'] =
+//            substr($data['mobile'], 0, 3) . '******' . substr($data['mobile'], -2) . '_' . $randomNumber;
 
         if ($this->request->isAjax() || $this->request->get('ajax')) {
             $form = new Forms\MobileRegisterForm();
