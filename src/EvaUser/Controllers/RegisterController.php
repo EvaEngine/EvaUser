@@ -23,6 +23,7 @@ class RegisterController extends ControllerBase
                 'username' => $this->request->getPost('username'),
                 'email' => $this->request->getPost('email'),
                 'password' => $this->request->getPost('password'),
+                'usernameCustomized' => 1
             ));
             try {
                 $registerUser = $user->register();
@@ -43,6 +44,7 @@ class RegisterController extends ControllerBase
                 'username' => $this->request->getPost('username'),
                 'email' => $this->request->getPost('email'),
                 'password' => $this->request->getPost('password'),
+                'usernameCustomized' => 1
             ));
 
             try {
@@ -69,7 +71,7 @@ class RegisterController extends ControllerBase
 //        $data['username'] = 'wscn_mobile_'.$data['mobile'];
 //        $randomNumber = chr(mt_rand(97, 122));
 //        $data['username'] = $data['mobile'] . '_' . $randomNumber;
-        $data['username'] = uniqid() . substr($data['mobile'], 7);
+        $data['username'] = 'mobi_' . uniqid() . substr($data['mobile'], 7);
         $data['email'] = $data['mobile'] . '@fake.wallstreetcn.com';
 //        $data['screenName'] =
 //            substr($data['mobile'], 0, 3) . '******' . substr($data['mobile'], -2) . '_' . $randomNumber;
@@ -85,7 +87,8 @@ class RegisterController extends ControllerBase
                 'username' => $data['username'],
                 'mobile' => $this->request->getPost('mobile'),
                 'password' => $this->request->getPost('password'),
-                'screenName' => $data['screenName']
+                'screenName' => $data['screenName'],
+                'usernameCustomized' => 0
             ));
 
             $captcha = $this->request->getPost('captcha');

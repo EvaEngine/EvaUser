@@ -55,6 +55,7 @@ DROP TABLE IF EXISTS `eva_user_users`;
 CREATE TABLE IF NOT EXISTS `eva_user_users` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `username` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `usernameCustomized` TINYINT(1) DEFAULT 1 NOT NULL,
   `email` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `mobile` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` enum('active','deleted','inactive') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'active',
