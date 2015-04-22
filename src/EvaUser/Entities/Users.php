@@ -23,7 +23,10 @@ class Users extends \Eva\EvaEngine\Mvc\Model implements CommentUser
      * @var string
      */
     public $email;
-
+    /**
+     * @var int
+     */
+    public $usernameCustomized = 1;
     /**
      *
      * @var string
