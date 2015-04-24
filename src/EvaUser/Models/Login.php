@@ -90,6 +90,7 @@ class Login extends User
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
             return $di->getSession();
         }
+
         return $di->getTokenStorage();
     }
 
@@ -100,8 +101,10 @@ class Login extends User
         if ($currentUser) {
             $currentUser = (array)$currentUser;
             $currentUser['badges'] = $storage->get(self::INFO_KEY_BADGE);
+
             return $currentUser;
         }
+
         return array(
             'id' => 0,
             'username' => 'Guest',
@@ -123,6 +126,7 @@ class Login extends User
         if ($roles) {
             return $roles;
         }
+
         return array(
             'GUEST'
         );
@@ -136,6 +140,7 @@ class Login extends User
     public function setRememberMeTokenExpire($rememberMeTokenExpires)
     {
         $this->rememberMeTokenExpires = $rememberMeTokenExpires;
+
         return $this;
     }
 
@@ -149,18 +154,21 @@ class Login extends User
     {
         if (!$this->username) {
             $this->appendMessage(new Message('ERR_USER_REMEMBER_TOKEN_NO_USER_INPUT'));
+
             return false;
         }
 
         $sessionId = $this->getDI()->getSession()->getId();
         if (!$sessionId) {
             $this->appendMessage(new Message('ERR_USER_REMEMBER_TOKEN_NO_SESSION'));
+
             return false;
         }
 
         $userinfo = self::findFirst("username = '$this->username'");
         if (!$userinfo) {
             $this->appendMessage(new Message('ERR_USER_REMEMBER_TOKEN_USER_NOT_FOUND'));
+
             return false;
         }
 
@@ -183,6 +191,7 @@ class Login extends User
         $authIdentity = $this->userToAuthIdentity($userinfo);
         $storage = Login::getAuthStorage();
         $storage->set(Login::AUTH_KEY_LOGIN, $authIdentity);
+
         return $authIdentity;
     }
 
@@ -226,7 +235,7 @@ class Login extends User
 
         $authIdentity = $this->saveUserToStorage($userinfo);
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
-            $cookieDomain = $this->getDI()->getConfig()->user->loginCookieDomain;
+            $cookieDomain = $this->getDI()->getConfig()->session->session_domain;
             /** @var \Phalcon\Http\Response\Cookies $cookies */
             $cookies = $this->getDI()->getCookies()->set(Login::LOGIN_COOKIE_KEY, $userinfo->id);
 
@@ -234,15 +243,13 @@ class Login extends User
             $cookie->setHttpOnly(false);
 
             if ($cookieDomain) {
-                //Set PHPSESSIONID domain
-                session_set_cookie_params(0, '/', $cookieDomain);
                 $cookie = $cookies->get(Login::LOGIN_COOKIE_KEY);
                 $cookie->setDomain($cookieDomain);
-                $cookies->get(Login::AUTH_KEY_LOGIN)->setDomain($cookieDomain);
             }
         }
 
         $this->getDI()->getEventsManager()->fire('user:afterLogin', $userinfo);
+
         return $userinfo;
     }
 
@@ -312,6 +319,7 @@ class Login extends User
 
         $login = new Login();
         $login->id = $userinfo->id;
+
         return $login->login();
     }
 
@@ -322,6 +330,7 @@ class Login extends User
         $tokenArray = explode('|', $tokenString);
         if (!$tokenArray || count($tokenArray) < 3) {
             $this->appendMessage(new Message('ERR_USER_REMEMBER_TOKEN_FORMAT_INCORRECT'));
+
             return false;
         }
 
@@ -336,11 +345,13 @@ class Login extends User
         ));
         if (!$tokenInfo) {
             $this->appendMessage(new Message('ERR_USER_REMEMBER_TOKEN_NOT_FOUND'));
+
             return false;
         }
 
         if ($tokenInfo->expiredAt < time()) {
             $this->appendMessage(new Message('ERR_USER_REMEMBER_TOKEN_EXPIRED'));
+
             return false;
         }
 
@@ -349,11 +360,13 @@ class Login extends User
         //User changed status or password
         if ($rememberMeHash != $tokenInfo->userHash) {
             $this->appendMessage(new Message('ERR_USER_REMEMBER_TOKEN_ILLEGAL'));
+
             return false;
         }
         $login = new Login();
         $login->id = $tokenInfo->userId;
         $userinfo = $login->login();
+
         return $userinfo;
     }
 
@@ -363,6 +376,7 @@ class Login extends User
         if ($authIdentity) {
             return $authIdentity;
         }
+
         return false;
     }
 
