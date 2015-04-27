@@ -2,7 +2,7 @@
 
 namespace Eva\EvaUser\Entities;
 
-class GuestUsers extends \Eva\EvaEngine\Mvc\Model implements CommentUser
+class GuestUsers extends EvaUserEntityBase implements CommentUser
 {
     const USER_TYPE = 'guest';
 
