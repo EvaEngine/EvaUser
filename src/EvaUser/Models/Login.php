@@ -235,7 +235,7 @@ class Login extends User
 
         $authIdentity = $this->saveUserToStorage($userinfo);
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
-            $cookieDomain = $this->getDI()->getConfig()->session->session_domain;
+            $cookieDomain = $this->getDI()->getConfig()->session->cookie_params->domain;
             /** @var \Phalcon\Http\Response\Cookies $cookies */
             $cookies = $this->getDI()->getCookies()->set(Login::LOGIN_COOKIE_KEY, $userinfo->id);
 

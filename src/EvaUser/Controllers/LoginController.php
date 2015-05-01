@@ -23,7 +23,7 @@ class LoginController extends ControllerBase
             $user = new Login();
             try {
                 $loginUser = $user->loginByPassword($this->request->getPost('identify'), $this->request->getPost('password'));
-                $cookieDomain = $this->getDI()->getConfig()->user->loginCookieDomain;
+                $cookieDomain = $this->getDI()->getConfig()->session->cookie_params->domain;
                 if ($loginUser->id && $this->request->getPost('remember')) {
                     $token = $user->getRememberMeToken();
                     if ($token) {
