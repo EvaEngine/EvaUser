@@ -198,12 +198,6 @@ class Profiles extends \Eva\EvaEngine\Mvc\Model
 
     /**
      *
-     * @var int
-     */
-    public $faceNum;
-
-    /**
-     *
      * @var integer
      */
     public $updatedAt;
@@ -246,7 +240,6 @@ class Profiles extends \Eva\EvaEngine\Mvc\Model
             'internalIm' => 'internalIm',
             'otherIm' => 'otherIm',
             'company' => 'company',
-            'faceNum' => 'faceNum',
             'updatedAt' => 'updatedAt'
         );
     }
