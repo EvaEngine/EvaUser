@@ -24,7 +24,7 @@ class LoginController extends ControllerBase
             try {
                 $loginUser = $user->loginByPassword($this->request->getPost('identify'),
                     $this->request->getPost('password'));
-                $cookieDomain = $this->getDI()->getConfig()->user->loginCookieDomain;
+                $cookieDomain = $this->getDI()->getConfig()->session->cookie_params->domain;
                 if ($loginUser->id && $this->request->getPost('remember')) {
                     $token = $user->getRememberMeToken();
                     if ($token) {
@@ -52,6 +52,7 @@ class LoginController extends ControllerBase
 
         } else {
             $loginFailedRedirectUri = $this->dispatcher->getParam('loginFailedRedirectUri');
+
             $loginFailedRedirectUri = $loginFailedRedirectUri ? $loginFailedRedirectUri : $this->getDI()->getConfig()->user->loginFailedRedirectUri;
             $loginFailedRedirectUri = $loginFailedRedirectUri ? $loginFailedRedirectUri : $this->request->getURI();
             $form = new Forms\LoginForm();
@@ -82,9 +83,8 @@ class LoginController extends ControllerBase
             } catch (\Exception $e) {
                 $this->showException($e, $user->getMessages());
 
-
                 // $this->getDI()->getConfig()->user->loginFailedRedirectUri
-                return $this->redirectHandler($loginFailedRedirectUri, 'error');
+                return $this->response->redirect($loginFailedRedirectUri, 'error');
             }
 
         }

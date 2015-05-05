@@ -365,7 +365,7 @@ a {
 }
 
 a:hover { 
-  color: #2795b6 !important;
+  color: #2795b6 ;
 }
 
 a:active { 
@@ -775,7 +775,20 @@ body.outlook p {
         padding-right: 10px !important;
       }
     }
-
+    .btn-email{
+        width:100px;
+        height: 32px;
+        background: #428bca;
+        color: #fff;
+        display: inline-block;
+        text-align: center;
+        border-radius: 3px;
+        line-height: 32px;;
+    }
+    .btn-email:hover{
+        color:#fff;
+        background: #0078d2;
+    }
   </style>
   </head>
   <body>
@@ -788,9 +801,11 @@ body.outlook p {
                         <tr>
                           <td>
                               <h1>Hi, <?=$user['username']?></h1>
-                                <p>You recently requested a link to reset your password.</p>
-                                <p>Please set a new password by following the link below:</p>
-                                <p><a href="<?=$url?>"><?=$url?></a></p>
+                                <p>您收到这封邮件，是因为您请求了重置密码</p>
+                                <p>点击下方的按钮重置密码：</p>
+                                <p><a class='btn-email'href="<?=$url?>">点击重置密码</a></p>
+                                <p>如果因为邮件安全设置等原因不能打开，请复制下面的链接，在浏览器中打开</p>
+                                <a href="<?=$url?>"><?=$url?></a>
                           </td>
                           <td class="expander"></td>
                         </tr>

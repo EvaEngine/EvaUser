@@ -252,19 +252,18 @@ class Login extends User
                 'CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR'
             );
             if ($cookieDomain) {
-                /** @var \Phalcon\Session\AdapterInterface $session */
-                $session = $this->getDI()->getSession();
-                // 设置 sso ticket 标记到 cookie
                 $cookies->set(
                     $sso_ticket_name,
-                    $session->getId() . '$$$' . $userinfo->id,
+                    $this->getDI()->getSession()->getId() . '^' . $userinfo->id,
                     0,
                     '/',
                     null,
                     $cookieDomain,
                     true
                 );
-                $cookies->get(Login::LOGIN_COOKIE_KEY)->setDomain($cookieDomain);
+                //Set PHPSESSIONID domain
+                $cookie = $cookies->get(Login::LOGIN_COOKIE_KEY);
+                $cookie->setDomain($cookieDomain);
                 $cookies->get(Login::AUTH_KEY_LOGIN)->setDomain($cookieDomain);
             }
         }
