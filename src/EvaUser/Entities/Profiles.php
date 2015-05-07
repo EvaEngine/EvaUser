@@ -246,6 +246,7 @@ class Profiles extends \Eva\EvaEngine\Mvc\Model
             'internalIm' => 'internalIm',
             'otherIm' => 'otherIm',
             'company' => 'company',
+            'jobTitle' => 'jobTitle',
             'updatedAt' => 'updatedAt'
         );
     }
