@@ -198,6 +198,12 @@ class Profiles extends \Eva\EvaEngine\Mvc\Model
 
     /**
      *
+     * @var string
+     */
+    public $jobTitle;
+
+    /**
+     *
      * @var integer
      */
     public $updatedAt;
