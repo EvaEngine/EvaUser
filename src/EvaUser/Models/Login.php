@@ -3,7 +3,9 @@
 namespace Eva\EvaUser\Models;
 
 use Eva\EvaEngine\IoC;
+use Eva\EvaEngine\Service\TokenStorage;
 use Eva\EvaUser\Entities;
+use Eva\EvaUser\TokenStorage\SessionTokenStorage;
 use Phalcon\Mvc\Model\Message as Message;
 use Eva\EvaEngine\Exception;
 use Phalcon\DI;
@@ -89,10 +91,12 @@ class Login extends User
     {
         $di = DI::getDefault();
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
-            return $di->getSession();
+            $tokenStorage = SessionTokenStorage::getInstance();
+        } else {
+            $tokenStorage = $di->getTokenStorage();
         }
 
-        return $di->getTokenStorage();
+        return $tokenStorage;
     }
 
     public static function getCurrentUser()
@@ -233,8 +237,10 @@ class Login extends User
         $userinfo->failedLogins = 0;
         $userinfo->loginAt = time();
         $userinfo->save();
-
+        $sso_ticket = $this->getDI()->getSession()->getId() . '^' . $userinfo->id;
+        Login::getAuthStorage()->setId($sso_ticket);
         $authIdentity = $this->saveUserToStorage($userinfo);
+
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
             $config = $this->getDI()->getConfig();
             $cookieDomain = $config->session->cookie_params->domain;
@@ -254,7 +260,7 @@ class Login extends User
             if ($cookieDomain) {
                 $cookies->set(
                     $sso_ticket_name,
-                    $this->getDI()->getSession()->getId() . '^' . $userinfo->id,
+                    $sso_ticket,
                     0,
                     '/',
                     null,
@@ -266,6 +272,7 @@ class Login extends User
                 $cookie->setDomain($cookieDomain);
                 $cookies->get(Login::AUTH_KEY_LOGIN)->setDomain($cookieDomain);
             }
+
         }
 
         $this->getDI()->getEventsManager()->fire('user:afterLogin', $userinfo);
@@ -392,7 +399,8 @@ class Login extends User
 
     public function getAuthIdentity()
     {
-        $authIdentity = $this->getDI()->getSession()->get(Login::AUTH_KEY_LOGIN);
+
+        $authIdentity = self::getAuthStorage()->get(Login::AUTH_KEY_LOGIN);
         if ($authIdentity) {
             return $authIdentity;
         }
