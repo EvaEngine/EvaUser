@@ -72,6 +72,23 @@ class User extends Entities\Users
         return $user;
     }
 
+    public function resetPassword($oldPassword, $newPassword)
+    {
+        $usr = Login::getCurrentUser();
+        if (!$usr['id']) throw new Exception\UnauthorizedException('ERR_USER_NOT_LOGIN');
+        /**
+         * @var $usr User
+         */
+        $usr = self::findFirst('id = ' . $usr['id']);
+        if (!$usr) throw new Exception\ResourceNotFoundException('ERR_USER_NOT_EXIST');
+        $match = Login::passwordVerify($oldPassword, $usr->password);
+        if (!$match) throw new Exception\VerifyFailedException('ERR_WRONG_PASSWORD');
+        $usr->password = self::passwordHash($newPassword);
+        if (!$usr->save()) throw new Exception\RuntimeException('ERR_USER_CHANGE_PASSWORD_FAILED');
+
+        return $usr;
+    }
+
     /**
      * 加密密码
      *
