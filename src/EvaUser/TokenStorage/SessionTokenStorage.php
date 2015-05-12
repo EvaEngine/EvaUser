@@ -26,7 +26,7 @@ class SessionTokenStorage extends TokenStorage
 
     public function getId()
     {
-        if ($this->tokenId) {
+        if (!$this->tokenId) {
             $this->setId($this->generateId());
         }
 
