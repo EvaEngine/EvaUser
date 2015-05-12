@@ -243,7 +243,7 @@ class Login extends User
 
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
             $config = $this->getDI()->getConfig();
-            $cookieDomain = $config->session->cookie_params->domain;
+            $ssoDomain = $config->session->sso_domain;
             $sso_ticket_name = $config->session->sso_ticket_name;
 
             /** @var \Phalcon\Http\Response\Cookies $cookies */
@@ -257,20 +257,20 @@ class Login extends User
                 'P3P',
                 'CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR'
             );
-            if ($cookieDomain) {
+            if ($ssoDomain) {
                 $cookies->set(
                     $sso_ticket_name,
                     $sso_ticket,
                     0,
                     '/',
                     null,
-                    $cookieDomain,
+                    $ssoDomain,
                     true
                 );
                 //Set PHPSESSIONID domain
                 $cookie = $cookies->get(Login::LOGIN_COOKIE_KEY);
-                $cookie->setDomain($cookieDomain);
-                $cookies->get(Login::AUTH_KEY_LOGIN)->setDomain($cookieDomain);
+                $cookie->setDomain($ssoDomain);
+                $cookies->get(Login::AUTH_KEY_LOGIN)->setDomain($ssoDomain);
             }
 
         }
