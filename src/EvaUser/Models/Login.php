@@ -237,11 +237,12 @@ class Login extends User
         $userinfo->failedLogins = 0;
         $userinfo->loginAt = time();
         $userinfo->save();
-        $sso_ticket = $this->getDI()->getSession()->getId() . '^' . $userinfo->id;
-        Login::getAuthStorage()->setId($sso_ticket);
-        $authIdentity = $this->saveUserToStorage($userinfo);
+
 
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
+            $sso_ticket = $this->getDI()->getSession()->getId() . '^' . $userinfo->id;
+            Login::getAuthStorage()->setId($sso_ticket);
+            $this->saveUserToStorage($userinfo);
             $config = $this->getDI()->getConfig();
             $ssoDomain = $config->session->sso_domain;
             $sso_ticket_name = $config->session->sso_ticket_name;
@@ -273,6 +274,8 @@ class Login extends User
                 $cookies->get(Login::AUTH_KEY_LOGIN)->setDomain($ssoDomain);
             }
 
+        } else {
+            $this->saveUserToStorage($userinfo);
         }
 
         $this->getDI()->getEventsManager()->fire('user:afterLogin', $userinfo);
