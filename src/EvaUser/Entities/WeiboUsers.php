@@ -2,7 +2,7 @@
 
 namespace Eva\EvaUser\Entities;
 
-class WeiboUsers extends \Eva\EvaEngine\Mvc\Model implements CommentUser
+class WeiboUsers extends EvaUserEntityBase implements CommentUser
 {
     protected $tableName = 'weibo_users';
     /**

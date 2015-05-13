@@ -2,7 +2,7 @@
 
 namespace Eva\EvaUser\Entities;
 
-class UserAuththread extends \Eva\EvaEngine\Mvc\Model
+class UserAuththread extends EvaUserEntityBase
 {
     protected $tableName = 'user_realname_auth_thread';
 

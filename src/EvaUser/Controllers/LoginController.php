@@ -22,12 +22,14 @@ class LoginController extends ControllerBase
 
             $user = new Login();
             try {
-                $loginUser = $user->loginByPassword($this->request->getPost('identify'), $this->request->getPost('password'));
+                $loginUser = $user->loginByPassword($this->request->getPost('identify'),
+                    $this->request->getPost('password'));
                 $cookieDomain = $this->getDI()->getConfig()->session->cookie_params->domain;
                 if ($loginUser->id && $this->request->getPost('remember')) {
                     $token = $user->getRememberMeToken();
                     if ($token) {
-                        $cookies = $this->cookies->set(Login::LOGIN_COOKIE_REMEMBER_KEY, $token, time() + $user->getRememberMeTokenExpires());
+                        $cookies = $this->cookies->set(Login::LOGIN_COOKIE_REMEMBER_KEY, $token,
+                            time() + $user->getRememberMeTokenExpires());
                         if ($cookieDomain) {
                             $cookie = $cookies->get(Login::LOGIN_COOKIE_REMEMBER_KEY);
                             $cookie->setDomain($cookieDomain);
@@ -39,18 +41,25 @@ class LoginController extends ControllerBase
                     $this->response->setHeader('Access-Control-Allow-Credentials', 'true');
                     $this->response->setHeader('Access-Control-Allow-Origin', $_SERVER['HTTP_ORIGIN']);
                     $this->response->setHeader('Access-Control-Allow-Methods', 'POST');
-                    $this->response->setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+                    $this->response->setHeader('Access-Control-Allow-Headers',
+                        'Content-Type, Authorization, X-Requested-With');
                 }
+
                 return $this->showResponseAsJson(Login::getCurrentUser());
             } catch (\Exception $e) {
                 return $this->showExceptionAsJson($e, $user->getMessages());
             }
 
         } else {
+            $loginFailedRedirectUri = $this->dispatcher->getParam('loginFailedRedirectUri');
+
+            $loginFailedRedirectUri = $loginFailedRedirectUri ? $loginFailedRedirectUri : $this->getDI()->getConfig()->user->loginFailedRedirectUri;
+            $loginFailedRedirectUri = $loginFailedRedirectUri ? $loginFailedRedirectUri : $this->request->getURI();
             $form = new Forms\LoginForm();
             if ($form->isValid($this->request->getPost()) === false) {
                 $this->showInvalidMessages($form);
-                return $this->redirectHandler($this->getDI()->getConfig()->user->loginFailedRedirectUri, 'error');
+
+                return $this->redirectHandler($loginFailedRedirectUri, 'error');
             }
 
             $user = new Login();
@@ -73,7 +82,9 @@ class LoginController extends ControllerBase
                 return $this->response->redirect($loginSuccessRedirectUri);
             } catch (\Exception $e) {
                 $this->showException($e, $user->getMessages());
-                return $this->redirectHandler($this->getDI()->getConfig()->user->loginFailedRedirectUri, 'error');
+
+                // $this->getDI()->getConfig()->user->loginFailedRedirectUri
+                return $this->response->redirect($loginFailedRedirectUri, 'error');
             }
 
         }
@@ -89,6 +100,7 @@ class LoginController extends ControllerBase
             $user = new Models\Register();
             try {
                 $user->sendVerificationEmail($identify);
+
                 return $this->showResponseAsJson('SUCCESS_USER_ACTIVE_MAIL_SENT');
             } catch (\Exception $e) {
                 return $this->showExceptionAsJson($e, $user->getMessages());
@@ -102,9 +114,11 @@ class LoginController extends ControllerBase
             try {
                 $user->sendVerificationEmail($identify);
                 $this->flashSession->success('SUCCESS_USER_ACTIVE_MAIL_SENT');
+
                 return $this->redirectHandler($this->getDI()->getConfig()->user->resetSuccessRedirectUri);
             } catch (\Exception $e) {
                 $this->showException($e, $user->getMessages());
+
                 return $this->redirectHandler($this->getDI()->getConfig()->user->resetFailedRedirectUri);
             }
 

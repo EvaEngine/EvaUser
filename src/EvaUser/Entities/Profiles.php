@@ -2,7 +2,7 @@
 
 namespace Eva\EvaUser\Entities;
 
-class Profiles extends \Eva\EvaEngine\Mvc\Model
+class Profiles extends EvaUserEntityBase
 {
     /**
      *

@@ -45,6 +45,7 @@ class SessionController extends ControllerBase
             );
             try {
                 $user->requestResetPassword();
+
                 return $this->showResponseAsJson('SUCCESS_USER_RESET_MAIL_SENT');
             } catch (\Exception $e) {
                 // 邮箱未激活，直接发送验证邮件
@@ -52,6 +53,7 @@ class SessionController extends ControllerBase
                     $registerUser = new Models\Register();
                     $registerUser->sendVerificationEmail($email);
                 }
+
                 return $this->showExceptionAsJson($e, $user->getMessages());
             }
         } else {
@@ -69,17 +71,21 @@ class SessionController extends ControllerBase
                 $this->flashSession->success('SUCCESS_USER_RESET_MAIL_SENT');
             } catch (\Exception $e) {
                 $this->showException($e, $user->getMessages());
+
                 return $this->redirectHandler($this->getDI()->getConfig()->user->resetFailedRedirectUri);
             }
+
             return $this->redirectHandler($this->getDI()->getConfig()->user->resetSuccessRedirectUri);
         }
     }
 
-    public function sendResetCaptchaAction(){
+    public function sendResetCaptchaAction()
+    {
         $mobile = $this->request->getPost('mobile');
         $registerModel = new Models\Register();
-        $registerModel->mobileCaptcha($mobile,$type=1);
-        $data = array('mobile'=>$mobile,'timestamp'=>time());
+        $registerModel->mobileCaptcha($mobile, $type = 1);
+        $data = array('mobile' => $mobile, 'timestamp' => time());
+
         return $this->showResponseAsJson($data);
     }
 
@@ -95,30 +101,34 @@ class SessionController extends ControllerBase
         if ($user->mobileStatus != 'active') {
             throw new Exception\InvalidArgumentException('ERR_MOBILE_INACTIVATED');
         }
-        if ($user->mobileCaptchaCheck($mobile, $captcha)) {
-
-            $resetPassword = new Models\ResetPassword();
-
-
-            $form = new Forms\MobileResetPasswordForm();
-            if ($form->isValid($this->request->getPost()) === false) {
-                return $this->showInvalidMessagesAsJson($form);
-            }
-
-            $resetPassword->assign(
-                array(
-                    'username' => $user->username,
-                    'password' => $this->request->getPost('password'),
-                )
-            );
-            try {
-                $resetPassword->resetPassword();
-                $this->flashSession->success('SUCCESS_USER_PASSWORD_RESET');
-            } catch (\Exception $e) {
-                return $this->showExceptionAsJson($e, $user->getMessages());
-            }
-            return $this->showResponseAsJson('SUCCESS_USER_PASSWORD_RESET');
+        try {
+            $user->mobileCaptchaCheck($mobile, $captcha);
+        } catch(\Exception $e) {
+            return $this->showExceptionAsJson($e);
         }
+        $resetPassword = new Models\ResetPassword();
+
+
+        $form = new Forms\MobileResetPasswordForm();
+        if ($form->isValid($this->request->getPost()) === false) {
+            return $this->showInvalidMessagesAsJson($form);
+        }
+
+        $resetPassword->assign(
+            array(
+                'username' => $user->username,
+                'password' => $this->request->getPost('password'),
+            )
+        );
+        try {
+            $resetPassword->resetPassword();
+            $this->flashSession->success('SUCCESS_USER_PASSWORD_RESET');
+        } catch (\Exception $e) {
+            return $this->showExceptionAsJson($e, $user->getMessages());
+        }
+
+        return $this->showResponseAsJson('SUCCESS_USER_PASSWORD_RESET');
+
     }
 
     public function resetAction()
@@ -130,6 +140,7 @@ class SessionController extends ControllerBase
             $user->verifyPasswordReset($username, $code);
         } catch (\Exception $e) {
             $this->showException($e, $user->getMessages());
+
             return $this->redirectHandler($this->getDI()->getConfig()->user->resetFailedRedirectUri);
         }
 
@@ -140,6 +151,7 @@ class SessionController extends ControllerBase
         $form = new Forms\ResetPasswordForm();
         if ($form->isValid($this->request->getPost()) === false) {
             $this->showInvalidMessages($form);
+
             return $this->redirectHandler($this->getDI()->getConfig()->user->resetFailedRedirectUri);
         }
 
@@ -154,6 +166,7 @@ class SessionController extends ControllerBase
             $this->flashSession->success('SUCCESS_USER_PASSWORD_RESET');
         } catch (\Exception $e) {
             $this->showException($e, $user->getMessages());
+
             return $this->redirectHandler($this->getDI()->getConfig()->user->resetFailedRedirectUri, 'error');
         }
 

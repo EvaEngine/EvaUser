@@ -1,12 +1,11 @@
 <?php
 
 namespace Eva\EvaUser\Entities;
-use \Eva\EvaEngine\Mvc\Model;
 use Eva\EvaEngine\Exception;
 /**
  * @SWG\Model(id="RealnameAuthForm")
  */
-class RealnameAuth extends Model
+class RealnameAuth extends EvaUserEntityBase
 {
     //身份证号码不存在
     const STATUS_UNDEFINED = 1;

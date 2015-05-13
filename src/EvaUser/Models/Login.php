@@ -2,7 +2,10 @@
 
 namespace Eva\EvaUser\Models;
 
+use Eva\EvaEngine\IoC;
+use Eva\EvaEngine\Service\TokenStorage;
 use Eva\EvaUser\Entities;
+use Eva\EvaUser\TokenStorage\SessionTokenStorage;
 use Phalcon\Mvc\Model\Message as Message;
 use Eva\EvaEngine\Exception;
 use Phalcon\DI;
@@ -88,10 +91,12 @@ class Login extends User
     {
         $di = DI::getDefault();
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
-            return $di->getSession();
+            $tokenStorage = SessionTokenStorage::getInstance();
+        } else {
+            $tokenStorage = $di->getTokenStorage();
         }
 
-        return $di->getTokenStorage();
+        return $tokenStorage;
     }
 
     public static function getCurrentUser()
@@ -233,19 +238,44 @@ class Login extends User
         $userinfo->loginAt = time();
         $userinfo->save();
 
-        $authIdentity = $this->saveUserToStorage($userinfo);
+
         if (Login::getLoginMode() == Login::LOGIN_MODE_SESSION) {
-            $cookieDomain = $this->getDI()->getConfig()->session->cookie_params->domain;
+            $sso_ticket = $this->getDI()->getSession()->getId() . '^' . $userinfo->id;
+            Login::getAuthStorage()->setId($sso_ticket);
+            $this->saveUserToStorage($userinfo);
+            $config = $this->getDI()->getConfig();
+            $ssoDomain = $config->session->sso_domain;
+            $sso_ticket_name = $config->session->sso_ticket_name;
+
             /** @var \Phalcon\Http\Response\Cookies $cookies */
             $cookies = $this->getDI()->getCookies()->set(Login::LOGIN_COOKIE_KEY, $userinfo->id);
-
             $cookie = $cookies->get(Login::LOGIN_COOKIE_KEY);
             $cookie->setHttpOnly(false);
 
-            if ($cookieDomain) {
+            /** @var \Phalcon\HTTP\ResponseInterface $response */
+            $response = $this->getDI()->getResponse();
+            $response->setHeader(
+                'P3P',
+                'CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR'
+            );
+            if ($ssoDomain) {
+                $cookies->set(
+                    $sso_ticket_name,
+                    $sso_ticket,
+                    0,
+                    '/',
+                    null,
+                    $ssoDomain,
+                    true
+                );
+                //Set PHPSESSIONID domain
                 $cookie = $cookies->get(Login::LOGIN_COOKIE_KEY);
-                $cookie->setDomain($cookieDomain);
+                $cookie->setDomain($ssoDomain);
+                $cookies->get(Login::AUTH_KEY_LOGIN)->setDomain($ssoDomain);
             }
+
+        } else {
+            $this->saveUserToStorage($userinfo);
         }
 
         $this->getDI()->getEventsManager()->fire('user:afterLogin', $userinfo);
@@ -372,7 +402,8 @@ class Login extends User
 
     public function getAuthIdentity()
     {
-        $authIdentity = $this->getDI()->getSession()->get(Login::AUTH_KEY_LOGIN);
+
+        $authIdentity = self::getAuthStorage()->get(Login::AUTH_KEY_LOGIN);
         if ($authIdentity) {
             return $authIdentity;
         }
@@ -387,5 +418,28 @@ class Login extends User
     public function isUserLoggedIn()
     {
         return $this->getAuthIdentity() ? true : false;
+    }
+
+    public static function logout()
+    {
+        /** @var \Phalcon\HTTP\ResponseInterface $response */
+        $response = IoC::get('response');
+        $response->setHeader(
+            'P3P',
+            'CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR'
+        );
+        $config = IoC::get('config');
+        /** @var \Phalcon\Http\Response\Cookies $cookies */
+        $cookies = IoC::get('cookies');
+        $cookieDomain = $config->session->cookie_params->domain;
+        $sso_ticket_name = $config->session->sso_ticket_name;
+        $cookies->get(Login::LOGIN_COOKIE_KEY)->setDomain($cookieDomain)->delete();
+        $cookies->get(Login::LOGIN_COOKIE_REMEMBER_KEY)->setDomain($cookieDomain)->delete();
+        $cookies->get($sso_ticket_name)->setDomain($cookieDomain)->delete();
+
+        Login::getAuthStorage()->remove(Login::AUTH_KEY_LOGIN);
+        Login::getAuthStorage()->remove(Login::AUTH_KEY_TOKEN);
+        Login::getAuthStorage()->remove(Login::AUTH_KEY_ROLES);
+        Login::removeBadges();
     }
 }

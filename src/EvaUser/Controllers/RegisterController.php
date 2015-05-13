@@ -34,10 +34,16 @@ class RegisterController extends ControllerBase
             }
         } else {
             $form = new Forms\RegisterForm();
+            $registerSuccessRedirectUri = $this->dispatcher->getParam('registerSuccessRedirectUri');
+            $registerSuccessRedirectUri = $registerSuccessRedirectUri ? $registerSuccessRedirectUri : $this->getDI()->getConfig()->user->registerSuccessRedirectUri;
+
+            $registerFailedRedirectUri = $this->dispatcher->getParam('registerFailedRedirectUri');
+            $registerFailedRedirectUri = $registerFailedRedirectUri ? $registerFailedRedirectUri : $this->getDI()->getConfig()->user->registerFailedRedirectUri;
+            $registerFailedRedirectUri = $registerFailedRedirectUri ? $registerFailedRedirectUri : $this->request->getURI();
             if ($form->isValid($this->request->getPost()) === false) {
                 $this->showInvalidMessages($form);
 
-                return $this->redirectHandler($this->getDI()->getConfig()->user->registerFailedRedirectUri, 'error');
+                return $this->redirectHandler($registerFailedRedirectUri, 'error');
             }
             $user = new Models\Register();
             $user->assign(array(
@@ -52,11 +58,11 @@ class RegisterController extends ControllerBase
             } catch (\Exception $e) {
                 $this->showException($e, $user->getMessages());
 
-                return $this->redirectHandler($this->getDI()->getConfig()->user->registerFailedRedirectUri, 'error');
+                return $this->redirectHandler($registerFailedRedirectUri, 'error');
             }
             $this->flashSession->success('SUCCESS_USER_REGISTERED_ACTIVE_MAIL_SENT');
 
-            return $this->redirectHandler($this->getDI()->getConfig()->user->registerSuccessRedirectUri);
+            return $this->redirectHandler($registerSuccessRedirectUri);
         }
     }
 

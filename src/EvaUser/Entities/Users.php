@@ -4,7 +4,7 @@ namespace Eva\EvaUser\Entities;
 
 use Phalcon\Mvc\Model\Validator\Email as Email;
 
-class Users extends \Eva\EvaEngine\Mvc\Model implements CommentUser
+class Users extends EvaUserEntityBase implements CommentUser
 {
     /**
      *

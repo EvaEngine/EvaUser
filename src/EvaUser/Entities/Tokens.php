@@ -2,7 +2,7 @@
 
 namespace Eva\EvaUser\Entities;
 
-class Tokens extends \Eva\EvaEngine\Mvc\Model
+class Tokens extends EvaUserEntityBase
 {
     /**
      *
