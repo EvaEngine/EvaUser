@@ -70,7 +70,7 @@ class ResetPassword extends User
         $message->setTemplate($this->getDI()->getConfig()->user->resetMailTemplate);
         $message->assign(array(
             'user' => $userinfo->toArray(),
-            'url' => $message->toSystemUrl('/session/reset/' . urlencode($userinfo->username) . '/' . $userinfo->passwordResetHash)
+            'url' => eva_url('passport', '/session/reset/' . urlencode($userinfo->username) . '/' . $userinfo->passwordResetHash)
         ));
 
         return $mailer->send($message->getMessage());

@@ -169,7 +169,8 @@ class User extends Entities\Users
         $message->assign(
             array(
                 'user' => $user->toArray(),
-                'url' => $message->toSystemUrl(
+                'url' => eva_url(
+                    'passport',
                     '/session/changemail/' . urlencode($user->username) . '/' . urlencode(
                         $newEmail
                     ) . '/' . $verifyCode
