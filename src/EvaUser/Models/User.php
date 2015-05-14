@@ -8,6 +8,7 @@ use Eva\EvaUser\Entities;
 use Eva\EvaEngine\Exception;
 use Eva\EvaFileSystem\Models\Upload as UploadModel;
 use Eva\EvaUser\Forms\MobileBindingForm;
+use Eva\EvaUser\Forms\UserUpdatePassword;
 
 class User extends Entities\Users
 {
@@ -72,17 +73,24 @@ class User extends Entities\Users
         return $user;
     }
 
-    public function resetPassword($oldPassword, $newPassword)
+    public function resetPassword(array $reqb)
     {
-        $usr = Login::getCurrentUser();
-        if (!$usr['id']) throw new Exception\UnauthorizedException('ERR_USER_NOT_LOGIN');
-        /**
-         * @var $usr User
-         */
-        $usr = self::findFirst('id = ' . $usr['id']);
-        if (!$usr) throw new Exception\ResourceNotFoundException('ERR_USER_NOT_EXIST');
-        $match = Login::passwordVerify($oldPassword, $usr->password);
-        if (!$match) throw new Exception\VerifyFailedException('ERR_WRONG_PASSWORD');
+//        $usr = Login::getCurrentUser();
+//        if (!$usr['id']) throw new Exception\UnauthorizedException('ERR_USER_NOT_LOGIN');
+//        /**
+//         * @var $usr User
+//         */
+//        $usr = self::findFirst('id = ' . $usr['id']);
+//        if (!$usr) throw new Exception\ResourceNotFoundException('ERR_USER_NOT_EXIST');
+//        $match = Login::passwordVerify($oldPassword, $usr->password);
+//        if (!$match) throw new Exception\VerifyFailedException('ERR_WRONG_PASSWORD');
+
+        $form=new UserUpdatePassword();
+        if (!$form->isValid($reqb)) {
+            foreach ($form->getMessages() as $message) {
+                echo $message, '<br>';
+            }
+        }
         $usr->password = self::passwordHash($newPassword);
         if (!$usr->save()) throw new Exception\RuntimeException('ERR_USER_CHANGE_PASSWORD_FAILED');
 

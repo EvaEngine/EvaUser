@@ -1,6 +1,6 @@
 <?php
 
-namespace Eva\EvaUser\Entities;
+namespace Eva\EvaUser\Forms;
 
 use \Eva\EvaEngine\Mvc\Model;
 use Eva\EvaEngine\Exception;
@@ -8,7 +8,7 @@ use Eva\EvaEngine\Exception;
 /**
  * @SWG\Model(id="UserVerification")
  */
-class UserVerification extends Model
+class UserVerification extends Form
 {
     /**
      * @SWG\Property(
