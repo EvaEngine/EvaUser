@@ -2,6 +2,8 @@
 
 namespace Eva\EvaUser\Models;
 
+use Eva\EvaEngine\Exception\InvalidArgumentException;
+use Eva\EvaSecurity\Verification\Verification;
 use Eva\EvaUser\Entities;
 use Eva\EvaEngine\Exception;
 use Eva\EvaFileSystem\Models\Upload as UploadModel;
@@ -212,11 +214,12 @@ class User extends Entities\Users
      */
     public function changeMobile($newMobile, $newCaptcha, $oldCaptcha = null)
     {
+        if (!Verification::factory($newMobile, 'sms', 'new_mobile')->verify($newCaptcha)) {
+            throw new InvalidArgumentException('新手机号码验证码不正确');
+        }
         // 如果之前的手机号码未激活，在现在是激活手机号的操作；
         if ($this->mobileStatus == 'inactive') {
-            if (!$this->mobileCaptchaCheck($newMobile, $newCaptcha)) {
-                throw new Exception\InvalidArgumentException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED');
-            }
+
 
             $this->mobile = $newMobile;
             $this->mobileStatus = 'active';
@@ -224,12 +227,10 @@ class User extends Entities\Users
             return $this->save();
             // 已激活的手机号修改必须先验证原来的手机验证码
         } else {
-            if (!$this->mobileCaptchaCheck($this->mobile, $oldCaptcha)) {
-                throw new Exception\InvalidArgumentException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED, ' . $this->mobile);
+            if (!Verification::factory($this->mobile, 'sms')->verify($oldCaptcha)) {
+                throw new InvalidArgumentException('当前手机号码验证码不正确');
             }
-            if (!$this->mobileCaptchaCheck($newMobile, $newCaptcha)) {
-                throw new Exception\InvalidArgumentException('ERR_USER_MOBILE_CAPTCHA_CHECK_FAILED, ' . $newCaptcha);
-            }
+
             $this->mobile = $newMobile;
             $this->mobileStatus = 'active';
 
