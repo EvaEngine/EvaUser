@@ -70,7 +70,10 @@ class Login extends User
         /** @var \Phalcon\Session\AdapterInterface $storage */
         $storage = self::getAuthStorage();
         $badges = $storage->get(self::INFO_KEY_BADGE);
-        if (isset($badges[$key])) {
+        if (is_object($badges) && isset($badges->$key)) {
+            unset($badges->$key);
+        }
+        if (is_array($badges) && isset($badges[$key])) {
             unset($badges[$key]);
         }
         if (!$badges) {
