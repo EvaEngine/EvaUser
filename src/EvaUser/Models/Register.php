@@ -140,7 +140,7 @@ class Register extends User
         $message->setTemplate($template);
         $message->assign(array(
             'user' => $userinfo->toArray(),
-            'url' => $message->toSystemUrl('/session/verify/' . urlencode($userinfo->username) . '/' . $userinfo->activationHash)
+            'url' => eva_url('passport', '/session/verify/' . urlencode($userinfo->username) . '/' . $userinfo->activationHash)
         ));
         $mailer->send($message->getMessage());
         return true;
