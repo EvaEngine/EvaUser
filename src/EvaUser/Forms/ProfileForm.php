@@ -229,6 +229,20 @@ class ProfileForm extends Form
      */
     public $updatedAt;
 
+    /**
+     *
+     * 公司
+     * @var string
+     */
+    public $company;
+
+    /**
+     *
+     * 个人头衔
+     * @var string
+     */
+    public $jobTitle;
+
     protected $defaultModelClass = 'Eva\EvaUser\Models\Profile';
 
     public function initialize($entity = null, $options = null)

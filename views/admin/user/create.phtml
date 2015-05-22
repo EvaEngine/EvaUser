@@ -353,6 +353,32 @@
                                 </div>
                             </div>
 
+                            <div class="space-4"></div>
+                            <div class="form-group">
+                                <label for="jobTitle" class="col-sm-3 control-label no-padding-right">Job Title</label>
+
+                                <div class="col-sm-9">
+                                    <?=$profileForm->render('jobTitle', array(
+                                        'class' => 'col-xs-12 col-sm-6',
+                                        'data-parsley-type' => 'jobTitle',
+                                        'autocomplete'=>'off'
+                                    ))?>
+                                </div>
+                            </div>
+
+                            <div class="space-4"></div>
+                            <div class="form-group">
+                                <label for="company" class="col-sm-3 control-label no-padding-right">Company</label>
+
+                                <div class="col-sm-9">
+                                    <?=$profileForm->render('company', array(
+                                        'class' => 'col-xs-12 col-sm-6',
+                                        'data-parsley-type' => 'company',
+                                        'autocomplete'=>'off'
+                                    ))?>
+                                </div>
+                            </div>
+
                             <div class="space"></div>
                             <h4 class="header blue bolder smaller">Contact</h4>
 
