@@ -2,7 +2,7 @@
 
 namespace Eva\EvaUser\Entities;
 
-class UserAuththread extends EvaUserEntityBase
+class UserAuthLogs extends EvaUserEntityBase
 {
     protected $tableName = 'user_realname_auth_log';
 
@@ -17,6 +17,12 @@ class UserAuththread extends EvaUserEntityBase
      * @var integer
      */
     public $userId;
+
+    /**
+     *
+     * @var integer
+     */
+    public $username;
 
     /**
      *

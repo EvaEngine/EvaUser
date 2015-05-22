@@ -1,0 +1,176 @@
+<div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+        try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+    </script>
+
+    <ul class="breadcrumb">
+        <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/admin/dashboard">Home</a>
+        </li>
+
+        <li>
+        <a href="/admin/user" class="active">User List</a>
+        </li>
+    </ul><!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+        <form class="form-search">
+            <span class="input-icon">
+                <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="icon-search nav-search-icon"></i>
+            </span>
+        </form>
+    </div><!-- #nav-search -->
+</div>
+
+<div class="page-content">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="table-header">
+                Showing <?=$pager->offset_start?> to <?=$pager->offset_end?> of <?=$pager->total_items?> Items
+            </div>
+
+            <div class="table-responsive dataTables_wrapper">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <?=$form->render('userId', array(
+                                    'placeholder' => 'userId',
+                                    'class' => 'form-control input-sm'
+                                ))?>
+                            </div>
+                            <div class="form-group">
+                                <?=$form->render('username', array(
+                                    'placeholder' => 'Username',
+                                    'class' => 'form-control input-sm',
+                                ))?>
+                            </div>
+
+                            <div class="form-group">
+                                <?=$form->render('realName', array(
+                                    'placeholder' => '真实姓名',
+                                    'class' => 'form-control input-sm'
+                                ))?>
+                            </div>
+
+                            <div class="form-group">
+                                <?=$form->render('cardNum', array(
+                                    'placeholder' => '身份证号码',
+                                    'class' => 'form-control input-sm'
+                                ))?>
+                            </div>
+
+                           <span>
+                                <label for="filter-from-limit">Display</label> 
+                            </span>
+                            <div class="form-group">
+                                <?=$form->render('limit', array(
+                                    'class' => 'form-control input-sm'
+                                ))?>
+                            </div>
+                            <button class="btn btn-info btn-sm form-control" type="submit">
+                                <i class="icon-search bigger-110"></i>
+                                Filter 
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+                <table class="table table-striped table-bordered table-hover dataTable table-sortable" id="post-grid"  data-sortable-key="order" data-sortable-default="-id">
+                    <thead>
+                        <tr>
+                            <th class="center">
+                                <label>
+                                    <input type="checkbox" class="ace">
+                                    <span class="lbl"></span>
+                                </label>
+                            </th>
+                            <th class="hidden-480">
+                                <a href="<?=$this->tag->uri('/admin/user/authlog', $pager->query)?>" class="sortable-link" data-sortable-value="id">ID</a>
+                            </th>
+
+                            <th>
+                                <a href="<?=$this->tag->uri('/admin/user/authlog', $pager->query)?>" class="sortable-link" data-sortable-value="userId">userId</a>
+                            </th>
+
+                            <th>
+                                <a href="<?=$this->tag->uri('/admin/user/authlog', $pager->query)?>" class="sortable-link" data-sortable-value="username">Username</a>
+                            </th>
+
+                            <th>
+                                realName
+                            </th>
+
+                            <th>
+                                cardNum
+                            </th>
+
+                            <th>
+                                message
+                            </th>
+
+                            <th>
+                                compMessage
+                            </th>
+
+                            <th>
+                                <a href="<?=$this->tag->uri('/admin/user/authlog', $pager->query)?>" class="sortable-link" data-sortable-value="requestAt">compTime</a>
+                            </th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?foreach($pager->items as $item):?>
+                        <tr>
+                            <td class="center">
+                                <label>
+                                    <input type="checkbox" class="ace" value="<?=$item->id?>"  data-batch-source="<?=$item->id?>">
+                                    <span class="lbl"></span>
+                                </label>
+                            </td>
+                            <td class="hidden-480"><?=$item->id?></td>
+
+                            <td>
+                                <?=$item->userId?>
+                            </td>
+
+                            <td>
+                                <?=$item->username?>
+                            </td>
+
+                            <td>
+                                <?=$item->realName?>
+                            </td>
+
+                            <td>
+                                <?=$item->cardNum?>
+                            </td>
+
+                            <td>
+                                <?=$item->message?>
+                            </td>
+
+                            <td>
+                                <?=$item->compMessage?>
+                            </td>
+
+                            <td>
+                                <?=date('y-m-d H:i', $item->requestAt)?>
+                            </td>
+
+                        </tr>
+                        <?endforeach?>
+                    </tbody>
+                </table>
+
+
+            </div><!--/table div-->
+
+        </div><!-- /col-->
+    </div><!--row end-->
+
+</div><!-- /.page-content -->

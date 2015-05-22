@@ -7,11 +7,17 @@
 </a>
 
 <ul class="submenu">
-    <li class="tobe-highlight" data-highlight-url="/admin/user.*">
+    <li class="tobe-highlight" data-highlight-url="/admin/user">
     <a href="/admin/user">
         <i class="icon-double-angle-right"></i>
         User List
     </a>
+    </li>
+    <li>
+        <a href="/admin/user/authlog">
+            <i class="icon-double-angle-right"></i>
+            实名认证记录
+        </a>
     </li>
 
     <!--
