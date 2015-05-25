@@ -31,6 +31,7 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
             'usernameClearly' => $this->request->getQuery('usernameClearly', 'string'),
 
             'email' => $this->request->getQuery('email', 'string'),
+            'mobile' => $this->request->getQuery('mobile', 'string'),
             'screenName' => $this->request->getQuery('screenName', 'string'),
 
             'order' => $this->request->getQuery('order', 'string'),

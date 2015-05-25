@@ -79,12 +79,18 @@
                                     ))?>
                             </div>
                             <div class="form-group">
+                                <?=$form->render('mobile', array(
+                                    'placeholder' => 'mobile',
+                                    'class' => 'form-control input-sm'
+                                ))?>
+                            </div>
+                            <div class="form-group">
                                 <?=$form->render('status', array(
                                     'class' => 'form-control input-sm'
                                 ))?>
                             </div>
                            <span>
-                                <label for="filter-from-limit">Display</label> 
+                                <label for="filter-from-limit">Display</label>
                             </span>
                             <div class="form-group">
                                 <?=$form->render('limit', array(
@@ -93,7 +99,7 @@
                             </div>
                             <button class="btn btn-info btn-sm form-control" type="submit">
                                 <i class="icon-search bigger-110"></i>
-                                Filter 
+                                Filter
                             </button>
                         </form>
 
@@ -116,11 +122,12 @@
                             </th>
                             <th class="hidden-480">Status</th>
                             <th>Email</th>
+                            <th>Mobile</th>
                             <th>Register Source</th>
                             <th>
                                 <a href="<?=$this->tag->uri('/admin/user', $pager->query)?>" class="sortable-link" data-sortable-value="created_at" data-sortable-default="-created_at">
                                     <i class="icon-time bigger-110"></i>
-                                    Register Time 
+                                    Register Time
                                 </a>
                             </th>
                             <th>
@@ -154,7 +161,7 @@
                                 <?if($this->moduleManager->hasModule('EvaPermission') && $item->roles):?>
                                 <?foreach($item->roles as $role):?>
                                 <button class="btn btn-xs btn-info ajax-form-sumbit" data-ajax-form="1" date-method="delete" data-form-action="/admin/permission/process/user/<?=$item->id?>/role/<?=$role->id?>" data-callback="form.remove();">
-                                    <?=$role->name?> <?=$role->roleKey?> <i class="icon-remove bigger-120"></i> 
+                                    <?=$role->name?> <?=$role->roleKey?> <i class="icon-remove bigger-120"></i>
                                 </button>
                                 <?endforeach;?>
                                 <?endif?>
@@ -169,6 +176,7 @@
                                 <span class="label label-sm <?=$status[$item->emailStatus]?>"><i class="icon-envelope"></i> <?=$item->emailStatus?></span>
                             </td>
                             <td><?=$item->email?></td>
+                            <td><?=$item->mobile?></td>
                             <td><?=$item->providerType?></td>
                             <td><?=$this->tag->datetime($item->createdAt)?></td>
                             <td><?=$item->loginAt ? $this->tag->datetime($item->loginAt) : 'Never'?></td>

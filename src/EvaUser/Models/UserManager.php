@@ -101,6 +101,9 @@ class UserManager extends User
         if (!empty($query['email'])) {
             $itemQuery->andWhere('email = :email:', array('email' => trim($query['email'])));
         }
+        if (!empty($query['mobile'])) {
+            $itemQuery->andWhere('mobile = :mobile:', array('mobile' => trim($query['mobile'])));
+        }
         if (!empty($query['screenName'])) {
             $screenName = trim($query['screenName']);
             $itemQuery->andWhere('screenName LIKE :screenName:', array('screenName' => "%{$screenName}%"));
