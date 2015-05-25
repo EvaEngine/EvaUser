@@ -44,6 +44,9 @@ class UserAuthLog extends UserAuthLogs{
 
         if (!empty($query['realName'])) {
             $itemQuery->andWhere('realName LIKE :realName:', array('realName' => "%{$query['realName']}%"));
+            if (empty($query['order'])) {
+                $backendOrder = "REPLACE(realName,'{$query['realName']}','')";
+            }
         }
 
         if (!empty($query['cardNum'])) {
