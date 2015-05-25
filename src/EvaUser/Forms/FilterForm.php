@@ -62,6 +62,12 @@ class FilterForm extends Form
      *
      * @var string
      */
+    public $mobile;
+
+    /**
+     *
+     * @var string
+     */
     public $screenName;
 
     public function initialize($entity = null, $options = null)
