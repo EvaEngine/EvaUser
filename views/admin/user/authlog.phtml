@@ -168,6 +168,20 @@
                     </tbody>
                 </table>
 
+                <div class="row">
+                    <div class="col-sm-6">
+
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="dataTables_paginate">
+                            <?$this->partial("partial/paginator", array(
+                                'pagerUrl' => 'admin/user/authlog',
+                                'pager' => $pager,
+                            ))?>
+                        </div>
+                    </div>
+                </div>
+
 
             </div><!--/table div-->
 
