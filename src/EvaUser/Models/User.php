@@ -8,6 +8,7 @@ use Eva\EvaUser\Entities;
 use Eva\EvaEngine\Exception;
 use Eva\EvaFileSystem\Models\Upload as UploadModel;
 use Eva\EvaUser\Forms\MobileBindingForm;
+use Eva\EvaUser\Forms\UserUpdatePassword;
 
 class User extends Entities\Users
 {
@@ -70,6 +71,30 @@ class User extends Entities\Users
         }
 
         return $user;
+    }
+
+    public function resetPassword(array $reqb)
+    {
+//        $usr = Login::getCurrentUser();
+//        if (!$usr['id']) throw new Exception\UnauthorizedException('ERR_USER_NOT_LOGIN');
+//        /**
+//         * @var $usr User
+//         */
+//        $usr = self::findFirst('id = ' . $usr['id']);
+//        if (!$usr) throw new Exception\ResourceNotFoundException('ERR_USER_NOT_EXIST');
+//        $match = Login::passwordVerify($oldPassword, $usr->password);
+//        if (!$match) throw new Exception\VerifyFailedException('ERR_WRONG_PASSWORD');
+
+        $form=new UserUpdatePassword();
+        if (!$form->isValid($reqb)) {
+            foreach ($form->getMessages() as $message) {
+                echo $message, '<br>';
+            }
+        }
+        $usr->password = self::passwordHash($newPassword);
+        if (!$usr->save()) throw new Exception\RuntimeException('ERR_USER_CHANGE_PASSWORD_FAILED');
+
+        return $usr;
     }
 
     /**
@@ -204,6 +229,24 @@ class User extends Entities\Users
     }
 
     /**
+     * 检查给定的手机号是否已经存在
+     *
+     * @param string $mobile 手机号
+     * @param int $uid 用户 uid，如果提供了 uid 参数，则排除掉该用户
+     * @return bool
+     */
+    public static function checkMobileExistence($mobile, $uid = 0)
+    {
+        $query = self::query()->where("mobile = '$mobile' AND mobileStatus='active'");
+        $uid = intval($uid);
+        if ($uid > 0) {
+            $query->andWhere('id != ' . $uid);
+        }
+
+        return $query->execute()->getFirst();
+    }
+
+    /**
      * 修改手机号
      *
      * @param string $newMobile 新手机号
@@ -211,16 +254,18 @@ class User extends Entities\Users
      * @param string $oldCaptcha 旧手机号验证码
      * @return bool
      * @throws Exception\InvalidArgumentException
+     * @throws Exception\ResourceConflictException
      */
     public function changeMobile($newMobile, $newCaptcha, $oldCaptcha = null)
     {
         if (!Verification::factory($newMobile, 'sms', 'new_mobile')->verify($newCaptcha)) {
             throw new InvalidArgumentException('新手机号码验证码不正确');
         }
+        if (self::checkMobileExistence($newMobile, $this->id)) {
+            throw new Exception\ResourceConflictException('ERR_MOBILE_HAS_BEEN_TAKEN');
+        }
         // 如果之前的手机号码未激活，在现在是激活手机号的操作；
         if ($this->mobileStatus == 'inactive') {
-
-
             $this->mobile = $newMobile;
             $this->mobileStatus = 'active';
 
