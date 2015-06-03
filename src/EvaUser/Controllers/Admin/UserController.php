@@ -121,4 +121,42 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
         return $this->redirectHandler('/admin/user/edit/' . $user->id);
 
     }
+
+    /**
+     * @operationName("auth log List")
+     * @operationDescription("auth log List")
+     */
+    public function authLogAction()
+    {
+        $limit = $this->request->getQuery('limit', 'int', 25);
+        $limit = $limit > 100 ? 100 : $limit;
+        $limit = $limit < 10 ? 10 : $limit;
+        $query = array(
+            //'q' => $this->request->getQuery('q', 'string'),
+            'userId' => $this->request->getQuery('userId', 'int'),
+            'username' => $this->request->getQuery('username', 'string'),
+            'realName' => $this->request->getQuery('realName', 'string'),
+            'cardNum' => $this->request->getQuery('cardNum', 'string'),
+            'order' => $this->request->getQuery('order', 'string'),
+            'limit' => $limit,
+            'page' => $this->request->getQuery('page', 'int', 1),
+        );
+        $form = new Forms\AuthLogForm();
+        $form->setValues($this->request->getQuery());
+
+        $this->view->setVar('form', $form);
+        $logModel = new Models\UserAuthLog();
+        $logs = $logModel->findlogs($query);
+
+
+        $paginator = new \Eva\EvaEngine\Paginator(array(
+            "builder" => $logs,
+            "limit" => $limit,
+            "page" => $query['page']
+        ));
+        $paginator->setQuery($query);
+        $pager = $paginator->getPaginate();
+        $this->view->setVar('pager', $pager);
+    }
+
 }

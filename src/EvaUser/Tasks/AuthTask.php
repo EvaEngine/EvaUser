@@ -5,7 +5,9 @@ use Eva\EvaEngine\Tasks\TaskBase;
 use Phalcon\Mvc\Model\Query;
 use Eva\EvaUser\Entities\RealnameAuth;
 use Eva\EvaUser\Controllers\ValidateController;
-use Eva\EvaUser\Entities\UserAuththread;
+use Eva\EvaUser\Entities\UserAuthLogs;
+use WscnFinance\Remote\User;
+
 class AuthTask extends TaskBase {
 
     public function indexAction() {
@@ -20,7 +22,7 @@ class AuthTask extends TaskBase {
 
             $val = new ValidateController();
             $xmlString = $val->getData($idArray);
-            $thread = new UserAuththread();
+            $thread = new UserAuthLogs();
 
             // file_put_contents('./aaa.txt', $xmlString );
             $obj = (array)simplexml_load_string($xmlString, 'SimpleXMLElement', LIBXML_NOCDATA | LIBXML_NOBLANKS);
