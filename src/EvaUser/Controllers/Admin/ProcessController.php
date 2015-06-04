@@ -5,12 +5,13 @@ namespace Eva\EvaUser\Controllers\Admin;
 use Eva\EvaUser\Models;
 use Eva\EvaEngine\Mvc\Controller\JsonControllerInterface;
 use Eva\EvaEngine\Exception;
+use Eva\EvaEngine\Mvc\Controller\SessionAuthorityControllerInterface;
 
 /**
 * @resourceName("User Managment Assists")
 * @resourceDescription("User Managment Assists (Ajax json format)")
 */
-class ProcessController extends ControllerBase implements JsonControllerInterface
+class ProcessController extends ControllerBase implements JsonControllerInterface, SessionAuthorityControllerInterface
 {
 
     /**
