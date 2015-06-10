@@ -33,6 +33,7 @@ class User extends Entities\Users
         'mobileStatus',
         'screenName',
         'avatar' => 'getAvatar',
+        'roles' => 'getRoles'
     );
 
     public function beforeSave()
