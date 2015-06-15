@@ -55,7 +55,8 @@ class Register extends User
     public function registerByMobile($captcha)
     {
         $this->getDI()->getEventsManager()->fire('user:beforeRegister', $this);
-        
+
+        // 校验用户名是否被注册
         $userinfo = self::findFirst("username = '$this->username'");
         if ($userinfo) {
             throw new Exception\ResourceConflictException('ERR_USER_USERNAME_ALREADY_TAKEN');
