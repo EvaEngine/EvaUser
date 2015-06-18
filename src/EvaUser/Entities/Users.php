@@ -238,12 +238,16 @@ class Users extends EvaUserEntityBase implements CommentUser
         if (!$this->id) {
             return array('GUEST');
         }
-
-        if ($this->isActived()) {
-            return array('USER');
-        } else {
+        if (!$this->isActived()) {
             return array('PENDING_USER');
         }
+        
+        $roles = array('USER');
+        foreach ($this->roles as $role) {
+            $roles[] = $role->roleKey;
+        }
+        
+        return $roles;
     }
 
     public function getId()
