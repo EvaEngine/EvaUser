@@ -183,6 +183,12 @@ class Users extends EvaUserEntityBase implements CommentUser
      */
     public $providerType = 'DEFAULT';
 
+    /**
+     *
+     * @var string
+     */
+    public $source;
+
 //    /**
 //     *
 //     * @var string 扩展字段
