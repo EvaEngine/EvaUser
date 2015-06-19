@@ -286,6 +286,18 @@ class Login extends User
         return $userinfo;
     }
 
+    public function updateCurrentUser()
+    {
+        if ($this->isUserLoggedIn()) {
+            $user = $this->getCurrentUser();
+            $this->saveUserToStorage(self::findFirst($user['id']));
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Login by Password
      *
