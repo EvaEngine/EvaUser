@@ -96,6 +96,7 @@ class RegisterController extends ControllerBase
                 'screenName' => $data['screenName'],
                 'usernameCustomized' => 0,
                 'providerType' => $data['providerType'],
+                'source' => $data['source'],
             ));
 
             $captcha = $this->request->getPost('captcha');
@@ -119,6 +120,7 @@ class RegisterController extends ControllerBase
                 'mobile' => $this->request->getPost('mobile'),
                 'password' => $this->request->getPost('password'),
                 'providerType' => $data['providerType'],
+                'source' => $data['source'],
             ));
 
             $captcha = $this->request->getPost('captcha');
