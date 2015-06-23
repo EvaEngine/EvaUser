@@ -24,7 +24,7 @@ class LoginController extends ControllerBase
             try {
                 $loginUser = $user->loginByPassword($this->request->getPost('identify'),
                     $this->request->getPost('password'));
-                $cookieDomain = $this->getDI()->getConfig()->session->cookie_params->domain;
+                $cookieDomain = $this->getDI()->getConfig()->session->sso_domain;
                 if ($loginUser->id && $this->request->getPost('remember')) {
                     $token = $user->getRememberMeToken();
                     if ($token) {
@@ -68,7 +68,13 @@ class LoginController extends ControllerBase
                 if ($this->request->getPost('remember')) {
                     $token = $user->getRememberMeToken();
                     if ($token) {
+                        $ssoDomain = $this->getDI()->getConfig()->session->sso_domain;
+
                         $this->cookies->set('realm', $token, time() + $user->getRememberMeTokenExpires());
+                         if ($ssoDomain) {
+                            $cookie = $this->cookies->get(Login::LOGIN_COOKIE_REMEMBER_KEY);
+                            $cookie->setDomain($ssoDomain);
+                        }
                     } else {
                         $this->flashSession->error($user->getMessages());
                     }
