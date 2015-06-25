@@ -292,7 +292,7 @@ class Users extends EvaUserEntityBase implements CommentUser
         );
         $this->hasOne('id', 'Eva\EvaUser\Entities\RealnameAuth', 'userId',
             array(
-                'alias' => 'Auth'
+                'alias' => 'auth'
             )
         );
 
