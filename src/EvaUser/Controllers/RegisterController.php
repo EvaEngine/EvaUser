@@ -141,7 +141,12 @@ class RegisterController extends ControllerBase
     public function mobileCaptchaAction()
     {
         $mobile = $this->request->getPost('mobile');
-        $type = $this->request->getPost('type', 'int', Models\Register::REGISTER_CODE); //短信的类型
+        if($this->request->get('type', 'string') == 'xgb'){ //如果get过来xgb,则是选股宝找回密码的短信
+            $type = Models\Register::XGB_RESET_CODE;
+        }else{
+            $type = Models\Register::REGISTER_CODE;
+        }
+         //短信的类型
         $registerModel = new Models\Register();
         $result = $registerModel->mobileCaptcha($mobile, $type);
 
