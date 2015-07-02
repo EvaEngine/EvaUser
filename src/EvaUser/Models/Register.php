@@ -11,11 +11,8 @@ class Register extends User
     protected static $verificationEmailTemplate;
 
     const REGISTER_CODE = 0; //主站,配资注册
-
-    const RESET_CODE = 1; //主站,配资找回密码
-
-    const XGB_REGISTER_CODE = 2; //选股宝注册
-
+    const XGB_REGISTER_CODE = 1; //选股宝注册
+    const RESET_CODE = 2; //主站,配资找回密码
     const XGB_RESET_CODE = 3; //选股宝找回密码
 
     public static function setVerificationEmailTemplate($template)
