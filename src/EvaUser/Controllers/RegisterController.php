@@ -141,9 +141,9 @@ class RegisterController extends ControllerBase
     public function mobileCaptchaAction()
     {
         $mobile = $this->request->getPost('mobile');
-
+        $type = $this->request->getPost('type', 'int', Models\Register::REGISTER_CODE); //短信的类型
         $registerModel = new Models\Register();
-        $result = $registerModel->mobileCaptcha($mobile);
+        $result = $registerModel->mobileCaptcha($mobile, $type);
 
         $data = array('mobile' => $mobile, 'timestamp' => time());
 

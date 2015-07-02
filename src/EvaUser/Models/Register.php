@@ -10,6 +10,14 @@ class Register extends User
 {
     protected static $verificationEmailTemplate;
 
+    const REGISTER_CODE = 0; //主站,配资注册
+
+    const RESET_CODE = 1; //主站,配资找回密码
+
+    const XGB_REGISTER_CODE = 2; //选股宝注册
+
+    const XGB_RESET_CODE = 3; //选股宝找回密码
+
     public static function setVerificationEmailTemplate($template)
     {
         self::$verificationEmailTemplate = $template;
@@ -182,7 +190,7 @@ class Register extends User
     }
     /**
      * @param $mobile
-     * @param int $type 这个type是用来区分短信的模板类别 为空时发送注册短信,true则为发送重置密码短信.SessionController->sendResetCaptcha也调用这个
+     * @param int $type
      * @return mixed|void
      */
     public function mobileCaptcha($mobile,$type = 0)
@@ -204,8 +212,12 @@ class Register extends User
         /** @var \Eva\EvaSms\Sender $sender */
         $sender = $this->getDI()->getSmsSender();
         $captcha = mt_rand(100000, 999999);
-        if($type){
+        if($type == self::RESET_CODE){
             $templateId = $this->getDI()->getConfig()->smsSender->templates->resetPassword;
+        }elseif($type == self::XGB_REGISTER_CODE){
+            $templateId = $this->getDI()->getConfig()->smsSender->templates->XGBverifyCode;
+        }elseif($type == self::XGB_RESET_CODE){
+            $templateId = $this->getDI()->getConfig()->smsSender->templates->XGBresetPassword;
         }else{
             $templateId = $this->getDI()->getConfig()->smsSender->templates->verifyCode;
         }
