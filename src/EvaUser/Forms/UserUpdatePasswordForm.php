@@ -37,14 +37,17 @@ class UserUpdatePasswordForm extends Form
 
         $password->addValidators([
             new PresenceOf([
-                'message' => 'A new password is required.'
+                //'message' => 'A new password is required.'
+                'message' => 'ERR_USER_NEW_PASSWORD_REQUIRED'
             ]),
             new StringLength([
                 'min' => 6,
-                'messageMinimum' => 'The new password is too short. Minimum 6 characters.'
+                //'messageMinimum' => 'The new password is too short. Minimum 6 characters.'
+                'messageMinimum' => 'ERR_USER_NEW_PASSWORD_TOO_SHORT_MIN_6'
             ]),
             new NotSameValidator([
-                'message' => 'The new password and the old are the same.',
+                //'message' => 'The new password and the old are the same.',
+                'message' => 'ERR_USER_PASSWORD_OLD_AND_NEW_THE_SAME',
                 'with' => 'oldPassword'
             ])
         ]);
@@ -54,7 +57,8 @@ class UserUpdatePasswordForm extends Form
         $oldPassword = new Password('oldPassword');
         $oldPassword->addValidators([
             new PresenceOf([
-                'message' => 'The old password is required.'
+                //'message' => 'The old password is required.'
+                'message' => 'ERR_USER_OLD_PASSWORD_REQUIRED'
             ]),
             new OldPasswordValidator(),
         ]);
@@ -90,10 +94,11 @@ class OldPasswordValidator extends Validation\Validator implements Validation\Va
 
             $message = $this->getOption('message');
             if (!$message) {
-                $message = 'The old password provided is incorrect.';
+                //$message = 'The old password provided is incorrect.';
+                $message = 'ERR_USER_OLD_PASSWORD_NOT_MATCH';
             }
 
-            $validator->appendMessage(new Validation\Message($message, $attribute));
+            $validator->appendMessage(new Validation\Message($message, $attribute,null,null));
 
             return false;
         }
