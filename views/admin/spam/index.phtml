@@ -1,0 +1,191 @@
+<div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+        try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+    </script>
+
+    <ul class="breadcrumb">
+        <li>
+        <i class="icon-home home-icon"></i>
+        <a href="/admin/dashboard">Home</a>
+        </li>
+
+        <li>
+        <a href="/admin/spam-user" class="active">Spam User List</a>
+        </li>
+    </ul><!-- .breadcrumb -->
+
+    <div class="nav-search" id="nav-search">
+        <form class="form-search">
+            <span class="input-icon">
+                <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                <i class="icon-search nav-search-icon"></i>
+            </span>
+        </form>
+    </div><!-- #nav-search -->
+</div>
+
+<div class="page-content">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="header smaller lighter blue">
+                Spam User List
+            </h3>
+            <div class="table-header">
+                Showing <?=$pager->offset_start?> to <?=$pager->offset_end?> of <?=$pager->total_items?> Items
+            </div>
+
+            <div class="table-responsive dataTables_wrapper">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <?=$form->render('uid', array(
+                                    'placeholder' => 'ID',
+                                    'class' => 'form-control input-sm'
+                                ))?>
+                            </div>
+                            <div class="form-group">
+                                <?=$form->render('username', array(
+                                    'placeholder' => 'Username',
+                                    'class' => 'form-control input-sm autocomplete',
+                                    'data-autocomplete-source' => '/admin/user/process/suggestions?query=%QUERY',
+                                    'data-autocomplete-target' => 'input[name=uid]',
+                                    'data-autocomplete-fill-name' => 'id',
+                                    'data-autocomplete-display-key' => 'username',
+                                ))?>
+                            </div>
+                            <div class="form-group">
+                                <?=$form->render('usernameClearly', array(
+                                        'placeholder' => 'Username exactly',
+                                        'class' => 'form-control input-sm autocomplete',
+                                        'data-autocomplete-source' => '/admin/user/process/suggestions?query=%QUERY',
+                                        'data-autocomplete-target' => 'input[name=uid]',
+                                        'data-autocomplete-fill-name' => 'id',
+                                        'data-autocomplete-display-key' => 'username',
+                                    ))?>
+                            </div>
+                            <div class="form-group">
+                                <?=$form->render('screenName', array(
+                                        'placeholder' => 'screenName',
+                                        'class' => 'form-control input-sm'
+                                    ))?>
+                            </div>
+                            <div class="form-group">
+                                <?=$form->render('email', array(
+                                        'placeholder' => 'email',
+                                        'class' => 'form-control input-sm'
+                                    ))?>
+                            </div>
+                            <div class="form-group">
+                                <?=$form->render('mobile', array(
+                                    'placeholder' => 'mobile',
+                                    'class' => 'form-control input-sm'
+                                ))?>
+                            </div>
+                            <div class="form-group">
+                                <?=$form->render('status', array(
+                                    'class' => 'form-control input-sm'
+                                ))?>
+                            </div>
+                           <span>
+                                <label for="filter-from-limit">Display</label>
+                            </span>
+                            <div class="form-group">
+                                <?=$form->render('limit', array(
+                                    'class' => 'form-control input-sm'
+                                ))?>
+                            </div>
+                            <button class="btn btn-info btn-sm form-control" type="submit">
+                                <i class="icon-search bigger-110"></i>
+                                Filter
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+                <table class="table table-striped table-bordered table-hover dataTable table-sortable" id="post-grid"  data-sortable-key="order" data-sortable-default="-id">
+                    <thead>
+                        <tr>
+                            <th class="center">
+                                <label>
+                                    <input type="checkbox" class="ace">
+                                    <span class="lbl"></span>
+                                </label>
+                            </th>
+                            <th class="center">user ID</th>
+                            <th class="hidden-480">禁言时间</th>
+                            <th class="hidden-480">用户名</th>
+                            <th class="hidden-480">昵称</th>
+                            <th class="hidden-480">判定规则</th>
+                            <th class="hidden-480">最近一条评论</th>
+                            <th class="hidden-480">评论时间</th>
+                            <th class="hidden-480">文章标题</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?foreach($pager->items as $item):?>
+                        <? $lastComment = $item->getLastComment() ?>
+                        <tr>
+                            <td class="center">
+                                <label>
+                                    <input type="checkbox" class="ace" value="<?=$item->id?>"  data-batch-source="<?=$item->id?>">
+                                    <span class="lbl"></span>
+                                </label>
+                            </td>
+                            <td class="center"><?= $item->id ?></td>
+                            <td class="hidden-480"><?= $this->tag->datetime($item->updatedAt) ?></td>
+                            <td class="hidden-480"><?= $item->username ?></td>
+                            <td class="hidden-480"><?= $item->screenName ?></td>
+                            <td class="hidden-480"><?= $item->spamReasonMap[$item->spamReason] ?></td>
+                            <td class="hidden-480"><? if ($lastComment) {echo mb_substr($lastComment['content'], 0, 30, 'utf-8');} ?></td>
+                            <td class="hidden-480"><? if ($lastComment) {echo $this->tag->datetime($lastComment['createdAt']);} ?></td>
+                            <td class="hidden-480"><a target="_blank" href="<?= $lastComment['permalink'] ?>"><? if ($lastComment) {echo $lastComment['title'];} ?></a></td>
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-xs btn-danger ajax-form-sumbit" data-ajax-form="1" date-method="delete" data-form-action="/admin/user/deleteusercomment/<?=$item->id?>" data-callback="window.location.reload();">
+                                        删除用户及评论
+                                    </button>
+                                    <button class="btn btn-xs btn-success ajax-form-sumbit" data-ajax-form="1" date-method="put" data-form-action="/admin/user/process/status/<?=$item->id?>" data-callback="window.location.reload();">
+                                        <input type="hidden" data-name="status" value="active" >
+                                        恢复用户评论资格
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <?endforeach?>
+                    </tbody>
+                </table>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="btn-group">
+                            <button class="btn btn-xs btn-success ajax-form-sumbit" data-batch-form="1" data-source-name="id" data-source-selectors="#post-grid input[data-batch-source]" date-method="put" data-form-action="/admin/post/process/batch" data-callback="window.location.reload();">
+                                <input type="hidden" data-name="status" value="published" >
+                                <i class="icon-ok bigger-120"></i>
+                            </button>
+
+                            <button class="btn btn-xs ajax-form-sumbit" data-batch-form="1" data-source-name="id" data-source-selectors="#post-grid input[data-batch-source]" date-method="put" data-form-action="/admin/post/process/batch" data-callback="window.location.reload();">
+                                <input type="hidden" data-name="status" value="deleted" >
+                                <i class="icon-eye-close bigger-120"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="dataTables_paginate">
+                            <?$this->partial("partial/paginator", array(
+                                'pagerUrl' => '/admin/spam-user',
+                                'pager' => $pager,
+                            ))?>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!--/table div-->
+
+        </div><!-- /col-->
+    </div><!--row end-->
+
+</div><!-- /.page-content -->

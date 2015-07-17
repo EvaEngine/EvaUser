@@ -27,11 +27,13 @@ class UserManager extends User
     public function beforeCreate()
     {
         $this->createdAt = $this->createdAt ? $this->createdAt : time();
+        $this->updatedAt = time();
         $this->providerType = $this->providerType != 'DEFAULT' ? $this->providerType : 'ADMIN';
     }
 
     public function beforeUpdate()
     {
+        $this->updatedAt = time();
         if (!$this->password) {
             $this->skipAttributesOnUpdate(array('password'));
         }
@@ -166,5 +168,21 @@ class UserManager extends User
     {
         $this->id = $id;
         $this->delete();
+    }
+
+    public function updateSpamUser($id, $reason)
+    {
+        if ($id > 0) {
+            $user = self::findFirst($id);
+            $user->status = 'spam';
+            $user->spamReason = $reason;
+            $user->updatedAt = time();
+            if ($user->save() === false) {
+                foreach ($user->getMessages() as $message) {
+                    echo $message . "<br/>";
+                }
+                dd('fail');
+            }
+        }
     }
 }

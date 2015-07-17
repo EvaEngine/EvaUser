@@ -32,6 +32,7 @@ class User extends Entities\Users
         'mobile',
         'mobileStatus',
         'screenName',
+        'createdAt',
         'avatar' => 'getAvatar',
         'roles' => 'getRoles'
     );

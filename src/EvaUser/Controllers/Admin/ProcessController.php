@@ -2,6 +2,9 @@
 
 namespace Eva\EvaUser\Controllers\Admin;
 
+use Eva\EvaComment\Entities\Comments;
+use Eva\EvaComment\Models\CommentManager;
+use Eva\EvaUser\Entities\Users;
 use Eva\EvaUser\Models;
 use Eva\EvaEngine\Mvc\Controller\JsonControllerInterface;
 use Eva\EvaEngine\Exception;
@@ -77,6 +80,47 @@ class ProcessController extends ControllerBase implements JsonControllerInterfac
             if ($user) {
                 $user->delete();
             }
+        } catch (\Exception $e) {
+            return $this->showExceptionAsJson($e, $user->getMessages());
+        }
+
+        return $this->response->setJsonContent($user);
+    }
+
+    /**
+     * @operationName("Remove user and comments")
+     * @operationDescription("Remove user and comments")
+     */
+    public function deleteUserCommentAction()
+    {
+        if (!$this->request->isDelete()) {
+            return $this->showErrorMessageAsJson(405, 'ERR_REQUEST_METHOD_NOT_ALLOW');
+        }
+        $userId = $this->dispatcher->getParam('id');
+
+        //删除评论
+        $commentModel = new CommentManager();
+        try {
+            $comments = $commentModel->findCommentsByUserId($userId);
+
+            foreach ($comments as $comment) {
+                $commentModel->updateCommentStatus($comment, Comments::STATE_SPAM);
+            }
+
+            $commentModel->syncCommentNum();
+        } catch (\Exception $e) {
+            return $this->showExceptionAsJson($e, $comment->getMessages());
+        }
+
+        //删除用户
+        $user =  Models\UserManager::findFirst($userId);
+        if (!$user) {
+            return $this->showErrorMessageAsJson(404, 'ERR_USER_NOT_FOUND');
+        }
+
+        try {
+            $user->status = 'deleted';
+            $user->save();
         } catch (\Exception $e) {
             return $this->showExceptionAsJson($e, $user->getMessages());
         }

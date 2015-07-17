@@ -2,6 +2,7 @@
 
 namespace Eva\EvaUser\Entities;
 
+use Eva\EvaComment\Models\CommentManager;
 use Phalcon\Mvc\Model\Validator\Email as Email;
 
 class Users extends EvaUserEntityBase implements CommentUser
@@ -139,6 +140,12 @@ class Users extends EvaUserEntityBase implements CommentUser
      *
      * @var integer
      */
+    public $updatedAt;
+
+    /**
+     *
+     * @var integer
+     */
     public $loginAt;
 
     /**
@@ -188,6 +195,24 @@ class Users extends EvaUserEntityBase implements CommentUser
      * @var string
      */
     public $source;
+
+    /**
+     *
+     * @var integer
+     */
+    public $spamReason;
+
+    const SPAM_REASON_DEFAULT = 0;
+    const SPAM_REASON_COMMENTS_TOO_MUCH = 1;
+    const SPAM_REASON_FILTER_TOO_MUCH = 2;
+    const SPAM_REASON_REPORT_TOO_MUCH = 3;
+
+    public $spamReasonMap = array(
+        self::SPAM_REASON_DEFAULT => '',
+        self::SPAM_REASON_COMMENTS_TOO_MUCH => "评论过多",
+        self::SPAM_REASON_FILTER_TOO_MUCH => "多次被过滤",
+        self::SPAM_REASON_REPORT_TOO_MUCH => "多次被举报"
+    );
 
 //    /**
 //     *
@@ -278,6 +303,13 @@ class Users extends EvaUserEntityBase implements CommentUser
     public function getUserType()
     {
         return self::USER_TYPE;
+    }
+
+    public function getLastComment()
+    {
+        $commentManager = new CommentManager();
+        $lastComment = $commentManager->findLastCommentByUserId($this->id);
+        return $lastComment;
     }
 
     public function initialize()

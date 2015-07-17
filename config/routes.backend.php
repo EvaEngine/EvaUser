@@ -20,6 +20,13 @@ return array(
         'id' => 3,
     ),
 
+    '/admin/user/deleteusercomment/(\d+)' =>  array(
+        'module' => 'EvaUser',
+        'controller' => 'Admin\Process',
+        'action' => 'deleteUserComment',
+        'id' => 1,
+    ),
+
     '/admin/register' => array(
         'module' => 'EvaUser',
         'controller' => 'Admin\Register',
@@ -68,6 +75,9 @@ return array(
         'username' => 1,
         'code' => 2,
     ),
-
-
+    '/admin/spam-user' => array(
+        'module' => 'EvaUser',
+        'controller' => 'Admin\Spam',
+        'action' => 'index'
+    )
 );

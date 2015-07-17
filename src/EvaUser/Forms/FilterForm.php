@@ -35,6 +35,7 @@ class FilterForm extends Form
     * @Option(active=Active)
     * @Option(inactive=Inactive)
     * @Option(deleted=Deleted)
+    * @Option(spam=Spam)
     * @var string
     */
     public $status;
