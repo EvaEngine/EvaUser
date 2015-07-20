@@ -340,6 +340,10 @@ class Login extends User
         if (!$userinfo) {
             throw new Exception\ResourceNotFoundException('ERR_USER_NOT_EXIST');
         }
+        //用户被禁言
+        if ($userinfo->status == 'spam') {
+            throw new Exception\RuntimeException('ERR_USER_IS_SPAM');
+        }
 
         if ($userinfo->failedLogins >= $this->maxLoginRetry && $userinfo->loginFailedAt > (time() - 30)) {
             throw new Exception\RuntimeException('ERR_USER_PASSWORD_WRONG_MAX_TIMES');
