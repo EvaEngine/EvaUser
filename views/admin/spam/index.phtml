@@ -137,7 +137,7 @@
                             </td>
                             <td class="center"><?= $item->id ?></td>
                             <td class="hidden-480"><?= $this->tag->datetime($item->updatedAt) ?></td>
-                            <td class="hidden-480"><?= $item->username ?></td>
+                            <td class="hidden-480"><a href="/admin/comment?usernameClearly=<?= $item->username ?>"><?= $item->username ?></a></td>
                             <td class="hidden-480"><?= $item->screenName ?></td>
                             <td class="hidden-480"><?= $item->spamReasonMap[$item->spamReason] ?></td>
                             <td class="hidden-480"><? if ($lastComment) {echo mb_substr($lastComment['content'], 0, 30, 'utf-8');} ?></td>
