@@ -50,6 +50,8 @@ class ProcessController extends ControllerBase implements JsonControllerInterfac
 
         $id = $this->dispatcher->getParam('id');
         $user =  Models\UserManager::findFirst($id);
+        //避免 Models\UserManager->beforeSave()方法会对password进行再次hash
+        $user->password = '';
         if (!$user) {
             return $this->showErrorMessageAsJson(404, 'ERR_USER_NOT_FOUND');
         }

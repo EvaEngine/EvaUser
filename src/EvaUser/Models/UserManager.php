@@ -2,6 +2,7 @@
 
 namespace Eva\EvaUser\Models;
 
+use Eva\EvaEngine\IoC;
 use Eva\EvaUser\Entities;
 use Eva\EvaFileSystem\Models\Upload as UploadModel;
 use Eva\EvaEngine\Exception;
@@ -173,7 +174,8 @@ class UserManager extends User
     public function updateSpamUser($id, $reason)
     {
         if ($id > 0) {
-            $user = self::findFirst($id);
+            /** @var Entities\users $user */
+            $user = Entities\Users::findFirst($id);
             $user->status = 'spam';
             $user->spamReason = $reason;
             $user->updatedAt = time();
