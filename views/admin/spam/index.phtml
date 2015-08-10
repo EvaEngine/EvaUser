@@ -83,11 +83,6 @@
                                     'class' => 'form-control input-sm'
                                 ))?>
                             </div>
-                            <div class="form-group">
-                                <?=$form->render('status', array(
-                                    'class' => 'form-control input-sm'
-                                ))?>
-                            </div>
                            <span>
                                 <label for="filter-from-limit">Display</label>
                             </span>
@@ -189,3 +184,68 @@
     </div><!--row end-->
 
 </div><!-- /.page-content -->
+
+
+<script>
+    require(['jquery','bootstrap','blockui'],function($){
+        var actions = {
+             '_popup-general':function($dom){
+                var $modal = $($dom.attr('data-target'));
+                
+                var method=$dom.attr('date-method');
+                var url=$dom.attr('data-form-action');
+                var callback=$dom.attr('data-callback');
+
+                $modal.find('form').attr('data-form-action',url );
+                $modal.find('form').attr('date-method',method );
+                $modal.find('form').attr('data-callback',callback );
+            },
+            'popup-confirm':function($dom){
+               
+                this['_popup-general']($dom);
+
+                var $modal = $($dom.attr('data-target'));
+
+                var userName=$dom.attr('data-userName');
+                var value=$dom.find('input').attr('value');
+             
+                $modal.find('.js-userName').text(userName)
+                $modal.find('input').attr('value',value);
+                
+                $modal.modal('show')
+            },
+            'popup-multipleconfirm':function($dom){
+                this['_popup-general']($dom);
+
+                var $modal = $($dom.attr('data-target'));
+
+                var userName=$dom.attr('data-userName');
+                var sourceName=$dom.attr('data-source-name');
+                var sourceSelectors=$dom.attr('data-source-selectors');
+                var value=$dom.find('input').attr('value');
+             
+                $modal.find('input').attr('value',value);
+                
+                $modal.find('form').attr('data-source-name',sourceName);
+                $modal.find('form').attr('data-source-selectors',sourceSelectors );
+                
+                $modal.modal('show')
+            },  
+        }
+       
+       function invokeAction(actionName,ctx){
+            if(actionName in actions){
+                actions[actionName](ctx);
+            }else{
+                alert('非法操作')
+            }
+        }
+     
+        $('#main-container').on('click','[data-action]',function(){
+            var self = $(this);
+            var actionName = self.attr('data-action');
+            invokeAction(actionName,self)
+        })
+      
+    })
+</script>
