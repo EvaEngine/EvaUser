@@ -38,7 +38,7 @@ class RealName extends RealnameAuth
             new Regex([
                 'field' => 'cardNum',
                 'message' => '身份证号的格式不正确',
-                'pattern' => '/(^\d{15}$)|(^\d{17}([0-9]|X)$)/'
+                'pattern' => '/^[\dxX]+$/'
             ]),
             new Uniqueness([
                 'field' => 'cardNum',
