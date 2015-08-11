@@ -16,5 +16,17 @@ use Eva\EvaUser\Entities\LoginRecords;
 
 class LoginRecord extends LoginRecords
 {
-
+    public function recordSource($uid, $source, $loginAt)
+    {
+        $request = $this->getDI()->getService('request');
+        dd($request);
+        $ipAddress = $request->getServer('REMOTE_ADDR');
+        $loginSource = new LoginSources;
+        $loginSource->userId = $uid;
+        $loginSource->source = $source;
+        $loginSource->loginAt = $loginAt;
+        $loginSource->remoteIp = $ipAddress;
+        $loginSource->save();
+        // log // throw exception
+    }
 } 
