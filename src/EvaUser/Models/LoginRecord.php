@@ -22,13 +22,12 @@ class LoginRecord extends LoginRecords
     {
         $request = $this->getDI()->getShared('request');
         $ipAddress = $request->getServer('REMOTE_ADDR');
-        $loginSource = new self;
-        $loginSource->userId = $uid;
-        $loginSource->source = $source;
-        $loginSource->loginAt = $loginAt;
-        $loginSource->remoteIp = $ipAddress;
-        if ($loginSource->save() == false) {
-            foreach ($loginSource->getMessages() as $message) {
+        $this->userId = $uid;
+        $this->source = $source;
+        $this->loginAt = $loginAt;
+        $this->remoteIp = $ipAddress;
+        if ($this->save() == false) {
+            foreach ($this->getMessages() as $message) {
                 throw new RuntimeException($message, 500);
             }
         }
@@ -37,8 +36,7 @@ class LoginRecord extends LoginRecords
 
     public static function getSourceOfUser()
     {
-        $loginRecord = new self;
-        $request = $loginRecord->getDI()->getShared('request');
+        $request = Ioc::getDI()->getShared('request');
         $data = $request->getRawBody();
         if (isset($data)) {
             $data = json_decode($data, true);
