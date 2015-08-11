@@ -24,7 +24,7 @@ class UserListener
     public function afterLogin(Event $event, Login $user)
     {
         // 记录登录用户的登录来源
-        $loginSource = new LoginRecord();  //拆分        loginHistory，还表的命名
+        $loginSource = new LoginRecord();
         $source = LoginRecord::getSourceOfUser();
         if($source) {
             $loginSource->recordSource($user->id, $source, $user->loginAt);
