@@ -243,22 +243,13 @@ class Register extends User
 
     public static function getProviderType($platform, $providerChannel = 'manual', $accountType = 'email')
     {
-        $providerType = '';
-        if ($platform == self::PROVIDER_PLATFORM_WEB) {
-            if ($providerChannel == self::PROVIDER_CHANNEL_OAUTH) {
-                $accessToken = OAuthManager::getAccessToken();
-                $providerType = self::PROVIDER_PLATFORM_WEB.'_'.self::PROVIDER_CHANNEL_OAUTH.'_'.$accessToken['adapterKey'];
-            } elseif ($providerChannel == self::PROVIDER_CHANNEL_MANUAL) {
-                $providerType = self::PROVIDER_PLATFORM_WEB.'_'.self::PROVIDER_CHANNEL_MANUAL.'_'.$accountType;
-            }
-        } elseif ($platform == self::PROVIDER_PLATFORM_APP) {
-            $providerType = self::PROVIDER_PLATFORM_APP.'_'.self::PROVIDER_CHANNEL_MANUAL.'_'.$accountType;
-        } elseif ($platform == self::PROVIDER_PLATFORM_ADMIN) {
-            $providerType = self::PROVIDER_PLATFORM_ADMIN;
-        } elseif ($providerType == self::PROVIDER_PLATFORM_ADMIN) {
-            $providerType = self::PROVIDER_PLATFORM_ADMIN;
+        $platform = in_array($platform, ['web', 'app']) ? $platform : self::PROVIDER_PLATFORM_WEB;
+        $accessToken = OAuthManager::getAccessToken();
+        if (isset($accessToken)) {
+            $accountType = $accessToken['adapterKey'];
         }
-        return $providerType;
+        $providerChannel = in_array($providerChannel, [self::PROVIDER_CHANNEL_OAUTH, self::PROVIDER_CHANNEL_MANUAL]) ? $providerChannel : self::PROVIDER_CHANNEL_MANUAL;
+        return implode('_', [$platform, $providerChannel, $accountType]);
     }
 
 

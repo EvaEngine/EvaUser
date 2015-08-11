@@ -60,7 +60,7 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
     public function createAction()
     {
         $user = new Models\UserManager();
-        $user->providerType = Models\Register::getProviderType('admin');
+        $user->providerType = 'admin';
         $user->source = Models\LoginRecord::getSourceOfUser();
         $form = new \Eva\EvaUser\Forms\UserForm();
         $form->setModel($user);
