@@ -2,6 +2,7 @@
 
 namespace Eva\EvaUser\Controllers;
 
+use Eva\EvaOAuthClient\Models\OAuthManager;
 use Eva\EvaUser\Models;
 use Eva\EvaUser\Forms;
 
@@ -23,7 +24,9 @@ class RegisterController extends ControllerBase
                 'username' => $this->request->getPost('username'),
                 'email' => $this->request->getPost('email'),
                 'password' => $this->request->getPost('password'),
-                'usernameCustomized' => 1
+                'usernameCustomized' => 1,
+                'providerType' => $user->getProviderType('web', 'manual', 'email'),
+                'source' => Models\LoginRecord::getSourceOfUser(),
             ));
             try {
                 $registerUser = $user->register();
@@ -50,7 +53,9 @@ class RegisterController extends ControllerBase
                 'username' => $this->request->getPost('username'),
                 'email' => $this->request->getPost('email'),
                 'password' => $this->request->getPost('password'),
-                'usernameCustomized' => 1
+                'usernameCustomized' => 1,
+                'providerType' => $user->getProviderType('web', 'manual', 'email'),
+                'source' => Models\LoginRecord::getSourceOfUser(),
             ));
 
             try {
@@ -95,8 +100,8 @@ class RegisterController extends ControllerBase
                 'password' => $this->request->getPost('password'),
                 'screenName' => $data['screenName'],
                 'usernameCustomized' => 0,
-                'providerType' => $data['providerType'],
-                'source' => $data['source'],
+                'providerType' => $user->getProviderType('web', 'manual', 'mobile'),
+                'source' => Models\LoginRecord::getSourceOfUser(),
             ));
 
             $captcha = $this->request->getPost('captcha');
@@ -119,8 +124,8 @@ class RegisterController extends ControllerBase
                 'username' => $data['username'],
                 'mobile' => $this->request->getPost('mobile'),
                 'password' => $this->request->getPost('password'),
-                'providerType' => $data['providerType'],
-                'source' => $data['source'],
+                'providerType' => $user->getProviderType('web', 'manual', 'mobile'),
+                'source' => Models\LoginRecord::getSourceOfUser(),
             ));
 
             $captcha = $this->request->getPost('captcha');

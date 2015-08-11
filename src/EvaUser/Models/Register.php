@@ -2,6 +2,7 @@
 
 namespace Eva\EvaUser\Models;
 
+use Eva\EvaOAuthClient\Models\OAuthManager;
 use Eva\EvaUser\Entities;
 use \Phalcon\Mvc\Model\Message as Message;
 use Eva\EvaEngine\Exception;
@@ -14,6 +15,15 @@ class Register extends User
     const XGB_REGISTER_CODE = 1; //选股宝注册
     const RESET_CODE = 2; //主站,配资找回密码
     const XGB_RESET_CODE = 3; //选股宝找回密码
+
+    const PROVIDER_PLATFORM_WEB = 'web';
+    const PROVIDER_PLATFORM_WAP = 'wap';
+    const PROVIDER_PLATFORM_APP = 'app';
+    const PROVIDER_PLATFORM_ADMIN = 'admin';
+
+    const PROVIDER_CHANNEL_OAUTH = 'oauth';
+    const PROVIDER_CHANNEL_MANUAL = 'manual';
+
 
     public static function setVerificationEmailTemplate($template)
     {
@@ -229,6 +239,26 @@ class Register extends User
         $cache->save($cacheKey, $data, $cacheTime);
 
         return $result;
+    }
+
+    public static function getProviderType($platform, $providerChannel = 'manual', $accountType = 'email')
+    {
+        $providerType = '';
+        if ($platform == self::PROVIDER_PLATFORM_WEB) {
+            if ($providerChannel == self::PROVIDER_CHANNEL_OAUTH) {
+                $accessToken = OAuthManager::getAccessToken();
+                $providerType = self::PROVIDER_PLATFORM_WEB.'_'.self::PROVIDER_CHANNEL_OAUTH.'_'.$accessToken['adapterKey'];
+            } elseif ($providerChannel == self::PROVIDER_CHANNEL_MANUAL) {
+                $providerType = self::PROVIDER_PLATFORM_WEB.'_'.self::PROVIDER_CHANNEL_MANUAL.'_'.$accountType;
+            }
+        } elseif ($platform == self::PROVIDER_PLATFORM_APP) {
+            $providerType = self::PROVIDER_PLATFORM_APP.'_'.self::PROVIDER_CHANNEL_MANUAL.'_'.$accountType;
+        } elseif ($platform == self::PROVIDER_PLATFORM_ADMIN) {
+            $providerType = self::PROVIDER_PLATFORM_ADMIN;
+        } elseif ($providerType == self::PROVIDER_PLATFORM_ADMIN) {
+            $providerType = self::PROVIDER_PLATFORM_ADMIN;
+        }
+        return $providerType;
     }
 
 
