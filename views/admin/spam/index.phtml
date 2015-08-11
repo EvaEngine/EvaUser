@@ -140,7 +140,7 @@
                             <td class="hidden-480"><a target="_blank" href="<?= $lastComment['permalink'] ?>"><? if ($lastComment) {echo $lastComment['title'];} ?></a></td>
                             <td>
                                 <div class="btn-group">
-                                    <button class="btn btn-xs btn-danger ajax-form-sumbit" data-ajax-form="1" date-method="delete" data-form-action="/admin/user/deleteusercomment/<?=$item->id?>" data-callback="window.location.reload();">
+                                    <button class="btn btn-xs btn-danger" data-target="#modal-confirm" data-action="popup-confirm" date-method="delete" data-form-action="/admin/user/deleteusercomment/<?=$item->id?>" data-callback="window.location.reload();">
                                         删除用户及评论
                                     </button>
                                     <button class="btn btn-xs btn-success ajax-form-sumbit" data-ajax-form="1" date-method="put" data-form-action="/admin/user/process/status/<?=$item->id?>" data-callback="window.location.reload();">
@@ -162,7 +162,7 @@
                                 <i class="icon-ok bigger-120"></i>
                             </button>
 
-                            <button class="btn btn-xs ajax-form-sumbit" data-batch-form="1" data-source-name="id" data-source-selectors="#post-grid input[data-batch-source]" date-method="put" data-form-action="/admin/post/process/batch" data-callback="window.location.reload();">
+                            <button class="btn btn-xs" data-target="#modal-multipleconfirm" data-action="popup-multipleconfirm" data-source-name="id" data-source-selectors="#post-grid input[data-batch-source]" date-method="put" data-form-action="/admin/post/process/batch" data-callback="window.location.reload();">
                                 <input type="hidden" data-name="status" value="deleted" >
                                 <i class="icon-eye-close bigger-120"></i>
                             </button>
@@ -187,65 +187,5 @@
 
 
 <script>
-    require(['jquery','bootstrap','blockui'],function($){
-        var actions = {
-             '_popup-general':function($dom){
-                var $modal = $($dom.attr('data-target'));
-                
-                var method=$dom.attr('date-method');
-                var url=$dom.attr('data-form-action');
-                var callback=$dom.attr('data-callback');
-
-                $modal.find('form').attr('data-form-action',url );
-                $modal.find('form').attr('date-method',method );
-                $modal.find('form').attr('data-callback',callback );
-            },
-            'popup-confirm':function($dom){
-               
-                this['_popup-general']($dom);
-
-                var $modal = $($dom.attr('data-target'));
-
-                var userName=$dom.attr('data-userName');
-                var value=$dom.find('input').attr('value');
-             
-                $modal.find('.js-userName').text(userName)
-                $modal.find('input').attr('value',value);
-                
-                $modal.modal('show')
-            },
-            'popup-multipleconfirm':function($dom){
-                this['_popup-general']($dom);
-
-                var $modal = $($dom.attr('data-target'));
-
-                var userName=$dom.attr('data-userName');
-                var sourceName=$dom.attr('data-source-name');
-                var sourceSelectors=$dom.attr('data-source-selectors');
-                var value=$dom.find('input').attr('value');
-             
-                $modal.find('input').attr('value',value);
-                
-                $modal.find('form').attr('data-source-name',sourceName);
-                $modal.find('form').attr('data-source-selectors',sourceSelectors );
-                
-                $modal.modal('show')
-            },  
-        }
-       
-       function invokeAction(actionName,ctx){
-            if(actionName in actions){
-                actions[actionName](ctx);
-            }else{
-                alert('非法操作')
-            }
-        }
-     
-        $('#main-container').on('click','[data-action]',function(){
-            var self = $(this);
-            var actionName = self.attr('data-action');
-            invokeAction(actionName,self)
-        })
-      
-    })
+    require(['wscn/js/components/popup/Popup'],function(){})
 </script>
