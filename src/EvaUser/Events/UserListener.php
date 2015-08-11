@@ -25,7 +25,7 @@ class UserListener
     {
         // 记录登录用户的登录来源
         $loginSource = new LoginRecord();  //拆分        loginHistory，还表的命名
-        $source = $loginSource->getSourceOfUser();
+        $source = LoginRecord::getSourceOfUser();
         if($source) {
             $loginSource->recordSource($user->id, $source, $user->loginAt);
         }
