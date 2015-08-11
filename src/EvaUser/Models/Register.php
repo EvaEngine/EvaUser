@@ -243,7 +243,7 @@ class Register extends User
 
     public static function getProviderType($platform, $providerChannel = 'manual', $accountType = 'email')
     {
-        $platform = in_array($platform, ['web', 'app']) ? $platform : self::PROVIDER_PLATFORM_WEB;
+        $platform = in_array($platform, [self::PROVIDER_PLATFORM_WEB, self::PROVIDER_PLATFORM_APP]) ? $platform : self::PROVIDER_PLATFORM_WEB;
         $accessToken = OAuthManager::getAccessToken();
         if (isset($accessToken)) {
             $accountType = $accessToken['adapterKey'];
