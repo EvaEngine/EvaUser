@@ -9,6 +9,7 @@ use Eva\EvaUser\Models;
 use Eva\EvaEngine\Mvc\Controller\JsonControllerInterface;
 use Eva\EvaEngine\Exception;
 use Eva\EvaEngine\Mvc\Controller\SessionAuthorityControllerInterface;
+use Eva\EvaUser\Models\Login as LoginModel;
 
 /**
 * @resourceName("User Managment Assists")
@@ -62,6 +63,13 @@ class ProcessController extends ControllerBase implements JsonControllerInterfac
         } catch (\Exception $e) {
             return $this->showExceptionAsJson($e, $user->getMessages());
         }
+
+        $userInfo = $this->getUserInfo();
+        $operationData = array(
+            'operatorId' => $userInfo['id'],
+            'subjectUser' => $user,
+        );
+        $this->getDI()->getEventsManager()->fire('audit:createOperation', $operationData);
 
         return $this->response->setJsonContent($user);
     }
@@ -127,6 +135,25 @@ class ProcessController extends ControllerBase implements JsonControllerInterfac
             return $this->showExceptionAsJson($e, $user->getMessages());
         }
 
+        $userInfo = $this->getUserInfo();
+        $operationData = array(
+            'operatorId' => $userInfo['id'],
+            'subjectUser' => $user,
+        );
+        $this->getDI()->getEventsManager()->fire('audit:createOperation', $operationData);
+
         return $this->response->setJsonContent($user);
+    }
+
+    private function getUserInfo()
+    {
+        $user = new LoginModel();
+        if ($user->isUserLoggedIn()) {
+            $userInfo = $user->getCurrentUser();
+
+            return $userInfo;
+        }else{
+            return false;
+        }
     }
 }
