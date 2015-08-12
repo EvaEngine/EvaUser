@@ -161,7 +161,7 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
         $this->view->setVar('pager', $pager);
     }
 
-    public function loginHistory()
+    public function loginHistoryAction()
     {
         $limit = $this->request->getQuery('limit', 'int', 25);
         $limit = $limit > 100 ? 100 : $limit;

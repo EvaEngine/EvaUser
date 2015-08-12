@@ -196,7 +196,7 @@ class UserManager extends User
     {
         $itemQuery = $this->getDI()->getModelsManager()->createBuilder();
 
-        $itemQuery->from(__CLASS__);
+        $itemQuery->from(['U' => __CLASS__]);
 
         $orderMapping = array(
             'id' => 'id ASC',
@@ -209,6 +209,19 @@ class UserManager extends User
             '-last_login' => 'loginAt DESC',
         );
 
-        $itemQuery->join
+        $itemQuery->join('Eva\EvaUser\Entities\LoginRecords', 'U.id = L.userId', 'L');
+
+        $itemQuery->andWhere("L.source = 'xgb'");
+
+        $itemQuery->groupBy(array('L.userId'));
+
+        $order = 'id DESC';
+        if (!empty($query['order'])) {
+            $order = empty($orderMapping[$query['order']]) ? $order : $orderMapping[$query['order']];
+        }
+
+        $itemQuery->orderBy($order);
+
+        return $itemQuery;
     }
 }
