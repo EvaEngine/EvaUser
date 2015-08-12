@@ -79,5 +79,10 @@ return array(
         'module' => 'EvaUser',
         'controller' => 'Admin\Spam',
         'action' => 'index'
-    )
+    ),
+    '/admin/login-history' =>  array(
+        'module' => 'EvaUser',
+        'controller' => 'Admin\User',
+        'action' => 'loginHistory'
+    ),
 );
