@@ -119,6 +119,10 @@ class UserManager extends User
             $itemQuery->andWhere('status = :status:', array('status' => $query['status']));
         }
 
+        if (!empty($query['source'])) {
+            $itemQuery->andWhere('source = :source:', array('source' => $query['source']));
+        }
+
         if (!empty($query['uid'])) {
             $itemQuery->andWhere('id = :uid:', array('uid' => $query['uid']));
         }
@@ -186,5 +190,25 @@ class UserManager extends User
                 dd('fail');
             }
         }
+    }
+
+    public function findLoginedUsers($query)
+    {
+        $itemQuery = $this->getDI()->getModelsManager()->createBuilder();
+
+        $itemQuery->from(__CLASS__);
+
+        $orderMapping = array(
+            'id' => 'id ASC',
+            '-id' => 'id DESC',
+            'created_at' => 'createdAt ASC',
+            '-created_at' => 'createdAt DESC',
+            'username' => 'username ASC',
+            '-username' => 'username DESC',
+            'last_login' => 'loginAt ASC',
+            '-last_login' => 'loginAt DESC',
+        );
+
+        $itemQuery->join
     }
 }

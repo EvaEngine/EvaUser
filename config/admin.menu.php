@@ -20,5 +20,11 @@
             Spam User List
         </a>
     </li>
+    <li class="tobe-highlight" data-highlight-url="/admin/login-history">
+        <a href="/admin/login-history">
+            <i class="icon-double-angle-right"></i>
+
+        </a>
+    </li>
 </ul>
 </li>
