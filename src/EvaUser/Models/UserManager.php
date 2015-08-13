@@ -180,10 +180,7 @@ class UserManager extends User
             $user->spamReason = $reason;
             $user->updatedAt = time();
             if ($user->save() === false) {
-                foreach ($user->getMessages() as $message) {
-                    echo $message . "<br/>";
-                }
-                dd('fail');
+                throw new Exception\RuntimeException('Save user failed');
             }
         }
     }
