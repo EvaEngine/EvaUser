@@ -23,7 +23,7 @@
     <li class="tobe-highlight" data-highlight-url="/admin/login-history">
         <a href="/admin/login-history">
             <i class="icon-double-angle-right"></i>
-            Login History
+            Login History Of XGB
         </a>
     </li>
 </ul>
