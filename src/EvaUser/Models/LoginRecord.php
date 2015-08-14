@@ -20,7 +20,7 @@ class LoginRecord extends LoginRecords
 {
     public function recordSource($uid, $source, $loginAt)
     {
-        $request = $this->getDI()->getShared('request');
+        $request = Ioc::getDI()->getShared('request');
         $ipAddress = $request->getServer('REMOTE_ADDR');
         $this->userId = $uid;
         $this->source = $source;
@@ -44,18 +44,19 @@ class LoginRecord extends LoginRecords
         $source = '';
         $refer = $request->getServer('HTTP_REFERER');
         $host = $request->getServer('HTTP_HOST');
-        if (isset($data['source'])) {   // api json数据
-            $source = $data['source'];
-        } elseif ($request->getPost('source')) {  // 表单填了source字段
-            $source = $request->getPost('source');
-        } elseif (isset($refer)) {  // HTTP_REFERER来判断
-            $source = self::checkLoginSourceOfUser($refer);
-        } elseif (isset($host)) {   // 通过HTTP_HOST来尝试判断
-            $source = self::checkLoginSourceOfUser($host);
-        } else {
-            $source = 'DEFAULT';
+        if (isset($data['source'])) {   // 尝试通过api json数据来获取source
+            return $source = $data['source'];
         }
-        return $source;
+        if ($request->getPost('source')) {  // 没有api数据，尝试从表单获取，看其是否填了source字段
+            return $source = $request->getPost('source');
+        }
+        if (isset($refer)) {  // api json和表单都没有，尝试通过HTTP_REFERER来判断
+            return $source = self::checkLoginSourceOfUser($refer);
+        }
+        if (isset($host)) {   // 通过HTTP_HOST来尝试判断
+            return $source = self::checkLoginSourceOfUser($host);
+        }
+        return $source = 'DEFAULT';
     }
 
     public static function checkLoginSourceOfUser($target)
