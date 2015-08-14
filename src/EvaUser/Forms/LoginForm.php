@@ -30,6 +30,15 @@ class LoginForm extends Form
      */
     public $password;
 
+    /**
+     * @SWG\Property(
+     *   name="source",
+     *   type="string",
+     *   description="Login source"
+     * )
+     */
+    public $source;
+
     public function initialize($entity = null, $options = null)
     {
         $name = new Text('identify');
