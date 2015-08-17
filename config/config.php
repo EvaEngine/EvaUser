@@ -17,6 +17,7 @@ return array(
         'changeEmailTemplate' => __DIR__ . '/../views/mails/change_email.phtml',
         'cookieTokenExpired' => 500000,
         'loginCookieDomain' => '',
+        'source' => array()
     ),
     'validateConfig' => array(
         'wsdlURL' => "http://gboss.id5.cn/services/QueryValidatorServices?wsdl",

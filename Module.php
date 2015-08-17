@@ -21,6 +21,9 @@ class Module implements ModuleDefinitionInterface, StandardInterface
 
     public static function registerGlobalEventListeners()
     {
+        return array(
+            'user' => 'Eva\EvaUser\Events\UserListener',
+        );
     }
 
     public static function registerGlobalViewHelpers()
