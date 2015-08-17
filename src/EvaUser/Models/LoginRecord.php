@@ -21,8 +21,7 @@ class LoginRecord extends Model
 {
     public static function getSourceOfUser()
     {
-        $loginRecord = new self;
-        $request = $loginRecord->getDI()->getShared('request');
+        $request = IoC::getDI()->getShared('request');
         $data = $request->getRawBody();
         if (isset($data)) {
             $data = json_decode($data, true);
