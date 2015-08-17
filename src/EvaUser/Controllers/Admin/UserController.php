@@ -29,6 +29,7 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
             'cid' => $this->request->getQuery('cid', 'int'),
             'username' => $this->request->getQuery('username', 'string'),
             'usernameClearly' => $this->request->getQuery('usernameClearly', 'string'),
+            'source' => $this->request->getQuery('source', 'string'),
 
             'email' => $this->request->getQuery('email', 'string'),
             'mobile' => $this->request->getQuery('mobile', 'string'),
@@ -38,6 +39,7 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
             'limit' => $limit,
             'page' => $this->request->getQuery('page', 'int', 1),
         );
+
         $form = new Forms\FilterForm();
         $form->setValues($this->request->getQuery());
         $this->view->setVar('form', $form);
@@ -153,6 +155,28 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
 
         $paginator = new \Eva\EvaEngine\Paginator(array(
             "builder" => $logs,
+            "limit" => $limit,
+            "page" => $query['page']
+        ));
+        $paginator->setQuery($query);
+        $pager = $paginator->getPaginate();
+        $this->view->setVar('pager', $pager);
+    }
+
+    public function loginHistoryAction()
+    {
+        $limit = $this->request->getQuery('limit', 'int', 25);
+        $limit = $limit > 100 ? 100 : $limit;
+        $limit = $limit < 10 ? 10 : $limit;
+        $query = array(
+            'order' => $this->request->getQuery('order', 'string', '-created_at'),
+            'limit' => $limit,
+            'page' => $this->request->getQuery('page', 'int', 1),
+        );
+        $user = new Models\UserManager();
+        $users = $user->findLoginedUsers($query);
+        $paginator = new \Eva\EvaEngine\Paginator(array(
+            "builder" => $users,
             "limit" => $limit,
             "page" => $query['page']
         ));

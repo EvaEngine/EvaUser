@@ -71,6 +71,17 @@ class FilterForm extends Form
      */
     public $screenName;
 
+    /**
+     *
+     * @Type(Select)
+     * @Option("All User")
+     * @Option(DEFAULT=DEFAULT)
+     * @Option(wscn=WSCN)
+     * @Option(xgb=XGB)
+     * @var string
+     */
+    public $source;
+
     public function initialize($entity = null, $options = null)
     {
         $this->initializeFormAnnotations();

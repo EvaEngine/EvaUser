@@ -119,6 +119,10 @@ class UserManager extends User
             $itemQuery->andWhere('status = :status:', array('status' => $query['status']));
         }
 
+        if (!empty($query['source'])) {
+            $itemQuery->andWhere('source = :source:', array('source' => $query['source']));
+        }
+
         if (!empty($query['uid'])) {
             $itemQuery->andWhere('id = :uid:', array('uid' => $query['uid']));
         }
@@ -183,5 +187,38 @@ class UserManager extends User
                 throw new Exception\RuntimeException('Save user failed');
             }
         }
+    }
+
+    public function findLoginedUsers($query)
+    {
+        $itemQuery = $this->getDI()->getModelsManager()->createBuilder();
+
+        $itemQuery->from(['U' => __CLASS__]);
+
+        $orderMapping = array(
+            'id' => 'id ASC',
+            '-id' => 'id DESC',
+            'created_at' => 'createdAt ASC',
+            '-created_at' => 'createdAt DESC',
+            'username' => 'username ASC',
+            '-username' => 'username DESC',
+            'last_login' => 'loginAt ASC',
+            '-last_login' => 'loginAt DESC',
+        );
+
+        $itemQuery->join('Eva\EvaUser\Entities\LoginRecords', 'U.id = L.userId', 'L');
+
+        $itemQuery->andWhere("L.source = 'xgb'");
+
+        $itemQuery->groupBy(array('L.userId'));
+
+        $order = 'id DESC';
+        if (!empty($query['order'])) {
+            $order = empty($orderMapping[$query['order']]) ? $order : $orderMapping[$query['order']];
+        }
+
+        $itemQuery->orderBy($order);
+
+        return $itemQuery;
     }
 }
