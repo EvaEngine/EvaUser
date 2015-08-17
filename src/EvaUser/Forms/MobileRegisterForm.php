@@ -43,6 +43,11 @@ class MobileRegisterForm extends Form
      */
     public $captcha;
 
+    /**
+     * @SWG\Property(name="source",type="string",description="Source of registration")
+     */
+    public $source;
+
     public function initialize($entity = null, $options = null)
     {
         $name = new Text('username');
