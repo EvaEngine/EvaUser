@@ -182,7 +182,7 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
         $paginator = new \Eva\EvaEngine\Paginator(array(
             "builder" => $users,
             "limit" => $limit,
-            "page" => $query['page'],
+            "page" => $query['page']
         ));
         $paginator->setQuery($query);
         $pager = $paginator->getPaginate();
