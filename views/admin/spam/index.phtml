@@ -158,10 +158,10 @@
                             <td class="hidden-480"><a target="_blank" href="<?= $lastComment['permalink'] ?>"><? if ($lastComment) {echo $lastComment['title'];} ?></a></td>
                             <td>
                                 <div class="btn-group">
-                                    <button class="btn btn-xs btn-danger" data-userName="<?=$item->username?>" data-target="#modal-confirm" data-action="popup-confirm" date-method="delete" data-content="账号及" data-form-action="/admin/user/deleteusercomment/<?=$item->id?>" data-callback="window.location.reload();">
+                                    <button class="btn btn-xs btn-danger" data-userName="<?=$item->username?>" data-target="#modal-confirm" data-action="popup-confirm" date-method="delete"  data-form-action="/admin/user/deleteusercomment/<?=$item->id?>" data-content="的账号和评论么？" data-callback="window.location.reload();">
                                         删除用户及评论
                                     </button>
-                                    <button class="btn btn-xs btn-success ajax-form-sumbit" data-ajax-form="1" date-method="put" data-form-action="/admin/user/process/status/<?=$item->id?>" data-callback="window.location.reload();">
+                                    <button class="btn btn-xs btn-success" data-userName="<?=$item->username?>" data-target="#modal-confirm" data-action="popup-confirm"  date-method="put" data-form-action="/admin/user/process/status/<?=$item->id?>" data-caozuo='恢复' data-content="的评论资格么？" data-callback="window.location.reload();">
                                         <input type="hidden" data-name="status" value="active" >
                                         恢复用户评论资格
                                     </button>

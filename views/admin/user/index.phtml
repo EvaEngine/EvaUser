@@ -210,7 +210,7 @@
                                         <i class="icon-edit bigger-120"></i>
                                     </a>
 
-                                    <button class="btn btn-xs btn-danger" data-userName="<?=$item->username?>" data-target="#modal-confirm" data-action="popup-confirm" date-method="put" data-form-action="/admin/user/process/status/<?=$item->id?>" data-callback="window.location.reload();">
+                                    <button class="btn btn-xs btn-danger" data-userName="<?=$item->username?>" data-target="#modal-confirm" data-action="popup-confirm" date-method="put" data-content="的账号么？" data-form-action="/admin/user/process/status/<?=$item->id?>" data-callback="window.location.reload();">
                                         <input type="hidden" data-name="status" value="deleted" >
                                         <i class="icon-trash bigger-120"></i>
                                     </button>
@@ -223,7 +223,7 @@
                                     <a class="btn btn-xs btn-info" href="/admin/permission/apikey/create?uid=<?=$item->id?>">
                                         <i class="icon-key bigger-120"></i>
                                     </a>
-                                    <button class="btn btn-xs btn-danger " data-userName="<?=$item->username?>" data-target="#modal-confirm" data-action="popup-confirm"  date-method="delete" data-form-action="/admin/comment/process/deleteusercomments/<?=$item->id?>" data-content="所有" data-callback="window.location.reload();">
+                                    <button class="btn btn-xs btn-danger " data-userName="<?=$item->username?>" data-target="#modal-confirm" data-action="popup-confirm"  date-method="delete" data-form-action="/admin/comment/process/deleteusercomments/<?=$item->id?>" data-content="所有的评论吗？" data-callback="window.location.reload();">
                                         删除该用户所有评论
                                     </button>
                                     <?endif?>
