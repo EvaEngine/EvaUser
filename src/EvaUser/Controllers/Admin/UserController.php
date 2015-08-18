@@ -172,13 +172,17 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
             'order' => $this->request->getQuery('order', 'string', '-created_at'),
             'limit' => $limit,
             'page' => $this->request->getQuery('page', 'int', 1),
+            'source' => $this->request->getQuery('source', 'string'),
         );
+        $form = new Forms\FilterForm();
+        $form->setValues($this->request->getQuery());
+        $this->view->setVar('form', $form);
         $user = new Models\UserManager();
         $users = $user->findLoginedUsers($query);
         $paginator = new \Eva\EvaEngine\Paginator(array(
             "builder" => $users,
             "limit" => $limit,
-            "page" => $query['page']
+            "page" => $query['page'],
         ));
         $paginator->setQuery($query);
         $pager = $paginator->getPaginate();

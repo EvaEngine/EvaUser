@@ -210,6 +210,10 @@ class UserManager extends User
 
         $itemQuery->andWhere("L.source = 'xgb'");
 
+        if (!empty($query['source'])) {
+            $itemQuery->andWhere('U.source = :source:', array('source' => $query['source']));
+        }
+
         $itemQuery->groupBy(array('L.userId'));
 
         $order = 'id DESC';
