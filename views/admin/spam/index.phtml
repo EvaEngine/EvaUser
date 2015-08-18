@@ -1,3 +1,21 @@
+<style>
+    .action-btn{
+        margin:5px 0 0 5px;
+        float: left;
+        cursor: pointer;
+    }
+    .action-btn:hover{
+        text-decoration: none;
+    }
+    .modal-dialog{
+       margin: 10% auto !important;
+    }
+    .js-userName{
+        color: #428bca;
+        padding: 0px 4px;
+        font-size: 14px;
+    }
+</style>
 <div class="breadcrumbs" id="breadcrumbs">
     <script type="text/javascript">
         try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
@@ -140,7 +158,7 @@
                             <td class="hidden-480"><a target="_blank" href="<?= $lastComment['permalink'] ?>"><? if ($lastComment) {echo $lastComment['title'];} ?></a></td>
                             <td>
                                 <div class="btn-group">
-                                    <button class="btn btn-xs btn-danger" data-target="#modal-confirm" data-action="popup-confirm" date-method="delete" data-form-action="/admin/user/deleteusercomment/<?=$item->id?>" data-callback="window.location.reload();">
+                                    <button class="btn btn-xs btn-danger" data-userName="<?=$item->username?>" data-target="#modal-confirm" data-action="popup-confirm" date-method="delete" data-content="账号及" data-form-action="/admin/user/deleteusercomment/<?=$item->id?>" data-callback="window.location.reload();">
                                         删除用户及评论
                                     </button>
                                     <button class="btn btn-xs btn-success ajax-form-sumbit" data-ajax-form="1" date-method="put" data-form-action="/admin/user/process/status/<?=$item->id?>" data-callback="window.location.reload();">
