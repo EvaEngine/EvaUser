@@ -192,13 +192,16 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
 //        dd($pager);
         $arrayPaginator = new PurePaginator($limit, count($usersArray), $usersArray);
 //        dd($arrayPaginator);
-        $pager->total_items = $arrayPaginator->total_items;
-        $pager->total_pages = $arrayPaginator->total_pages;
         $pager->before = $arrayPaginator->before;
         $pager->first = $arrayPaginator->first;
         $pager->next = $arrayPaginator->next;
         $pager->last = $arrayPaginator->last;
         $pager->current = $arrayPaginator->current;
+        $pager->total_items = $arrayPaginator->total_items;
+        $pager->total_pages = $arrayPaginator->total_pages;
+        $pager->page_range = $arrayPaginator->page_range;
+        $pager->next_range = $arrayPaginator->next_range;
+        $pager->prev_range = $arrayPaginator->prev_range;
 
 //        dd($pager);
 //        dd($total);
