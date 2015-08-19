@@ -186,6 +186,7 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
         ));
         $paginator->setQuery($query);
         $pager = $paginator->getPaginate();
+        $pager = $user->correctPaginator($pager, $users, $limit);
         $this->view->setVar('pager', $pager);
     }
 
