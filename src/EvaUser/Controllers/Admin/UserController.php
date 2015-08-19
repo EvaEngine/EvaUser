@@ -2,7 +2,6 @@
 
 namespace Eva\EvaUser\Controllers\Admin;
 
-use Eva\EvaEngine\View\PurePaginator;
 use Eva\EvaUser\Forms;
 use Eva\EvaUser\Models;
 use Eva\EvaEngine\Mvc\Controller\SessionAuthorityControllerInterface;
@@ -187,25 +186,7 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
         ));
         $paginator->setQuery($query);
         $pager = $paginator->getPaginate();
-        $usersArray = $users->getQuery()->execute()->toArray();
-//        dd($usersArray);
-//        dd($pager);
-        $arrayPaginator = new PurePaginator($limit, count($usersArray), $usersArray);
-//        dd($arrayPaginator);
-        $pager->before = $arrayPaginator->before;
-        $pager->first = $arrayPaginator->first;
-        $pager->next = $arrayPaginator->next;
-        $pager->last = $arrayPaginator->last;
-        $pager->current = $arrayPaginator->current;
-        $pager->total_items = $arrayPaginator->total_items;
-        $pager->total_pages = $arrayPaginator->total_pages;
-        $pager->page_range = $arrayPaginator->page_range;
-        $pager->next_range = $arrayPaginator->next_range;
-        $pager->prev_range = $arrayPaginator->prev_range;
-
-//        dd($pager);
-//        dd($total);
-
+        $pager = $user->correctPaginator($pager, $users, $limit);
         $this->view->setVar('pager', $pager);
     }
 

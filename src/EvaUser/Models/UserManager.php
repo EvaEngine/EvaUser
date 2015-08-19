@@ -3,9 +3,11 @@
 namespace Eva\EvaUser\Models;
 
 use Eva\EvaEngine\IoC;
+use Eva\EvaEngine\View\PurePaginator;
 use Eva\EvaUser\Entities;
 use Eva\EvaFileSystem\Models\Upload as UploadModel;
 use Eva\EvaEngine\Exception;
+use Phalcon\Mvc\Model\Query;
 
 class UserManager extends User
 {
@@ -224,5 +226,30 @@ class UserManager extends User
         $itemQuery->orderBy($order);
 
         return $itemQuery;
+    }
+
+    /**
+     * @param \stdClass $pager
+     * @param Query\Builder $builder
+     * @param integer $limit
+     * @return \stdClass
+     *
+     * 因为Phalcon的分页，在连表查询时候，会产生bug，导致分页出错，所以用此方法来对其重新赋值
+     */
+    public function correctPaginator(\stdClass $pager, \Phalcon\Mvc\Model\Query\Builder $builder, $limit)
+    {
+        $builderArray = $builder->getQuery()->execute()->toArray();
+        $newPaginator = new PurePaginator($limit, count($builderArray), $builderArray);
+        $pager->before = $newPaginator->before;
+        $pager->first = $newPaginator->first;
+        $pager->next = $newPaginator->next;
+        $pager->last = $newPaginator->last;
+        $pager->current = $newPaginator->current;
+        $pager->total_items = $newPaginator->total_items;
+        $pager->total_pages = $newPaginator->total_pages;
+        $pager->page_range = $newPaginator->page_range;
+        $pager->next_range = $newPaginator->next_range;
+        $pager->prev_range = $newPaginator->prev_range;
+        return $pager;
     }
 }
