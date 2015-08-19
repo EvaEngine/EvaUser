@@ -186,6 +186,11 @@ class UserController extends AdminControllerBase implements SessionAuthorityCont
         ));
         $paginator->setQuery($query);
         $pager = $paginator->getPaginate();
+        $total = $users->getQuery()->execute()->count();
+        $pager->total_items = $total;
+//        dd($pager);
+//        dd($total);
+
         $this->view->setVar('pager', $pager);
     }
 
