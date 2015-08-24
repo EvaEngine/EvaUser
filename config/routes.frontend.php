@@ -16,4 +16,10 @@ return array(
         'username' => 1,
         'code' => 2,
     ),
+    
+    '/cleancookies' =>  array(
+        'module' => 'EvaUser',
+        'controller' => 'logout',
+        'action' => 'cleancookies',
+    ),
 );
