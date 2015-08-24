@@ -10,7 +10,7 @@ class LoginController extends ControllerBase
 {
     public function indexAction()
     {
-        $next = eva_url('admin', '/admin/dashboard');
+        $next = eva_url('wscnAdmin', '/admin/dashboard');
         if ($this->request->getHTTPReferer()) {
             $next = $this->request->getHTTPReferer();
         }
