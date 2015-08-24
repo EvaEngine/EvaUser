@@ -85,4 +85,9 @@ return array(
         'controller' => 'Admin\User',
         'action' => 'loginHistory'
     ),
+   '/cleancookies' =>  array(
+        'module' => 'EvaUser',
+        'controller' => 'logout',
+        'action' => 'cleancookies',
+    ),
 );
