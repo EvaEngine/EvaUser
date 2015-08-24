@@ -1,21 +1,3 @@
-<style>
-    .action-btn{
-        margin:5px 0 0 5px;
-        float: left;
-        cursor: pointer;
-    }
-    .action-btn:hover{
-        text-decoration: none;
-    }
-    .modal-dialog{
-       margin: 10% auto !important;
-    }
-    .js-userName{
-        color: #428bca;
-        padding: 0px 4px;
-        font-size: 14px;
-    }
-</style>
 <div class="breadcrumbs" id="breadcrumbs">
     <script type="text/javascript">
         try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
@@ -210,16 +192,16 @@
                                 <div class="btn-group">
                                     <button class="btn btn-xs btn-success ajax-form-sumbit" data-ajax-form="1" date-method="put" data-form-action="/admin/user/process/status/<?=$item->id?>" data-callback="window.location.reload();">
                                         <input type="hidden" data-name="status" value="active" >
-                                        <i class="icon-ok bigger-120"></i>
+                                        <i class="icon-ok bigger-120" data-hover-msg='恢复该用户'></i>
                                     </button>
 
                                     <a class="btn btn-xs btn-info" href="/admin/user/edit/<?=$item->id?>">
-                                        <i class="icon-edit bigger-120"></i>
+                                        <i class="icon-edit bigger-120" data-hover-msg='编辑用户信息'></i>
                                     </a>
 
                                     <button class="btn btn-xs btn-danger" data-userName="<?=$item->username?>" data-target="#modal-confirm" data-action="popup-confirm" date-method="put" data-content="的账号么？" data-form-action="/admin/user/process/status/<?=$item->id?>" data-callback="window.location.reload();">
                                         <input type="hidden" data-name="status" value="deleted" >
-                                        <i class="icon-trash bigger-120"></i>
+                                        <i class="icon-trash bigger-120" data-hover-msg='删除用户'></i>
                                     </button>
 
 <!--                                    <button class="btn btn-xs btn-danger ajax-form-sumbit" data-ajax-form="1" date-method="delete" data-form-action="/admin/user/process/delete/--><?//=$item->id?><!--" data-confirm="1" data-confirm-message="--><?//=sprintf('User %s will be deleted, are you sure?', $item->username)?><!--" data-callback="form.closest('tr').hide();">-->
@@ -244,16 +226,16 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="btn-group">
-                            <button class="btn btn-xs btn-success ajax-form-sumbit" data-batch-form="1" data-source-name="id" data-source-selectors="#post-grid input[data-batch-source]" date-method="put" data-form-action="/admin/post/batch" data-callback="window.location.reload();">
+                           <!--  <button class="btn btn-xs btn-success ajax-form-sumbit" data-batch-form="1" data-source-name="id" data-source-selectors="#post-grid input[data-batch-source]" date-method="put" data-form-action="/admin/post/batch" data-callback="window.location.reload();">
                                 <input type="hidden" data-name="status" value="published" >
-                                <i class="icon-ok bigger-120"></i>
+                                <i class="icon-ok bigger-120" data-hover-msg='多选恢复用户'></i>
                             </button>
 
                             <button class="btn btn-xs btn-warning ajax-form-sumbit" data-batch-form="1" data-source-name="id" data-source-selectors="#post-grid input[data-batch-source]" date-method="put" data-form-action="/admin/post/batch" data-callback="window.location.reload();">
                                 <input type="hidden" data-name="status" value="deleted" >
-                                <i class="icon-eye-close bigger-120"></i>
+                                <i class="icon-eye-close bigger-120" data-hover-msg='多选删除用户'></i>
                             </button>
-
+ -->
                             <?if($this->moduleManager->hasModule('EvaPermission')):?>
                             <?$roles = \Eva\EvaPermission\Entities\Roles::find();?>
                             <?foreach($roles as $role):?>

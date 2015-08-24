@@ -1,21 +1,3 @@
-<style>
-    .action-btn{
-        margin:5px 0 0 5px;
-        float: left;
-        cursor: pointer;
-    }
-    .action-btn:hover{
-        text-decoration: none;
-    }
-    .modal-dialog{
-       margin: 10% auto !important;
-    }
-    .js-userName{
-        color: #428bca;
-        padding: 0px 4px;
-        font-size: 14px;
-    }
-</style>
 <div class="breadcrumbs" id="breadcrumbs">
     <script type="text/javascript">
         try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
@@ -175,15 +157,15 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="btn-group">
-                            <button class="btn btn-xs btn-success ajax-form-sumbit" data-batch-form="1" data-source-name="id" data-source-selectors="#post-grid input[data-batch-source]" date-method="put" data-form-action="/admin/post/process/batch" data-callback="window.location.reload();">
+                           <!--  <button class="btn btn-xs btn-success ajax-form-sumbit" data-batch-form="1" data-source-name="id" data-source-selectors="#post-grid input[data-batch-source]" date-method="put" data-form-action="/admin/post/process/batch" data-callback="window.location.reload();">
                                 <input type="hidden" data-name="status" value="published" >
-                                <i class="icon-ok bigger-120"></i>
+                                <i class="icon-ok bigger-120" data-hover-msg='多选恢复用户'></i>
                             </button>
 
                             <button class="btn btn-xs" data-target="#modal-multipleconfirm" data-action="popup-multipleconfirm" data-source-name="id" data-source-selectors="#post-grid input[data-batch-source]" date-method="put" data-form-action="/admin/post/process/batch" data-callback="window.location.reload();">
                                 <input type="hidden" data-name="status" value="deleted" >
-                                <i class="icon-eye-close bigger-120"></i>
-                            </button>
+                                <i class="icon-eye-close bigger-120" data-hover-msg='多选删除用户'></i>
+                            </button> -->
                         </div>
                     </div>
                     <div class="col-sm-6">
